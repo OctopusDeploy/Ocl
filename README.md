@@ -1,3 +1,3 @@
-# Octopus.Hcl
+# Hcl.NET
 
-A HCL serialization libary for .NET
+A HCL serialization library for .NET
