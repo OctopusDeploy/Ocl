@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Octopus.Hcl
 {
@@ -12,7 +13,17 @@ namespace Octopus.Hcl
     /// </remarks>
     public class HBody : IEnumerable<IHElement>
     {
-        private readonly List<IHElement> elements = new List<IHElement>();
+        private readonly List<IHElement> elements;
+
+        public HBody()
+        {
+            elements = new List<IHElement>();
+        }
+        
+        public HBody(IEnumerable<IHElement> elements)
+        {
+            this.elements = elements.ToList();
+        }
 
         public IEnumerator<IHElement> GetEnumerator()
             => elements.GetEnumerator();

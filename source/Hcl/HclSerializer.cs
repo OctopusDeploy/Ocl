@@ -16,5 +16,9 @@ namespace Octopus.Hcl
 
         public string Serialize(HDocument document)
             => HclConvert.Serialize(document, Options);
+        
+        public string Serialize(object obj)
+            => HclConvert.Serialize(obj, Options);
+        
     }
 }

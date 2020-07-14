@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Octopus.Hcl
 {
@@ -16,8 +17,20 @@ namespace Octopus.Hcl
         private string name;
 
         public HBlock(string name)
+            : this(name, Array.Empty<string>())
+        {
+        }
+
+        public HBlock(string name, IEnumerable<string> labels)
+            : this(name, labels, Array.Empty<IHElement>())
+        {
+        }
+
+        public HBlock(string name, IEnumerable<string> labels, IEnumerable<IHElement> elements)
+            : base(elements)
         {
             this.name = Name = name; // Make the compiler happy
+            Labels = labels.ToList();
         }
 
         public string Name
@@ -34,6 +47,6 @@ namespace Octopus.Hcl
         /// <remarks>
         /// Block labels can either be quoted literal strings or naked identifiers.
         /// </remarks>
-        public List<string> Labels { get; } = new List<string>();
+        public List<string> Labels { get; }
     }
 }
