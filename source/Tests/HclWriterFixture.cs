@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
@@ -36,7 +37,10 @@ namespace Tests
             yield return CreateCase("double quotes", @"a""b", @"""a\""b""");
             yield return CreateCase("string array", new[] { "B", "C" }, @"[""B"", ""C""]");
             yield return CreateCase("Int array", new[] { 4, 3, 4 }, @"[4, 3, 4]");
-            yield return CreateCase("string with newlines", new HclStringLiteral(@"a\r\nb", HclStringLiteralFormat.SingleLine), @"""a\r\nb""");
+            yield return CreateCase("single line string slashes are escaped", new HclStringLiteral(@"a\c\r\nb\t", HclStringLiteralFormat.SingleLine), @"""a\\c\\r\\nb\\t""");
+            yield return CreateCase("single line string tab is escaped", new HclStringLiteral("a\tb", HclStringLiteralFormat.SingleLine), @"""a\tb""");
+            yield return CreateCase("single line string newlines are escaped", new HclStringLiteral("a\r\nb", HclStringLiteralFormat.SingleLine), @"""a\r\nb""");
+            yield return CreateCase("single line string double quotes are escaped", new HclStringLiteral("a\"b", HclStringLiteralFormat.SingleLine), @"""a\""b""");
         }
 
         [TestCaseSource(nameof(WriteAttributeDataSource))]
@@ -70,7 +74,7 @@ namespace Tests
         [Test]
         public void Heredoc()
         {
-            var literal = new HclStringLiteral(" a\r\n    b", HclStringLiteralFormat.Heredoc) { HeredocIdentifier = "ZZZ" };
+            var literal = new HclStringLiteral(" a\n    b", HclStringLiteralFormat.Heredoc) { HeredocIdentifier = "ZZZ" };
             var block = new HBlock("MyBlock")
             {
                 new HAttribute("MyAttr", literal)
@@ -85,13 +89,13 @@ ZZZ
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
         public void HeredocIndented()
         {
-            var literal = new HclStringLiteral(" a\r\n    b", HclStringLiteralFormat.IndentedHeredoc);
+            var literal = new HclStringLiteral(" a\n    b", HclStringLiteralFormat.IndentedHeredoc);
             var block = new HBlock("MyBlock")
             {
                 new HAttribute("MyAttr", literal)
@@ -106,7 +110,7 @@ ZZZ
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
@@ -122,22 +126,22 @@ a
 b
 YYY";
 
-            Execute(w => w.Write(new HAttribute("MyAttr", "a\r\nb")), options)
+            Execute(w => w.Write(new HAttribute("MyAttr", "a\nb")), options)
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
         public void WriteBlockEmpty()
             => Execute(w => w.Write(new HBlock("MyBlock")))
                 .Should()
-                .Be("MyBlock {\r\n}");
+                .Be("MyBlock {\n}");
 
         [Test]
         public void WriteBlockSpecialCharactersInName()
             => Execute(w => w.Write(new HBlock("My0%&2_'\"-Block")))
                 .Should()
-                .Be("My0__2___-Block {\r\n}");
+                .Be("My0__2___-Block {\n}");
 
         [Test]
         public void WriteBlockSingleLabel()
@@ -147,7 +151,7 @@ YYY";
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be("MyBlock \"MyLabel\" {\r\n}");
+                .Be("MyBlock \"MyLabel\" {\n}");
         }
 
         [Test]
@@ -160,7 +164,7 @@ YYY";
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be("MyBlock \"MyLabel\" \"OtherLabel\" \"LastLabel\" {\r\n}");
+                .Be("MyBlock \"MyLabel\" \"OtherLabel\" \"LastLabel\" {\n}");
         }
 
         [Test]
@@ -171,7 +175,7 @@ YYY";
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be("MyBlock \"My\\\"Label\" {\r\n}");
+                .Be("MyBlock \"My\\\"Label\" {\n}");
         }
 
         [Test]
@@ -190,7 +194,7 @@ YYY";
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
@@ -207,7 +211,7 @@ YYY";
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
@@ -230,7 +234,7 @@ YYY";
 
             Execute(w => w.Write(block), options)
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
@@ -264,15 +268,17 @@ YYY";
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be(expected);
+                .Be(expected.ToUnixLineEndings());
         }
 
 
         private string Execute(Action<HclWriter> when, HclSerializerOptions? options = null)
         {
             var sb = new StringBuilder();
-            using (var writer = new HclWriter(sb, options))
+            using(var sw = new StringWriter(sb))
+            using (var writer = new HclWriter(sw, options))
             {
+                sw.NewLine = "\n";
                 when(writer);
             }
 

@@ -227,7 +227,12 @@ namespace Octopus.Hcl
         private void WriteSingleLineStringLiteral(string s)
         {
             writer.Write('"');
-            writer.Write(s.Replace("\"", "\\\""));
+            s = s.Replace(@"\", @"\\")
+                .Replace("\r", @"\r")
+                .Replace("\n", @"\n")
+                .Replace("\t", @"\t")
+                .Replace("\"", @"\""");
+            writer.Write(s);
             writer.Write('"');
         }
 
