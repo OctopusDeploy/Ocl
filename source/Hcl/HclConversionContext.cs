@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Octopus.Hcl.Converters;
 
 namespace Octopus.Hcl
@@ -24,14 +25,14 @@ namespace Octopus.Hcl
         }
         
          
-        public IEnumerable<IHElement> ToElements(string name, object? value)
+        public IEnumerable<IHElement> ToElements(PropertyInfo property, object? value)
         {
             if (value == null)
-                return new[] { new HAttribute(name, null) };
+                yield return new[] { new HAttribute(name, null) };
 
             foreach (var converter in converters)
                 if (converter.CanConvert(value.GetType()))
-                    return converter.Convert(this, name, value);
+                    return converter.Convert(this, property, value);
 
             throw new Exception("Could not find a converter for " + value.GetType().FullName);
         }

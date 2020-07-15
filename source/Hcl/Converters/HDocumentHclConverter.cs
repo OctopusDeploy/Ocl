@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Octopus.Hcl.Converters
 {
-    internal class HDocumentHclConverter : BlockHclConverter
+    internal class HDocumentHclConverter
     {
         public HDocument Convert(object? obj, HclConversionContext context)
             => obj == null
