@@ -5,20 +5,23 @@ using System.Reflection;
 
 namespace Octopus.Hcl.Converters
 {
-    internal class HDocumentHclConverter : BlockHclConverter
+    internal class HDocumentHclConverter : DefaultBlockHclConverter
     {
         public HDocument Convert(object? obj, HclConversionContext context)
-            => obj == null
-                ? new HDocument()
-                : new HDocument(
-                    GetElements(
-                        obj,
-                        from p in obj.GetType().GetProperties()
-                        where p.CanRead
-                        where p.GetCustomAttribute<HclIgnoreAttribute>() == null
-                        select p,
-                        context
-                    )
-                );
+        {
+            if (obj == null)
+                return new HDocument();
+
+            var defaultProperties = obj.GetType().GetDefaultMembers().OfType<PropertyInfo>();
+
+            var properties = from p in obj.GetType().GetProperties()
+                where p.CanRead
+                where p.GetCustomAttribute<HclIgnoreAttribute>() == null
+                select p;
+
+            return new HDocument(
+                GetElements(obj, properties.Except(defaultProperties), context)
+            );
+        }
     }
 }

@@ -16,5 +16,15 @@ namespace Octopus.Hcl.Converters
 
         protected virtual string GetName(string name, object obj)
             => name;
+
+        protected virtual IEnumerable<IHElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, HclConversionContext context)
+        {
+            var elements = from p in properties
+                let attr = p.GetCustomAttribute<HclElementAttribute>() ?? new HclElementAttribute()
+                from element in context.ToElements(attr.Name ?? p.Name, p.GetValue(obj))
+                orderby attr.Ordinal, element is HBlock, element.Name
+                select element;
+            return elements;
+        }
     }
 }

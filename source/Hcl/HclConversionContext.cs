@@ -17,13 +17,14 @@ namespace Octopus.Hcl
                     new IHclConverter[]
                     {
                         new DefaultAttributeHclConverter(),
+                        new DefaultDictionaryHclConverter(),
                         new DefaultCollectionHclConverter(),
-                        new BlockHclConverter(),
+                        new DefaultBlockHclConverter(),
                     })
                 .ToArray();
         }
-        
-         
+
+
         public IEnumerable<IHElement> ToElements(string name, object? value)
         {
             if (value == null)

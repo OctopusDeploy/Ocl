@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Octopus.Hcl
 {
@@ -11,6 +12,7 @@ namespace Octopus.Hcl
     /// <remarks>
     /// An attribute definition assigns a value to a particular attribute name within a body. Each distinct attribute name may be defined no more than once within a single body.
     /// </remarks>
+    [DebuggerDisplay("{Name} = {Value}", Name = "HAttribute")]
     public class HAttribute : IHElement
     {
         private string name;

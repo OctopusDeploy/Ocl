@@ -19,7 +19,7 @@ namespace Octopus.Hcl
         {
             elements = new List<IHElement>();
         }
-        
+
         public HBody(IEnumerable<IHElement> elements)
         {
             this.elements = elements.ToList();
@@ -33,5 +33,8 @@ namespace Octopus.Hcl
 
         public void Add(IHElement element)
             => elements.Add(element);
+
+        public void InsertRange(int index, IEnumerable<IHElement> collection)
+            => elements.InsertRange(index, collection);
     }
 }

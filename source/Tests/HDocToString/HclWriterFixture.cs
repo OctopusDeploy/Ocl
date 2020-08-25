@@ -6,7 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Hcl;
 
-namespace Tests
+namespace Tests.HDocToString
 {
     [Parallelizable(ParallelScope.All)]
     public class HclWriterFixture
