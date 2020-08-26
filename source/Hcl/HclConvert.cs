@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Octopus.Hcl.Converters;
 
 namespace Octopus.Hcl
 {
@@ -17,5 +18,11 @@ namespace Octopus.Hcl
 
             return sb.ToString();
         }
+
+        public static string Serialize(object? obj, HclSerializerOptions? options = null)
+            => Serialize(ToHDocument(obj, options));
+
+        public static HDocument ToHDocument(object? obj, HclSerializerOptions? options = null)
+            => new HDocumentHclConverter().Convert(obj, new HclConversionContext(options ?? new HclSerializerOptions()));
     }
 }

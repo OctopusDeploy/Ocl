@@ -178,8 +178,9 @@ namespace Octopus.Hcl
                     return;
             }
 
-            if (value is IEnumerable enumerable)
+            if (HAttribute.IsSupportedValueCollectionType(value.GetType()))
             {
+                var enumerable = (IEnumerable)value;
                 writer.Write('[');
                 var isFirst = true;
                 foreach (var item in enumerable)

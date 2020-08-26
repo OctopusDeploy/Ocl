@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Octopus.Hcl
 {
@@ -12,6 +14,7 @@ namespace Octopus.Hcl
     public class HAttribute : IHElement
     {
         private string name;
+        private object? value;
 
         public HAttribute(string name, object? value)
         {
@@ -33,6 +36,26 @@ namespace Octopus.Hcl
         /// <remarks>
         /// The attribute value is given as an expression, which is retained literally for later evaluation by the calling application.
         /// </remarks>
-        public object? Value { get; set; }
+        public object? Value
+        {
+            get => value;
+            set
+            {
+                if (value != null && !IsSupportedValueType(value.GetType()))
+                    throw new ArgumentException($"The type {value.GetType().FullName} is not a support value type HCL attribute");
+                this.value = value;
+            }
+        }
+
+        public static bool IsSupportedValueType(Type type)
+            => type.IsPrimitive ||
+                type == typeof(string) ||
+                type == typeof(decimal) ||
+                type == typeof(HclStringLiteral) ||
+                IsSupportedValueCollectionType(type);
+
+        internal static bool IsSupportedValueCollectionType(Type type)
+            => (type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!)) ||
+                (typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType && type.GenericTypeArguments.Length == 1 && IsSupportedValueType(type.GenericTypeArguments[0]));
     }
 }
