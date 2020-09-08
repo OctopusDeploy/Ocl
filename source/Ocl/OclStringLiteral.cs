@@ -22,6 +22,8 @@ namespace Octopus.Ocl
         public string HeredocIdentifier { get; set; } = "EOT";
 
         public static OclStringLiteral Create(string value)
-            => new OclStringLiteral(value, value.Contains('\n') ? OclStringLiteralFormat.IndentedHeredoc : OclStringLiteralFormat.SingleLine);
+        {
+            return new OclStringLiteral(value, value.Contains('\n') ? OclStringLiteralFormat.IndentedHeredoc : OclStringLiteralFormat.SingleLine);
+        }
     }
 }

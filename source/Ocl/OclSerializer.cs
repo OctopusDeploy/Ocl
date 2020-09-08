@@ -15,6 +15,8 @@ namespace Octopus.Ocl
         public OclSerializerOptions Options { get; }
 
         public string Serialize(OclDocument document)
-            => OclConvert.Serialize(document, Options);
+        {
+            return OclConvert.Serialize(document, Options);
+        }
     }
 }

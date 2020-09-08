@@ -14,7 +14,9 @@ namespace Tests
         private static IEnumerable<TestCaseData> WriteAttributeDataSource()
         {
             TestCaseData CreateCase(string name, object? value, string expected)
-                => new TestCaseData(value, expected) { TestName = "WriteAttribute value: " + name };
+            {
+                return new TestCaseData(value, expected) { TestName = "WriteAttribute value: " + name };
+            }
 
             yield return CreateCase("null", null, "null");
             yield return CreateCase("bool", false, "false");
@@ -45,10 +47,11 @@ namespace Tests
 
         [TestCaseSource(nameof(WriteAttributeDataSource))]
         public void WriteAttribute(object? input, string expected)
-            => Execute(w => w.Write(new OclAttribute("MyAttr", input)))
+        {
+            Execute(w => w.Write(new OclAttribute("MyAttr", input)))
                 .Should()
                 .Be($"MyAttr = {expected}");
-
+        }
 
         [Test]
         public void WriteAttributeInvalidValueThrows()
@@ -61,15 +64,19 @@ namespace Tests
 
         [Test]
         public void WriteAttributeLeadingNumberInName()
-            => Execute(w => w.Write(new OclAttribute("0MyAttr", 5)))
+        {
+            Execute(w => w.Write(new OclAttribute("0MyAttr", 5)))
                 .Should()
                 .Be("_0MyAttr = 5");
+        }
 
         [Test]
         public void WriteAttributeSpecialCharactersInName()
-            => Execute(w => w.Write(new OclAttribute("My0%&2_'\"-Attr", 5)))
+        {
+            Execute(w => w.Write(new OclAttribute("My0%&2_'\"-Attr", 5)))
                 .Should()
                 .Be("My0__2___-Attr = 5");
+        }
 
         [Test]
         public void Heredoc()
@@ -133,15 +140,19 @@ YYY";
 
         [Test]
         public void WriteBlockEmpty()
-            => Execute(w => w.Write(new OclBlock("MyBlock")))
+        {
+            Execute(w => w.Write(new OclBlock("MyBlock")))
                 .Should()
                 .Be("MyBlock {\n}");
+        }
 
         [Test]
         public void WriteBlockSpecialCharactersInName()
-            => Execute(w => w.Write(new OclBlock("My0%&2_'\"-Block")))
+        {
+            Execute(w => w.Write(new OclBlock("My0%&2_'\"-Block")))
                 .Should()
                 .Be("My0__2___-Block {\n}");
+        }
 
         [Test]
         public void WriteBlockSingleLabel()
@@ -271,11 +282,10 @@ YYY";
                 .Be(expected.ToUnixLineEndings());
         }
 
-
         private string Execute(Action<OclWriter> when, OclSerializerOptions? options = null)
         {
             var sb = new StringBuilder();
-            using(var sw = new StringWriter(sb))
+            using (var sw = new StringWriter(sb))
             using (var writer = new OclWriter(sw, options))
             {
                 sw.NewLine = "\n";

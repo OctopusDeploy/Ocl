@@ -15,12 +15,18 @@ namespace Octopus.Ocl
         private readonly List<IOclElement> elements = new List<IOclElement>();
 
         public IEnumerator<IOclElement> GetEnumerator()
-            => elements.GetEnumerator();
+        {
+            return elements.GetEnumerator();
+        }
 
         IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
+        {
+            return GetEnumerator();
+        }
 
         public void Add(IOclElement element)
-            => elements.Add(element);
+        {
+            elements.Add(element);
+        }
     }
 }
