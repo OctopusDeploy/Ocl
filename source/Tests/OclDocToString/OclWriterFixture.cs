@@ -55,7 +55,7 @@ namespace Tests
         {
             Action action = () => Execute(w => w.Write(new OclAttribute("MyAttr", new Random())));
             action.Should()
-                .Throw<InvalidOperationException>()
+                .Throw<ArgumentException>()
                 .WithMessage("*System.Random*");
         }
 

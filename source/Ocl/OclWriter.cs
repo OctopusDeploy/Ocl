@@ -178,8 +178,9 @@ namespace Octopus.Ocl
                     return;
             }
 
-            if (value is IEnumerable enumerable)
+            if (OclAttribute.IsSupportedValueCollectionType(value.GetType()))
             {
+                var enumerable = (IEnumerable)value;
                 writer.Write('[');
                 var isFirst = true;
                 foreach (var item in enumerable)
