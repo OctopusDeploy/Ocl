@@ -74,7 +74,7 @@ namespace Tests
         [Test]
         public void Heredoc()
         {
-            var literal = new OclStringLiteral(" a\n    b", OclStringLiteralFormat.Heredoc) { HeredocIdentifier = "ZZZ" };
+            var literal = new OclStringLiteral(" a\n    b", OclStringLiteralFormat.Heredoc) { HeredocTag = "ZZZ" };
             var block = new OclBlock("MyBlock")
             {
                 new OclAttribute("MyAttr", literal)
@@ -118,7 +118,7 @@ ZZZ
         {
             var options = new OclSerializerOptions
             {
-                DefaultHeredocIdentifier = "YYY"
+                DefaultHeredocTag = "YYY"
             };
 
             var expected = @"MyAttr = <<-YYY

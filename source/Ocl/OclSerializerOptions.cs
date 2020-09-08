@@ -9,6 +9,6 @@ namespace Octopus.Ocl
     {
         public char IndentChar { get; set; } = ' ';
         public int IndentDepth { get; set; } = 4;
-        public string DefaultHeredocIdentifier { get; set; } = "EOT";
+        public string DefaultHeredocTag { get; set; } = "EOT";
     }
 }
