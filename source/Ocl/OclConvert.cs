@@ -1,16 +1,16 @@
 using System;
 using System.Text;
 
-namespace Octopus.Hcl
+namespace Octopus.Ocl
 {
-    public class HclConvert
+    public class OclConvert
     {
-        public static string Serialize(HDocument document, HclSerializerOptions? options = null)
+        public static string Serialize(OclDocument document, OclSerializerOptions? options = null)
         {
-            options ??= new HclSerializerOptions();
+            options ??= new OclSerializerOptions();
             var sb = new StringBuilder();
             // ReSharper disable once ConvertToUsingDeclaration
-            using (var writer = new HclWriter(sb, options))
+            using (var writer = new OclWriter(sb, options))
             {
                 writer.Write(document);
             }

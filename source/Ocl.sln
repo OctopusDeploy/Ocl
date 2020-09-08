@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hcl", "Hcl\Hcl.csproj", "{F7AE7754-E195-47FB-9614-EB1CFF4B8D70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocl", "Ocl\Ocl.csproj", "{F7AE7754-E195-47FB-9614-EB1CFF4B8D70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{43A59954-CE41-4554-92C0-750E9F29994E}"
 EndProject

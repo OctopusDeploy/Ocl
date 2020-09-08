@@ -3,39 +3,39 @@ using System.Collections;
 using System.IO;
 using System.Text;
 
-namespace Octopus.Hcl
+namespace Octopus.Ocl
 {
     /// <summary>
     /// This class is not threadsafe
     /// </summary>
-    public class HclWriter : IDisposable
+    public class OclWriter : IDisposable
     {
         private readonly TextWriter writer;
         private int currentIndent;
         private bool isFirstLine = true;
         private bool lastWrittenWasBlock;
 
-        public HclWriter(StringBuilder sb, HclSerializerOptions? options = null)
+        public OclWriter(StringBuilder sb, OclSerializerOptions? options = null)
             : this(new StringWriter(sb), options)
         {
         }
 
-        public HclWriter(TextWriter writer, HclSerializerOptions? options = null)
+        public OclWriter(TextWriter writer, OclSerializerOptions? options = null)
         {
             this.writer = writer;
-            Options = options ?? new HclSerializerOptions();
+            Options = options ?? new OclSerializerOptions();
         }
 
-        public HclSerializerOptions Options { get; }
+        public OclSerializerOptions Options { get; }
 
-        public void Write(IHElement element)
+        public void Write(IOclElement element)
         {
             switch (element)
             {
-                case HAttribute attribute:
+                case OclAttribute attribute:
                     Write(attribute);
                     return;
-                case HBlock block:
+                case OclBlock block:
                     Write(block);
                     return;
                 default:
@@ -43,13 +43,13 @@ namespace Octopus.Hcl
             }
         }
 
-        public void Write(HBody body)
+        public void Write(OclBody body)
         {
             foreach (var item in body)
                 Write(item);
         }
 
-        public void Write(HAttribute attribute)
+        public void Write(OclAttribute attribute)
         {
             WriteNextLine();
             WriteIndent();
@@ -58,7 +58,7 @@ namespace Octopus.Hcl
             WriteValue(attribute.Value);
         }
 
-        public void Write(HBlock block)
+        public void Write(OclBlock block)
         {
             if (!isFirstLine && !lastWrittenWasBlock)
                 writer.WriteLine();
@@ -169,11 +169,11 @@ namespace Octopus.Hcl
                     WriteSingleLineStringLiteral(c.ToString());
                     return;
                 case string s:
-                    var literal = HclStringLiteral.Create(s);
+                    var literal = OclStringLiteral.Create(s);
                     literal.HeredocIdentifier = Options.DefaultHeredocIdentifier;
                     WriteValue(literal);
                     return;
-                case HclStringLiteral s:
+                case OclStringLiteral s:
                     WriteValue(s);
                     return;
             }
@@ -197,15 +197,15 @@ namespace Octopus.Hcl
             throw new InvalidOperationException($"The type {value.GetType().FullName} is not a valid attribute value and can not be serialized");
         }
 
-        private void WriteValue(HclStringLiteral literal)
+        private void WriteValue(OclStringLiteral literal)
         {
-            if (literal.Format == HclStringLiteralFormat.SingleLine)
+            if (literal.Format == OclStringLiteralFormat.SingleLine)
             {
                 WriteSingleLineStringLiteral(literal.Value);
                 return;
             }
 
-            var isIndented = literal.Format == HclStringLiteralFormat.IndentedHeredoc;
+            var isIndented = literal.Format == OclStringLiteralFormat.IndentedHeredoc;
 
             writer.Write("<<");
             if (isIndented)

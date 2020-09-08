@@ -33,7 +33,7 @@ Setup(context =>
 
     nugetVersion = gitVersionInfo.NuGetVersion;
 
-    Information("Building Octopus.Hcl v{0}", nugetVersion);
+    Information("Building Octopus.Ocl v{0}", nugetVersion);
     Information("Informational Version {0}", gitVersionInfo.InformationalVersion);
 });
 

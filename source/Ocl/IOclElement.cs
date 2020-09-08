@@ -1,8 +1,8 @@
 using System;
 
-namespace Octopus.Hcl
+namespace Octopus.Ocl
 {
-    public interface IHElement
+    public interface IOclElement
     {
         string Name { get; set; }
     }

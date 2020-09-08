@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Octopus.Hcl
+namespace Octopus.Ocl
 {
     /// <summary>
     ///     <seealso cref="https://github.com/hashicorp/hcl/blob/hcl2/hclsyntax/spec.md#bodies" />
@@ -10,17 +10,17 @@ namespace Octopus.Hcl
     /// <remarks>
     /// A body is a collection of associated attributes and blocks. The meaning of this association is defined by the calling application.
     /// </remarks>
-    public class HBody : IEnumerable<IHElement>
+    public class OclBody : IEnumerable<IOclElement>
     {
-        private readonly List<IHElement> elements = new List<IHElement>();
+        private readonly List<IOclElement> elements = new List<IOclElement>();
 
-        public IEnumerator<IHElement> GetEnumerator()
+        public IEnumerator<IOclElement> GetEnumerator()
             => elements.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
 
-        public void Add(IHElement element)
+        public void Add(IOclElement element)
             => elements.Add(element);
     }
 }

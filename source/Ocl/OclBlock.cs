@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 
-namespace Octopus.Hcl
+namespace Octopus.Ocl
 {
     /// <summary>
-    /// A HCL block, <code>MyThing "ALabel" { ... }</code>
+    /// A block, <code>MyThing "ALabel" { ... }</code>
     /// <seealso cref="https://github.com/hashicorp/hcl/blob/hcl2/hclsyntax/spec.md#blocks" />
     /// </summary>
     /// <remarks>
     /// A block creates a child body that is annotated with a block type and zero or more block labels. Blocks create a
     /// structural hierarchy which can be interpreted by the calling application.
     /// </remarks>
-    public class HBlock : HBody, IHElement
+    public class OclBlock : OclBody, IOclElement
     {
         private string name;
 
-        public HBlock(string name)
+        public OclBlock(string name)
         {
             this.name = Name = name; // Make the compiler happy
         }

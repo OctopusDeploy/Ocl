@@ -4,12 +4,12 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
-using Octopus.Hcl;
+using Octopus.Ocl;
 
 namespace Tests
 {
     [Parallelizable(ParallelScope.All)]
-    public class HclWriterFixture
+    public class OclWriterFixture
     {
         private static IEnumerable<TestCaseData> WriteAttributeDataSource()
         {
@@ -37,47 +37,47 @@ namespace Tests
             yield return CreateCase("double quotes", @"a""b", @"""a\""b""");
             yield return CreateCase("string array", new[] { "B", "C" }, @"[""B"", ""C""]");
             yield return CreateCase("Int array", new[] { 4, 3, 4 }, @"[4, 3, 4]");
-            yield return CreateCase("single line string slashes are escaped", new HclStringLiteral(@"a\c\r\nb\t", HclStringLiteralFormat.SingleLine), @"""a\\c\\r\\nb\\t""");
-            yield return CreateCase("single line string tab is escaped", new HclStringLiteral("a\tb", HclStringLiteralFormat.SingleLine), @"""a\tb""");
-            yield return CreateCase("single line string newlines are escaped", new HclStringLiteral("a\r\nb", HclStringLiteralFormat.SingleLine), @"""a\r\nb""");
-            yield return CreateCase("single line string double quotes are escaped", new HclStringLiteral("a\"b", HclStringLiteralFormat.SingleLine), @"""a\""b""");
+            yield return CreateCase("single line string slashes are escaped", new OclStringLiteral(@"a\c\r\nb\t", OclStringLiteralFormat.SingleLine), @"""a\\c\\r\\nb\\t""");
+            yield return CreateCase("single line string tab is escaped", new OclStringLiteral("a\tb", OclStringLiteralFormat.SingleLine), @"""a\tb""");
+            yield return CreateCase("single line string newlines are escaped", new OclStringLiteral("a\r\nb", OclStringLiteralFormat.SingleLine), @"""a\r\nb""");
+            yield return CreateCase("single line string double quotes are escaped", new OclStringLiteral("a\"b", OclStringLiteralFormat.SingleLine), @"""a\""b""");
         }
 
         [TestCaseSource(nameof(WriteAttributeDataSource))]
         public void WriteAttribute(object? input, string expected)
-            => Execute(w => w.Write(new HAttribute("MyAttr", input)))
+            => Execute(w => w.Write(new OclAttribute("MyAttr", input)))
                 .Should()
                 .Be($"MyAttr = {expected}");
 
-        
+
         [Test]
         public void WriteAttributeInvalidValueThrows()
         {
-            Action action = () => Execute(w => w.Write(new HAttribute("MyAttr", new Random())));
+            Action action = () => Execute(w => w.Write(new OclAttribute("MyAttr", new Random())));
             action.Should()
                 .Throw<InvalidOperationException>()
                 .WithMessage("*System.Random*");
         }
-        
+
         [Test]
         public void WriteAttributeLeadingNumberInName()
-            => Execute(w => w.Write(new HAttribute("0MyAttr", 5)))
+            => Execute(w => w.Write(new OclAttribute("0MyAttr", 5)))
                 .Should()
                 .Be("_0MyAttr = 5");
 
         [Test]
         public void WriteAttributeSpecialCharactersInName()
-            => Execute(w => w.Write(new HAttribute("My0%&2_'\"-Attr", 5)))
+            => Execute(w => w.Write(new OclAttribute("My0%&2_'\"-Attr", 5)))
                 .Should()
                 .Be("My0__2___-Attr = 5");
-    
+
         [Test]
         public void Heredoc()
         {
-            var literal = new HclStringLiteral(" a\n    b", HclStringLiteralFormat.Heredoc) { HeredocIdentifier = "ZZZ" };
-            var block = new HBlock("MyBlock")
+            var literal = new OclStringLiteral(" a\n    b", OclStringLiteralFormat.Heredoc) { HeredocIdentifier = "ZZZ" };
+            var block = new OclBlock("MyBlock")
             {
-                new HAttribute("MyAttr", literal)
+                new OclAttribute("MyAttr", literal)
             };
 
             var expected = @"MyBlock {
@@ -95,10 +95,10 @@ ZZZ
         [Test]
         public void HeredocIndented()
         {
-            var literal = new HclStringLiteral(" a\n    b", HclStringLiteralFormat.IndentedHeredoc);
-            var block = new HBlock("MyBlock")
+            var literal = new OclStringLiteral(" a\n    b", OclStringLiteralFormat.IndentedHeredoc);
+            var block = new OclBlock("MyBlock")
             {
-                new HAttribute("MyAttr", literal)
+                new OclAttribute("MyAttr", literal)
             };
 
             var expected = @"MyBlock {
@@ -116,7 +116,7 @@ ZZZ
         [Test]
         public void MultilineStringsUseHeredocAndTheHeredocIdentifierFromOptions()
         {
-            var options = new HclSerializerOptions
+            var options = new OclSerializerOptions
             {
                 DefaultHeredocIdentifier = "YYY"
             };
@@ -126,27 +126,27 @@ a
 b
 YYY";
 
-            Execute(w => w.Write(new HAttribute("MyAttr", "a\nb")), options)
+            Execute(w => w.Write(new OclAttribute("MyAttr", "a\nb")), options)
                 .Should()
                 .Be(expected.ToUnixLineEndings());
         }
 
         [Test]
         public void WriteBlockEmpty()
-            => Execute(w => w.Write(new HBlock("MyBlock")))
+            => Execute(w => w.Write(new OclBlock("MyBlock")))
                 .Should()
                 .Be("MyBlock {\n}");
 
         [Test]
         public void WriteBlockSpecialCharactersInName()
-            => Execute(w => w.Write(new HBlock("My0%&2_'\"-Block")))
+            => Execute(w => w.Write(new OclBlock("My0%&2_'\"-Block")))
                 .Should()
                 .Be("My0__2___-Block {\n}");
 
         [Test]
         public void WriteBlockSingleLabel()
         {
-            var block = new HBlock("MyBlock");
+            var block = new OclBlock("MyBlock");
             block.Labels.Add("MyLabel");
 
             Execute(w => w.Write(block))
@@ -157,7 +157,7 @@ YYY";
         [Test]
         public void WriteBlockMultipleLabel()
         {
-            var block = new HBlock("MyBlock");
+            var block = new OclBlock("MyBlock");
             block.Labels.Add("MyLabel");
             block.Labels.Add("OtherLabel");
             block.Labels.Add("LastLabel");
@@ -170,7 +170,7 @@ YYY";
         [Test]
         public void WriteBlockDoubleQuotesInLabel()
         {
-            var block = new HBlock("MyBlock");
+            var block = new OclBlock("MyBlock");
             block.Labels.Add("My\"Label");
 
             Execute(w => w.Write(block))
@@ -181,9 +181,9 @@ YYY";
         [Test]
         public void WriteBlockSingleChildBlock()
         {
-            var block = new HBlock("MyBlock")
+            var block = new OclBlock("MyBlock")
             {
-                new HBlock("Child")
+                new OclBlock("Child")
             };
 
             var expected = @"MyBlock {
@@ -200,9 +200,9 @@ YYY";
         [Test]
         public void WriteBlockSingleChildAttribute()
         {
-            var block = new HBlock("MyBlock")
+            var block = new OclBlock("MyBlock")
             {
-                new HAttribute("Child", 5)
+                new OclAttribute("Child", 5)
             };
 
             var expected = @"MyBlock {
@@ -217,15 +217,15 @@ YYY";
         [Test]
         public void IndentOptionsAreUsed()
         {
-            var options = new HclSerializerOptions
+            var options = new OclSerializerOptions
             {
                 IndentChar = '+',
                 IndentDepth = 5
             };
 
-            var block = new HBlock("MyBlock")
+            var block = new OclBlock("MyBlock")
             {
-                new HAttribute("Child", 5)
+                new OclAttribute("Child", 5)
             };
 
             var expected = @"MyBlock {
@@ -240,16 +240,16 @@ YYY";
         [Test]
         public void WriteBlockMixedAttributesAndBlocks()
         {
-            var block = new HBlock("MyBlock")
+            var block = new OclBlock("MyBlock")
             {
-                new HAttribute("First", 1),
-                new HAttribute("Second", 2),
-                new HBlock("Third")
+                new OclAttribute("First", 1),
+                new OclAttribute("Second", 2),
+                new OclBlock("Third")
                 {
-                    new HAttribute("ThirdChild", 3)
+                    new OclAttribute("ThirdChild", 3)
                 },
-                new HBlock("Fourth"),
-                new HAttribute("Last", 9)
+                new OclBlock("Fourth"),
+                new OclAttribute("Last", 9)
             };
 
             var expected = @"MyBlock {
@@ -272,11 +272,11 @@ YYY";
         }
 
 
-        private string Execute(Action<HclWriter> when, HclSerializerOptions? options = null)
+        private string Execute(Action<OclWriter> when, OclSerializerOptions? options = null)
         {
             var sb = new StringBuilder();
             using(var sw = new StringWriter(sb))
-            using (var writer = new HclWriter(sw, options))
+            using (var writer = new OclWriter(sw, options))
             {
                 sw.NewLine = "\n";
                 when(writer);

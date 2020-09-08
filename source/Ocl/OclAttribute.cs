@@ -1,19 +1,19 @@
 using System;
 
-namespace Octopus.Hcl
+namespace Octopus.Ocl
 {
     /// <summary>
-    /// A HCL attribute, <code>MyAttribute = value</code>
+    /// An attribute, <code>MyAttribute = value</code>
     /// <seealso cref="https://github.com/hashicorp/hcl/blob/hcl2/hclsyntax/spec.md#attribute-definitions" />
     /// </summary>
     /// <remarks>
     /// An attribute definition assigns a value to a particular attribute name within a body. Each distinct attribute name may be defined no more than once within a single body.
     /// </remarks>
-    public class HAttribute : IHElement
+    public class OclAttribute : IOclElement
     {
         private string name;
 
-        public HAttribute(string name, object? value)
+        public OclAttribute(string name, object? value)
         {
             this.name = Name = name; // Make the compiler happy
             Value = value;

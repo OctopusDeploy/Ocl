@@ -1,3 +1,4 @@
-# Hcl.NET
+# Octopus Configuration Language (OCL)
 
-A HCL serialization library for .NET
+The serialization library for the Octopus Configuration Language (OCL).
+

@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Authors>Octopus Deploy</Authors>
-    <AssemblyName>Octopus.Hcl</AssemblyName>
-    <RootNamespace>Octopus.Hcl</RootNamespace>
-    <PackageProjectUrl>https://github.com/OctopusDeploy/Hcl.NET</PackageProjectUrl>
+    <AssemblyName>Octopus.Ocl</AssemblyName>
+    <RootNamespace>Octopus.Ocl</RootNamespace>
+    <PackageProjectUrl>https://github.com/OctopusDeploy/Ocl</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TargetFramework>netcoreapp3.1</TargetFramework>
