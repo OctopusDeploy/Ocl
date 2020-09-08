@@ -12,7 +12,7 @@ namespace Octopus.Ocl
     /// </remarks>
     public class OclBody : IEnumerable<IOclElement>
     {
-        private readonly List<IOclElement> elements = new List<IOclElement>();
+        readonly List<IOclElement> elements = new List<IOclElement>();
 
         public IEnumerator<IOclElement> GetEnumerator()
             => elements.GetEnumerator();
