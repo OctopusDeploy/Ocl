@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Octopus.Ocl;
 using Octopus.Ocl.Converters;
 
-namespace Tests.ObjectToOclDoc
+namespace Tests.ToOclDoc
 {
     public class ToOclDocNamingFixture
     {

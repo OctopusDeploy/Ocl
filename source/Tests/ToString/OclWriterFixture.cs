@@ -6,7 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
 
-namespace Tests
+namespace Tests.ToString
 {
     [Parallelizable(ParallelScope.All)]
     public class OclWriterFixture

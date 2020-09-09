@@ -9,7 +9,7 @@ namespace Octopus.Ocl.Converters
         public bool CanConvert(Type type)
             => typeof(IEnumerable).IsAssignableFrom(type);
 
-        public IEnumerable<IOclElement> ToOclElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
         {
             var items = (IEnumerable)value;
             foreach (var item in items)

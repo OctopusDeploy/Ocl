@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Octopus.Ocl;
 
-namespace Tests.ObjectToOclDoc
+namespace Tests.ToOclDoc
 {
     public class ToOclBodyDefaultBehaviourFixture
     {

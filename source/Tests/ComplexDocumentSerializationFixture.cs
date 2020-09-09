@@ -126,10 +126,10 @@ namespace Tests
 
                 var step = (DeploymentStep)obj;
 
-                var actions = step.Actions.SelectMany(a => actionOclConverter.ToOclElements(context, name, a)).ToArray();
+                var actions = step.Actions.SelectMany(a => actionOclConverter.ToElements(context, name, a)).ToArray();
 
                 var element = actions.Length == 1
-                    ? (OclBlock) actionOclConverter.ToOclElements(context, name, step.Actions[0]).Single()
+                    ? (OclBlock) actionOclConverter.ToElements(context, name, step.Actions[0]).Single()
                     : new OclBlock("rolling", new[] { step.Name }, actions);
 
                 var properties = from p in typeof(DeploymentStep).GetProperties()

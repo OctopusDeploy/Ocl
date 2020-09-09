@@ -31,7 +31,7 @@ namespace Octopus.Ocl
 
             foreach (var converter in converters)
                 if (converter.CanConvert(value.GetType()))
-                    return converter.ToOclElements(this, name, value);
+                    return converter.ToElements(this, name, value);
 
             throw new Exception("Could not find a converter for " + value.GetType().FullName);
         }
