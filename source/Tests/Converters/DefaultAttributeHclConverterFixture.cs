@@ -13,7 +13,7 @@ namespace Tests.Converters
         public void NameCaseIsKept()
         {
             var context = new OclConversionContext(new OclSerializerOptions());
-            var result = (OclAttribute) new DefaultAttributeOclConverter().Convert(context, "Test", "Value").Single();
+            var result = (OclAttribute) new DefaultAttributeOclConverter().ToOclElements(context, "Test", "Value").Single();
             result.Name.Should().Be("Test");
         }
     }

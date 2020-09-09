@@ -14,7 +14,7 @@ namespace Tests.Converters
         {
             var context = new OclConversionContext(new OclSerializerOptions());
             var data = new WithIndexer();
-            var result = (OclBlock)new DefaultBlockOclConverter().Convert(context, "Test", data).Single();
+            var result = (OclBlock)new DefaultBlockOclConverter().ToOclElements(context, "Test", data).Single();
             result.Should()
                 .Be(
                     new OclBlock("Test")
