@@ -120,6 +120,9 @@ namespace Tests
             public override bool CanConvert(Type type)
                 => typeof(DeploymentStep).IsAssignableFrom(type);
 
+            public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+                => throw new NotImplementedException();
+
             protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
             {
                 var actionOclConverter = new ActionOclConverter();

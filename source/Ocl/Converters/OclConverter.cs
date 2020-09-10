@@ -12,6 +12,8 @@ namespace Octopus.Ocl.Converters
         public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
             => new[] { ConvertInternal(context, name, obj) };
 
+        public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue);
+
         protected abstract IOclElement ConvertInternal(OclConversionContext context, string name, object obj);
 
         protected virtual string GetName(string name, object obj)
@@ -22,7 +24,10 @@ namespace Octopus.Ocl.Converters
             var elements = from p in properties
                 let attr = p.GetCustomAttribute<OclElementAttribute>() ?? new OclElementAttribute()
                 from element in context.ToElements(attr.Name ?? p.Name, p.GetValue(obj))
-                orderby attr.Ordinal, element is OclBlock, element.Name
+                orderby
+                    attr.Ordinal,
+                    element is OclBlock,
+                    (element as OclBlock)?.Name ?? (element as OclAttribute)?.Name
                 select element;
             return elements;
         }

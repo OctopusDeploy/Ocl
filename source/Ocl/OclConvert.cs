@@ -24,5 +24,14 @@ namespace Octopus.Ocl
 
         public static OclDocument ToOclDocument(object? obj, OclSerializerOptions? options = null)
             => new OclDocumentOclConverter().Convert(obj, new OclConversionContext(options ?? new OclSerializerOptions()));
+
+        public static T FromOclDocument<T>(OclDocument document, OclSerializerOptions? options = null)
+        {
+            var context = new OclConversionContext(options ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(T), document, () => null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            return (T)result;
+        }
     }
 }

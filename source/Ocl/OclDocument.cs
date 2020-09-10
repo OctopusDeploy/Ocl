@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Octopus.Ocl
 {
-    public class OclDocument : OclBody
+    public class OclDocument : OclBody, IOclElement
     {
         public OclDocument()
         {
