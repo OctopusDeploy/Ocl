@@ -170,7 +170,7 @@ namespace Octopus.Ocl
                     return;
                 case string s:
                     var literal = OclStringLiteral.Create(s);
-                    literal.HeredocIdentifier = Options.DefaultHeredocIdentifier;
+                    literal.HeredocTag = Options.DefaultHeredocTag;
                     WriteValue(literal);
                     return;
                 case OclStringLiteral s:
@@ -178,8 +178,9 @@ namespace Octopus.Ocl
                     return;
             }
 
-            if (value is IEnumerable enumerable)
+            if (OclAttribute.IsSupportedValueCollectionType(value.GetType()))
             {
+                var enumerable = (IEnumerable)value;
                 writer.Write('[');
                 var isFirst = true;
                 foreach (var item in enumerable)
@@ -210,7 +211,7 @@ namespace Octopus.Ocl
             writer.Write("<<");
             if (isIndented)
                 writer.Write("-");
-            writer.WriteLine(literal.HeredocIdentifier);
+            writer.WriteLine(literal.HeredocTag);
 
             foreach (var line in literal.Value.Split('\n'))
             {
@@ -221,7 +222,7 @@ namespace Octopus.Ocl
 
             if (isIndented)
                 WriteIndent();
-            writer.Write(literal.HeredocIdentifier);
+            writer.Write(literal.HeredocTag);
         }
 
         private void WriteSingleLineStringLiteral(string s)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Octopus.Ocl
 {
@@ -16,8 +17,25 @@ namespace Octopus.Ocl
         private string name;
 
         public OclBlock(string name)
+            : this(name, Array.Empty<string>())
+        {
+        }
+
+        public OclBlock(string name, string label)
+            : this(name, new[] { label }, Array.Empty<IOclElement>())
+        {
+        }
+
+        public OclBlock(string name, IEnumerable<string> labels)
+            : this(name, labels, Array.Empty<IOclElement>())
+        {
+        }
+
+        public OclBlock(string name, IEnumerable<string> labels, IEnumerable<IOclElement> elements)
+            : base(elements)
         {
             this.name = Name = name; // Make the compiler happy
+            Labels = labels.ToList();
         }
 
         public string Name
@@ -34,6 +52,6 @@ namespace Octopus.Ocl
         /// <remarks>
         /// Block labels can either be quoted literal strings or naked identifiers.
         /// </remarks>
-        public List<string> Labels { get; } = new List<string>();
+        public List<string> Labels { get; }
     }
 }

@@ -19,7 +19,7 @@ namespace Octopus.Ocl
 
         public string Value { get; }
         public OclStringLiteralFormat Format { get; }
-        public string HeredocIdentifier { get; set; } = "EOT";
+        public string HeredocTag { get; set; } = "EOT";
 
         public static OclStringLiteral Create(string value)
             => new OclStringLiteral(value, value.Contains('\n') ? OclStringLiteralFormat.IndentedHeredoc : OclStringLiteralFormat.SingleLine);
