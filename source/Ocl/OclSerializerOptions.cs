@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Octopus.Ocl
 {
@@ -10,5 +11,6 @@ namespace Octopus.Ocl
         public char IndentChar { get; set; } = ' ';
         public int IndentDepth { get; set; } = 4;
         public string DefaultHeredocTag { get; set; } = "EOT";
+        public List<IOclConverter> Converters { get; set; } = new List<IOclConverter>();
     }
 }

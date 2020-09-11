@@ -16,5 +16,8 @@ namespace Octopus.Ocl
 
         public string Serialize(OclDocument document)
             => OclConvert.Serialize(document, Options);
+
+        public string Serialize(object obj)
+            => OclConvert.Serialize(obj, Options);
     }
 }

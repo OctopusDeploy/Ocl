@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Octopus.Ocl.Converters;
 
 namespace Octopus.Ocl
 {
@@ -17,5 +18,11 @@ namespace Octopus.Ocl
 
             return sb.ToString();
         }
+
+        public static string Serialize(object? obj, OclSerializerOptions? options = null)
+            => Serialize(ToOclDocument(obj, options));
+
+        public static OclDocument ToOclDocument(object? obj, OclSerializerOptions? options = null)
+            => new OclDocumentOclConverter().Convert(obj, new OclConversionContext(options ?? new OclSerializerOptions()));
     }
 }
