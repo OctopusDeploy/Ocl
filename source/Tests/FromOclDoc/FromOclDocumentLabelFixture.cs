@@ -15,7 +15,7 @@ namespace Tests.FromOclDoc
                 new OclBlock("Item", "Label1Value")
             };
 
-            OclConvert.FromOclDocument<Parent<SampleWithLabelAttributes>>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Parent<SampleWithLabelAttributes>>(document, new OclSerializerOptions())
                 .Item
                 .Should()
                 .BeEquivalentTo(new SampleWithLabelAttributes() { FirstLabel = "Label1Value" });
@@ -29,7 +29,7 @@ namespace Tests.FromOclDoc
                 new OclBlock("Item", new[] { "Label1Value", "Label2Value" })
             };
 
-            OclConvert.FromOclDocument<Parent<SampleWithLabelAttributes>>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Parent<SampleWithLabelAttributes>>(document, new OclSerializerOptions())
                 .Item
                 .Should()
                 .BeEquivalentTo(new SampleWithLabelAttributes()
@@ -47,7 +47,7 @@ namespace Tests.FromOclDoc
                 new OclBlock("Item", "Label1Value")
             };
 
-            Action action = () => OclConvert.FromOclDocument<Parent<SampleWithoutLabelAttribute>>(document, new OclSerializerOptions());
+            Action action = () => OclConvert.Deserialize<Parent<SampleWithoutLabelAttribute>>(document, new OclSerializerOptions());
             action.Should()
                 .Throw<OclException>()
                 .WithMessage("*The block 'Item' defines 1 labels (Label1Value) but the type SampleWithoutLabelAttribute only has 0 label properties*");

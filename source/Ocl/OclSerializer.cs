@@ -21,6 +21,7 @@ namespace Octopus.Ocl
             => OclConvert.Serialize(obj, Options);
 
         public T Deserialize<T>(OclDocument document)
-            => OclConvert.FromOclDocument<T>(document, Options);
+            where T : notnull
+            => OclConvert.Deserialize<T>(document, Options);
     }
 }

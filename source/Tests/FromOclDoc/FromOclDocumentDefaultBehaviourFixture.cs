@@ -6,12 +6,12 @@ using Octopus.Ocl;
 
 namespace Tests.FromOclDoc
 {
-    public class FromOclDocumentDefaultBehaviourFixture
+    public class DeserializeDefaultBehaviourFixture
     {
         [Test]
         public void Empty()
         {
-            OclConvert.FromOclDocument<Car>(new OclDocument(), new OclSerializerOptions())
+            OclConvert.Deserialize<Car>(new OclDocument(), new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car());
         }
@@ -24,7 +24,7 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Doors", 4)
             };
 
-            OclConvert.FromOclDocument<Car>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car() { Doors = 4 });
         }
@@ -37,7 +37,7 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Name", "Mystery Machine")
             };
 
-            OclConvert.FromOclDocument<Car>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
         }
@@ -53,7 +53,7 @@ namespace Tests.FromOclDoc
                 }
             };
 
-            OclConvert.FromOclDocument<Car>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car()
                 {
@@ -72,7 +72,7 @@ namespace Tests.FromOclDoc
                 }
             };
 
-            OclConvert.FromOclDocument<Car>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car()
                 {
@@ -98,7 +98,7 @@ namespace Tests.FromOclDoc
                 }
             };
 
-            OclConvert.FromOclDocument<Car>(document, new OclSerializerOptions())
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car()
                 {
@@ -118,7 +118,7 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Wings", 1)
             };
 
-            Action action = () => OclConvert.FromOclDocument<Car>(document, new OclSerializerOptions());
+            Action action = () => OclConvert.Deserialize<Car>(document, new OclSerializerOptions());
             action.Should()
                 .Throw<OclException>()
                 .WithMessage("*The property 'Wings' was not found on 'Car'*");
