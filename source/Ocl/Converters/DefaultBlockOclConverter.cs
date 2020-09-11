@@ -44,7 +44,7 @@ namespace Octopus.Ocl.Converters
 
             foreach (var child in body)
             {
-                var name = (child as OclBlock)?.Name ?? (child as OclAttribute)?.Name;
+                var name = child.Name;
                 if (name == null)
                     throw new OclException("Encountered invalid child: " + child.GetType());
 

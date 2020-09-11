@@ -14,5 +14,7 @@ namespace Octopus.Ocl
             : base(elements)
         {
         }
+
+        public string Name => "";
     }
 }

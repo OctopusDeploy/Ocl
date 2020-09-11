@@ -27,7 +27,7 @@ namespace Octopus.Ocl.Converters
                 orderby
                     attr.Ordinal,
                     element is OclBlock,
-                    (element as OclBlock)?.Name ?? (element as OclAttribute)?.Name
+                    element.Name
                 select element;
             return elements;
         }
