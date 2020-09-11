@@ -22,7 +22,7 @@ namespace Tests.ComplexDocument
                             {
                                 Name = "Simple Script Action",
                                 Type = "Inline Script Action",
-                                Properties = new Dictionary<string, string>()
+                                Properties = new Dictionary<string, string?>()
                                 {
                                     { "Syntax", "PowerShell" },
                                     { "Body", "Write-Host 'Hi'" },
@@ -39,7 +39,7 @@ namespace Tests.ComplexDocument
                             {
                                 Name = "Deploy Website",
                                 Type = "Deploy to IIS",
-                                Properties = new Dictionary<string, string>()
+                                Properties = new Dictionary<string, string?>()
                                 {
                                     { "AppPool.Framework", "v4.0" },
                                     { "AppPool.Identity", "ApplicationPoolIdentity" },
@@ -50,7 +50,7 @@ namespace Tests.ComplexDocument
                             {
                                 Name = "Deploy Website",
                                 Type = "Deploy to IIS",
-                                Properties = new Dictionary<string, string>()
+                                Properties = new Dictionary<string, string?>()
                                 {
                                     { "AppPool.Framework", "v4.0" },
                                     { "AppPool.Identity", "ApplicationPoolIdentity" },

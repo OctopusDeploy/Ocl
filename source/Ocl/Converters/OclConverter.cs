@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.VisualBasic;
 
 namespace Octopus.Ocl.Converters
 {
@@ -30,6 +32,71 @@ namespace Octopus.Ocl.Converters
                     element.Name
                 select element;
             return elements;
+        }
+
+        protected virtual IReadOnlyList<IOclElement> SetProperties(
+            OclConversionContext context,
+            OclBody body,
+            object target,
+            IEnumerable<PropertyInfo> properties)
+        {
+            var propertyLookup = properties.ToDictionary(p => p.Name);
+            var notFound = new List<IOclElement>();
+            foreach (var child in body)
+            {
+                var name = child.Name?.Trim();
+                if (string.IsNullOrWhiteSpace(name))
+                    throw new OclException("Encountered invalid child: " + child.GetType());
+
+                if (propertyLookup.TryGetValue(name, out var property))
+                {
+                    var valueToSet = context.FromElement(property.PropertyType, child, () => property.GetValue(target));
+                    property.SetValue(target, CoerceValue(valueToSet, property.PropertyType));
+                }
+                else
+                {
+                    notFound.Add(child);
+                }
+            }
+
+            return notFound;
+        }
+
+        private object? CoerceValue(object? valueToSet, Type type)
+        {
+            if (valueToSet == null)
+                return null;
+
+            if (type.IsInstanceOfType(valueToSet))
+                return valueToSet;
+
+            object? FromArray<T>()
+            {
+                if (valueToSet is T[] array)
+                {
+                    if (type == typeof(List<T>))
+                        return array.ToList();
+                    if (type == typeof(HashSet<T>))
+                        return array.ToHashSet();
+                }
+
+                return null;
+            }
+
+            return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? throw new Exception($"Could not coerce value of type {valueToSet.GetType().Name} to {type.Name}");
+        }
+
+        protected virtual IEnumerable<PropertyInfo> GetNonLabelProperties(Type type, bool forWriting)
+        {
+            var defaultProperties = type.GetDefaultMembers().OfType<PropertyInfo>();
+            var properties = from p in type.GetProperties()
+                where p.CanRead
+                where !forWriting || p.CanWrite
+                where p.GetCustomAttribute<OclIgnoreAttribute>() == null
+                where p.GetCustomAttribute<OclLabelAttribute>() == null
+                select p;
+
+            return properties.Except(defaultProperties);
         }
     }
 }

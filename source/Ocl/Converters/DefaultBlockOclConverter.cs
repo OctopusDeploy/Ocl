@@ -27,7 +27,7 @@ namespace Octopus.Ocl.Converters
             return target;
         }
 
-        private static void SetLabels(Type type, OclBlock block, object target)
+        protected virtual void SetLabels(Type type, OclBlock block, object target)
         {
             var labelProperties = GetLabelProperties(type, true).ToArray();
 
@@ -42,19 +42,10 @@ namespace Octopus.Ocl.Converters
         {
             var properties = GetNonLabelProperties(type, true).ToArray();
 
-            foreach (var child in body)
-            {
-                var name = child.Name;
-                if (name == null)
-                    throw new OclException("Encountered invalid child: " + child.GetType());
+            var notFound = SetProperties(context, body, target, properties);
 
-                var property = properties.FirstOrDefault(p => p.Name == name);
-                if (property == null)
-                    throw new OclException($"The property '{name}' was not found on '{type.Name}'");
-
-                var valueToSet = context.FromElement(property.PropertyType, child, () => property.GetValue(target));
-                property.SetValue(target, valueToSet);
-            }
+            if(notFound.Any())
+                throw new OclException($"The propert{(notFound.Count > 1 ? "ies" : "y")} '{string.Join("', '", notFound.Select(a => a.Name))}' {(notFound.Count > 1 ? "were" : "was")} not found on '{type.Name}'");
         }
 
         protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
@@ -85,17 +76,6 @@ namespace Octopus.Ocl.Converters
         protected virtual IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)
             => GetElements(obj, GetNonLabelProperties(obj.GetType(), false), context);
 
-        protected IEnumerable<PropertyInfo> GetNonLabelProperties(Type type, bool forWriting)
-        {
-            var defaultProperties = type.GetDefaultMembers().OfType<PropertyInfo>();
-            var properties = from p in type.GetProperties()
-                where p.CanRead
-                where !forWriting || p.CanWrite
-                where p.GetCustomAttribute<OclIgnoreAttribute>() == null
-                where p.GetCustomAttribute<OclLabelAttribute>() == null
-                select p;
 
-            return properties.Except(defaultProperties);
-        }
     }
 }

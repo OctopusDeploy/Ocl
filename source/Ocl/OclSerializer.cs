@@ -20,6 +20,9 @@ namespace Octopus.Ocl
         public string Serialize(object obj)
             => OclConvert.Serialize(obj, Options);
 
+        public T Deserialize<T>(string document) where T : notnull
+            => OclConvert.Deserialize<T>(document, Options);
+
         public T Deserialize<T>(OclDocument document)
             where T : notnull
             => OclConvert.Deserialize<T>(document, Options);

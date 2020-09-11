@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Octopus.Ocl;
 using Octopus.Ocl.Converters;
 
@@ -7,6 +9,8 @@ namespace Tests.ComplexDocument
 {
     class DeploymentStepOclConverter : OclConverter
     {
+        private const string RollingBlockName = "rolling";
+
         public override bool CanConvert(Type type)
             => typeof(DeploymentStep).IsAssignableFrom(type);
 
@@ -20,13 +24,9 @@ namespace Tests.ComplexDocument
 
             var element = actions.Length == 1
                 ? (OclBlock)actionOclConverter.ToElements(context, name, step.Actions[0]).Single()
-                : new OclBlock("rolling", new[] { step.Name }, actions);
+                : new OclBlock(RollingBlockName, new[] { step.Name }, actions);
 
-            var properties = from p in typeof(DeploymentStep).GetProperties()
-                where p.CanRead
-                where p.Name != nameof(DeploymentStep.Name)
-                where p.Name != nameof(DeploymentStep.Actions)
-                select p;
+            var properties = GetSettableProperties();
 
             var children = GetElements(obj, properties, context);
 
@@ -36,6 +36,34 @@ namespace Tests.ComplexDocument
         }
 
         public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
-            => throw new NotImplementedException();
+            => StepFromElement(context, element);
+
+        public DeploymentStep StepFromElement(OclConversionContext context, IOclElement element)
+        {
+            var actionConverter = new DeploymentActionOclConverter();
+
+            var block = (OclBlock)element;
+
+            var step = new DeploymentStep(block.Labels[0]);
+            var notFound = SetProperties(context, block, step, GetSettableProperties().ToArray()).ToHashSet();
+
+            if (block.Name == RollingBlockName)
+            {
+                step.Actions = notFound.Select(e => actionConverter.ActionFromElement(context, e)).ToList();
+            }
+            else
+            {
+                var actionTempBlock = new OclBlock(block.Name, block.Labels, notFound);
+                step.Actions.Add(actionConverter.ActionFromElement(context, actionTempBlock));
+            }
+
+            return step;
+        }
+
+        private IEnumerable<PropertyInfo> GetSettableProperties()
+            => from p in GetNonLabelProperties(typeof(DeploymentStep), true)
+                where p.Name != nameof(DeploymentStep.Name)
+                where p.Name != nameof(DeploymentStep.Actions)
+                select p;
     }
 }

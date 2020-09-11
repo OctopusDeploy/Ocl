@@ -24,7 +24,6 @@ namespace Tests.ComplexDocument
     {
         public string Type { get; set; } = "";
         public string Name { get; set; } = "";
-        public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string?> Properties { get; set; } = new Dictionary<string, string?>();
     }
-
 }

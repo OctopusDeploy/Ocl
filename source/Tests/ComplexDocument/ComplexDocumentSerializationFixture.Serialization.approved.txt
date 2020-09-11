@@ -1,21 +1,21 @@
-inline_script_action "Simple Script Action" {
+Inline_Script_Action "Simple Script Action" {
     Roles = ["web-server"]
-    syntax = "PowerShell"
-    body = "Write-Host 'Hi'"
+    Syntax = "PowerShell"
+    Body = "Write-Host 'Hi'"
 }
 
 rolling "Rolling Step" {
     Roles = ["role1", "role2"]
 
-    deploy_to_iis "Deploy Website" {
-        apppool_framework = "v4.0"
-        apppool_identity = "ApplicationPoolIdentity"
-        customfield = "Another value"
+    Deploy_to_IIS "Deploy Website" {
+        AppPool_Framework = "v4.0"
+        AppPool_Identity = "ApplicationPoolIdentity"
+        CustomField = "Another value"
     }
 
-    deploy_to_iis "Deploy Website" {
-        apppool_framework = "v4.0"
-        apppool_identity = "ApplicationPoolIdentity"
-        customfield = "Another value"
+    Deploy_to_IIS "Deploy Website" {
+        AppPool_Framework = "v4.0"
+        AppPool_Identity = "ApplicationPoolIdentity"
+        CustomField = "Another value"
     }
 }
