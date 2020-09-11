@@ -1,4 +1,4 @@
-Inline_Script_Action "Simple Script Action" {
+Inline_Script_Action "Simple Script" {
     Roles = ["web-server"]
     Syntax = "PowerShell"
     Body = "Write-Host 'Hi'"

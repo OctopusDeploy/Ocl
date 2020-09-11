@@ -23,8 +23,7 @@ namespace Octopus.Ocl
         public T Deserialize<T>(string document) where T : notnull
             => OclConvert.Deserialize<T>(document, Options);
 
-        public T Deserialize<T>(OclDocument document)
-            where T : notnull
+        public T Deserialize<T>(OclDocument document) where T : notnull
             => OclConvert.Deserialize<T>(document, Options);
     }
 }

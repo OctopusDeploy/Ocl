@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Assent;
+using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
 
@@ -13,14 +14,14 @@ namespace Tests.ComplexDocument
             {
                 Steps = new List<DeploymentStep>()
                 {
-                    new DeploymentStep("Simple Script Step")
+                    new DeploymentStep("Simple Script")
                     {
                         Roles = new List<string>() { "web-server", },
                         Actions = new List<DeploymentAction>()
                         {
                             new DeploymentAction()
                             {
-                                Name = "Simple Script Action",
+                                Name = "Simple Script",
                                 Type = "Inline Script Action",
                                 Properties = new Dictionary<string, string?>()
                                 {
@@ -62,6 +63,17 @@ namespace Tests.ComplexDocument
                 }
             };
 
+        private static OclSerializerOptions GetOptions()
+            => new OclSerializerOptions()
+            {
+                Converters = new List<IOclConverter>()
+                {
+                    new DeploymentProcessConverter(),
+                    new DeploymentStepOclConverter(),
+                    new DeploymentActionOclConverter()
+                }
+            };
+
         [Test]
         public void ToOclDocument()
         {
@@ -99,18 +111,21 @@ namespace Tests.ComplexDocument
         [Test]
         public void Serialization()
         {
-            var options = new OclSerializerOptions()
-            {
-                Converters = new List<IOclConverter>()
-                {
-                    new DeploymentStepOclConverter(),
-                    new DeploymentActionOclConverter()
-                }
-            };
-
-            var result = OclConvert.Serialize(GetTestData(), options);
+            var result = OclConvert.Serialize(GetTestData(), GetOptions());
             this.Assent(result);
         }
 
+
+        [Test]
+        public void Roundtrip()
+        {
+            var oclSerializerOptions = GetOptions();
+            var input = GetTestData();
+
+            var ocl = OclConvert.Serialize(input, oclSerializerOptions);
+            var result = OclConvert.Deserialize<DeploymentProcess>(ocl, oclSerializerOptions);
+
+            result.Should().BeEquivalentTo(input);
+        }
     }
 }
