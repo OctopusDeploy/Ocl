@@ -30,6 +30,19 @@ namespace Tests.FromOclDoc
         }
 
         [Test]
+        public void IntNullAttribute()
+        {
+            var document = new OclDocument()
+            {
+                new OclAttribute("Doors", null)
+            };
+
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+                .Should()
+                .BeEquivalentTo(new Car() { Doors = null });
+        }
+
+        [Test]
         public void StringAttribute()
         {
             var document = new OclDocument()
@@ -40,6 +53,19 @@ namespace Tests.FromOclDoc
             OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
                 .Should()
                 .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
+        }
+
+        [Test]
+        public void EnumAttribute()
+        {
+            var document = new OclDocument()
+            {
+                new OclAttribute("Type", "Suv")
+            };
+
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+                .Should()
+                .BeEquivalentTo(new Car() { Type = CarType.Suv });
         }
 
         [Test]
@@ -127,9 +153,16 @@ namespace Tests.FromOclDoc
         class Car
         {
             public string Name { get; set; } = "";
-            public int Doors { get; set; }
+            public int? Doors { get; set; }
             public Person? Driver { get; set; }
             public List<Person>? Passengers { get; set; }
+            public CarType Type { get; set; }
+        }
+
+        enum CarType
+        {
+            Hatchback,
+            Suv
         }
 
         class Person
