@@ -110,7 +110,7 @@ namespace Tests.Parsing
                     new OclAttribute("Child1", 1),
                     new OclAttribute("Child2", 2),
 
-                    new OclBlock("ChildBlock2", new[] { "Label"})
+                    new OclBlock("ChildBlock2", new[] { "Label" })
                     {
                         new OclBlock("GrandChildBlock"),
                         new OclAttribute("GrandChild", "A")

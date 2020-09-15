@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Octopus.Ocl
@@ -15,8 +14,8 @@ namespace Octopus.Ocl
     [DebuggerDisplay("{Name} = {Value}", Name = "OclAttribute")]
     public class OclAttribute : IOclElement
     {
-        private string name;
-        private object? value;
+        string name;
+        object? value;
 
         public OclAttribute(string name, object? value)
         {
@@ -57,7 +56,7 @@ namespace Octopus.Ocl
                 IsSupportedValueCollectionType(type);
 
         internal static bool IsSupportedValueCollectionType(Type type)
-            => (type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!)) ||
-                (typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType && type.GenericTypeArguments.Length == 1 && IsSupportedValueType(type.GenericTypeArguments[0]));
+            => type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!) ||
+                typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType && type.GenericTypeArguments.Length == 1 && IsSupportedValueType(type.GenericTypeArguments[0]);
     }
 }

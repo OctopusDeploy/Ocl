@@ -11,9 +11,7 @@ namespace Tests.ComplexDocument
     class DeploymentStep
     {
         public DeploymentStep(string name)
-        {
-            Name = name;
-        }
+            => Name = name;
 
         public string Name { get; }
         public List<string>? Roles { get; set; }
@@ -26,5 +24,4 @@ namespace Tests.ComplexDocument
         public string Name { get; set; } = "";
         public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
     }
-
 }

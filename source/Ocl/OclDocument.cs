@@ -7,7 +7,6 @@ namespace Octopus.Ocl
     {
         public OclDocument()
         {
-
         }
 
         public OclDocument(IEnumerable<IOclElement> elements)

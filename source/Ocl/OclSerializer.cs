@@ -8,9 +8,7 @@ namespace Octopus.Ocl
     public class OclSerializer
     {
         public OclSerializer(OclSerializerOptions? options = null)
-        {
-            Options = options ?? new OclSerializerOptions();
-        }
+            => Options = options ?? new OclSerializerOptions();
 
         public OclSerializerOptions Options { get; }
 

@@ -6,12 +6,10 @@ namespace Tests
 {
     public class OclBodyAssertions
     {
-        private readonly OclBody? subject;
+        readonly OclBody? subject;
 
         public OclBodyAssertions(OclBody? subject)
-        {
-            this.subject = subject;
-        }
+            => this.subject = subject;
 
         public void Be(OclBody expected)
         {

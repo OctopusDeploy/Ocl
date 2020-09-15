@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
 using Octopus.Ocl.Converters;

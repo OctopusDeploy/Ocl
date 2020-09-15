@@ -11,7 +11,7 @@ namespace Tests.ToString
     [Parallelizable(ParallelScope.All)]
     public class OclWriterFixture
     {
-        private static IEnumerable<TestCaseData> WriteAttributeDataSource()
+        static IEnumerable<TestCaseData> WriteAttributeDataSource()
         {
             TestCaseData CreateCase(string name, object? value, string expected)
                 => new TestCaseData(value, expected) { TestName = "WriteAttribute value: " + name };
@@ -48,7 +48,6 @@ namespace Tests.ToString
             => Execute(w => w.Write(new OclAttribute("MyAttr", input)))
                 .Should()
                 .Be($"MyAttr = {expected}");
-
 
         [Test]
         public void WriteAttributeInvalidValueThrows()
@@ -271,11 +270,10 @@ YYY";
                 .Be(expected.ToUnixLineEndings());
         }
 
-
-        private string Execute(Action<OclWriter> when, OclSerializerOptions? options = null)
+        string Execute(Action<OclWriter> when, OclSerializerOptions? options = null)
         {
             var sb = new StringBuilder();
-            using(var sw = new StringWriter(sb))
+            using (var sw = new StringWriter(sb))
             using (var writer = new OclWriter(sw, options))
             {
                 sw.NewLine = "\n";

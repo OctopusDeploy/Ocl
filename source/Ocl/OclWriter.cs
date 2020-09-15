@@ -10,10 +10,10 @@ namespace Octopus.Ocl
     /// </summary>
     public class OclWriter : IDisposable
     {
-        private readonly TextWriter writer;
-        private int currentIndent;
-        private bool isFirstLine = true;
-        private bool lastWrittenWasBlock;
+        readonly TextWriter writer;
+        int currentIndent;
+        bool isFirstLine = true;
+        bool lastWrittenWasBlock;
 
         public OclWriter(StringBuilder sb, OclSerializerOptions? options = null)
             : this(new StringWriter(sb), options)
@@ -87,7 +87,7 @@ namespace Octopus.Ocl
             lastWrittenWasBlock = true;
         }
 
-        private void WriteNextLine()
+        void WriteNextLine()
         {
             if (!isFirstLine)
                 writer.WriteLine();
@@ -97,13 +97,13 @@ namespace Octopus.Ocl
             lastWrittenWasBlock = false;
         }
 
-        private void WriteIndent()
+        void WriteIndent()
         {
             for (var x = 0; x < currentIndent; x++)
                 writer.Write(Options.IndentChar);
         }
 
-        private void WriteIdentifier(string identifier)
+        void WriteIdentifier(string identifier)
         {
             if (string.IsNullOrWhiteSpace(identifier))
                 throw new ArgumentException("Identifier cannot be blank");
@@ -122,7 +122,7 @@ namespace Octopus.Ocl
                     writer.Write('_');
         }
 
-        private void WriteValue(object? value)
+        void WriteValue(object? value)
         {
             if (value == null)
             {
@@ -198,7 +198,7 @@ namespace Octopus.Ocl
             throw new InvalidOperationException($"The type {value.GetType().FullName} is not a valid attribute value and can not be serialized");
         }
 
-        private void WriteValue(OclStringLiteral literal)
+        void WriteValue(OclStringLiteral literal)
         {
             if (literal.Format == OclStringLiteralFormat.SingleLine)
             {
@@ -225,7 +225,7 @@ namespace Octopus.Ocl
             writer.Write(literal.HeredocTag);
         }
 
-        private void WriteSingleLineStringLiteral(string s)
+        void WriteSingleLineStringLiteral(string s)
         {
             writer.Write('"');
             s = s.Replace(@"\", @"\\")

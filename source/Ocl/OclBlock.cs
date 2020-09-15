@@ -14,7 +14,7 @@ namespace Octopus.Ocl
     /// </remarks>
     public class OclBlock : OclBody, IOclElement
     {
-        private string name;
+        string name;
 
         public OclBlock(string name)
             : this(name, Array.Empty<string>())

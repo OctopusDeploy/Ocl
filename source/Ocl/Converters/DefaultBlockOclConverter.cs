@@ -41,6 +41,5 @@ namespace Octopus.Ocl.Converters
 
             return GetElements(obj, properties.Except(defaultProperties), context);
         }
-
     }
 }
