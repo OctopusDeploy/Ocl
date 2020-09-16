@@ -29,7 +29,7 @@ namespace Octopus.Ocl.Parsing
 
         static readonly Parser<bool> FalseLiteral =
             from _ in Parse.String("false")
-            select true;
+            select false;
 
         static readonly Parser<int> IntegerLiteral =
             from number in Parse.Number
