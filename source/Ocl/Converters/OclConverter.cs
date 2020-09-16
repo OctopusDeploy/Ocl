@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.VisualBasic;
 
 namespace Octopus.Ocl.Converters
 {
@@ -62,7 +60,7 @@ namespace Octopus.Ocl.Converters
             return notFound;
         }
 
-        private object? CoerceValue(object? valueToSet, Type type)
+        object? CoerceValue(object? valueToSet, Type type)
         {
             if (valueToSet == null)
                 return null;

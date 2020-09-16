@@ -24,6 +24,18 @@ namespace Tests.Parsing
                 .HaveChildrenExactly(new OclBlock("MyBlock"));
 
         [Test]
+        public void MultipleInRoot()
+            => OclParser.Execute(@"
+                MyBlock {}
+                MyBlock {}
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclBlock("MyBlock"),
+                    new OclBlock("MyBlock")
+                );
+
+        [Test]
         public void SingleLabel()
             => OclParser.Execute(@"MyBlock ""Foo"" {}")
                 .Should()
