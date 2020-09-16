@@ -32,6 +32,25 @@ namespace Tests.Parsing
                 .Should()
                 .HaveChildrenExactly(new OclAttribute("Foo", 1.5m));
 
+        [Test]
+        public void Null()
+            => OclParser.Execute("Foo = null")
+                .Should()
+                .HaveChildrenExactly(new OclAttribute("Foo", null));
+
+        [Test]
+        public void True()
+            => OclParser.Execute("Foo = true")
+                .Should()
+                .HaveChildrenExactly(new OclAttribute("Foo", true));
+
+
+        [Test]
+        public void False()
+            => OclParser.Execute("Foo = false")
+                .Should()
+                .HaveChildrenExactly(new OclAttribute("Foo", false));
+
         [TestCase("Foo=[]")]
         [TestCase("Foo = []")]
         [TestCase("Foo = [ ] ")]

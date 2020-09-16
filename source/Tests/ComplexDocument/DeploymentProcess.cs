@@ -14,6 +14,7 @@ namespace Tests.ComplexDocument
             => Name = name;
 
         public string Name { get; }
+        public string? Description { get; }
         public List<string>? Roles { get; set; }
         public List<DeploymentAction> Actions { get; set; } = new List<DeploymentAction>();
     }

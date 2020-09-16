@@ -26,7 +26,7 @@ namespace Octopus.Ocl
         public IEnumerable<IOclElement> ToElements(string name, object? value)
         {
             if (value == null)
-                return new[] { new OclAttribute(name, null) };
+                return new IOclElement[0];
 
             foreach (var converter in converters)
                 if (converter.CanConvert(value.GetType()))
