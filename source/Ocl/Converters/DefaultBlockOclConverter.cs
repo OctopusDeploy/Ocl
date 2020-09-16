@@ -12,9 +12,7 @@ namespace Octopus.Ocl.Converters
 
         public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
         {
-            var target = Activator.CreateInstance(type);
-            if (target == null)
-                throw new OclException("Could not create instance of " + type.Name);
+            var target = CreateInstance(type, element);
 
             if (!(element is OclBody body))
                 throw new OclException("Cannot convert attribute element");
@@ -27,6 +25,10 @@ namespace Octopus.Ocl.Converters
             return target;
         }
 
+        protected virtual object CreateInstance(Type type, IOclElement oclElement)
+            => Activator.CreateInstance(type)
+                ?? throw new OclException("Could not create instance of " + type.Name);
+
         protected virtual void SetLabels(Type type, OclBlock block, object target)
         {
             var labelProperties = GetLabelProperties(type, true).ToArray();
@@ -38,7 +40,7 @@ namespace Octopus.Ocl.Converters
                 labelProperties[x].SetValue(target, block.Labels[x]);
         }
 
-        void SetProperties(OclConversionContext context, Type type, OclBody body, object target)
+        protected virtual void SetProperties(OclConversionContext context, Type type, OclBody body, object target)
         {
             var properties = GetNonLabelProperties(type, true).ToArray();
 
@@ -64,7 +66,7 @@ namespace Octopus.Ocl.Converters
             return labels;
         }
 
-        static IEnumerable<PropertyInfo> GetLabelProperties(Type type, bool forWriting)
+        protected virtual IEnumerable<PropertyInfo> GetLabelProperties(Type type, bool forWriting)
             => from p in type.GetProperties()
                 where p.CanRead
                 where !forWriting || p.CanWrite
