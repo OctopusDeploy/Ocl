@@ -54,7 +54,7 @@ namespace Octopus.Ocl.Parsing
             from close in ArrayClose.Token()
             select values.ToArray();
 
-        static readonly Parser<object> Literal =
+        static readonly Parser<object?> Literal =
             NullLiteral
                 .Or(QuotedStringParser.QuotedStringLiteral)
                 .Or(HeredocParser.Literal)
