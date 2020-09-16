@@ -4,62 +4,70 @@ using Sprache;
 
 namespace Octopus.Ocl.Parsing
 {
-    internal static class OclParser
+    static class OclParser
     {
-        private static readonly Parser<Char> Comma = Parse.Char(',');
-        private static readonly Parser<Char> ArrayOpen = Parse.Char('[');
-        private static readonly Parser<Char> ArrayClose = Parse.Char(']');
+        static readonly Parser<char> Comma = Parse.Char(',');
+        static readonly Parser<char> ArrayOpen = Parse.Char('[');
+        static readonly Parser<char> ArrayClose = Parse.Char(']');
 
-        private static readonly Parser<Char> BlockOpen = Parse.Char('{');
-        private static readonly Parser<Char> BlockClose = Parse.Char('}');
+        static readonly Parser<char> BlockOpen = Parse.Char('{');
+        static readonly Parser<char> BlockClose = Parse.Char('}');
 
-        public static Parser<T> SameLineToken<T>(this Parser<T> parser)
-            => from leading in ParserCommon.WhitespaceExceptNewline.Many()
-                from item in parser
-                from trailing in ParserCommon.WhitespaceExceptNewline.Many()
-                select item;
-
-        private static readonly Parser<string> Name =
+        static readonly Parser<string> Name =
             from name in Parse.Char(c => c == '_' || char.IsLetterOrDigit(c), "letter, digit, _")
                 .AtLeastOnce()
                 .Text()
             select name;
 
+        static readonly Parser<object?> NullLiteral =
+            from _ in Parse.String("null")
+            select (object?) null;
 
-        private static readonly Parser<int> IntegerLiteral =
+        static readonly Parser<bool> TrueLiteral =
+            from _ in Parse.String("true")
+            select true;
+
+        static readonly Parser<bool> FalseLiteral =
+            from _ in Parse.String("false")
+            select false;
+
+        static readonly Parser<int> IntegerLiteral =
             from number in Parse.Number
             select int.Parse(number);
 
-        private static readonly Parser<decimal> DecimalLiteral =
+        static readonly Parser<decimal> DecimalLiteral =
             from number in Parse.DecimalInvariant
             select decimal.Parse(number);
 
-        private static readonly Parser<string[]> QuotedStringArrayLiteral =
+        static readonly Parser<string[]> QuotedStringArrayLiteral =
             from open in ArrayOpen.Token()
             from values in QuotedStringParser.QuotedStringLiteral.DelimitedBy(Comma.Token())
             from close in ArrayClose.Token()
             select values.ToArray();
 
-        private static readonly Parser<string[]> EmptyArrayLiteral =
+        static readonly Parser<string[]> EmptyArrayLiteral =
             from open in ArrayOpen.Token()
             from close in ArrayClose.Token()
             select new string[0];
 
-        private static readonly Parser<int[]> IntArrayLiteral =
+        static readonly Parser<int[]> IntArrayLiteral =
             from open in ArrayOpen.Token()
             from values in IntegerLiteral.DelimitedBy(Comma.Token())
             from close in ArrayClose.Token()
             select values.ToArray();
 
-        private static readonly Parser<decimal[]> DecimalArrayLiteral =
+        static readonly Parser<decimal[]> DecimalArrayLiteral =
             from open in ArrayOpen.Token()
             from values in DecimalLiteral.DelimitedBy(Comma.Token())
             from close in ArrayClose.Token()
             select values.ToArray();
 
-        private static readonly Parser<object> Literal =
-            QuotedStringParser.QuotedStringLiteral
-                .Or<object>(HeredocParser.Literal)
+        static readonly Parser<object?> Literal =
+            NullLiteral
+                .Or(TrueLiteral.Select(d => (object)d))
+                .Or(FalseLiteral.Select(d => (object)d))
+                .Or(QuotedStringParser.QuotedStringLiteral)
+                .Or(HeredocParser.Literal)
                 .Or(DecimalLiteral.Select(d => (object)d))
                 .Or(IntegerLiteral.Select(d => (object)d))
                 .Or(EmptyArrayLiteral)
@@ -67,33 +75,39 @@ namespace Octopus.Ocl.Parsing
                 .Or(DecimalArrayLiteral)
                 .Or(IntArrayLiteral);
 
-        private static readonly Parser<OclAttribute> Attribute =
+        static readonly Parser<OclAttribute> Attribute =
             from name in Name.SameLineToken()
             from _ in Parse.Char('=')
             from value in Literal.SameLineToken()
             select new OclAttribute(name, value);
 
-        private static readonly Parser<IOclElement[]> EmptyBlockBody =
+        static readonly Parser<IOclElement[]> EmptyBlockBody =
             from open in BlockOpen.SameLineToken()
             from close in BlockClose.Token()
             select Array.Empty<IOclElement>();
 
-        private static readonly Parser<IOclElement[]> BlockBody =
+        static readonly Parser<IOclElement[]> BlockBody =
             from open in BlockOpen.SameLineToken()
             from openNewline in ParserCommon.NewLine
             from children in Block.Token().Or<IOclElement>(Attribute.Token()).AtLeastOnce()
             from close in BlockClose.Token()
             select children.ToArray();
 
-        private static readonly Parser<OclBlock> Block =
+        static readonly Parser<OclBlock> Block =
             from name in Name.SameLineToken()
             from labels in QuotedStringParser.QuotedStringLiteral.SameLineToken().Many()
             from children in EmptyBlockBody.Or(BlockBody).Token().Once()
             select new OclBlock(name, labels.ToArray(), children.Single());
 
         static readonly Parser<OclDocument> Document =
-            from child in Block.Or<IOclElement>(Attribute).Many().Token().End()
+            from child in Block.Or<IOclElement>(Attribute).Token().Many().End()
             select new OclDocument(child);
+
+        public static Parser<T> SameLineToken<T>(this Parser<T> parser)
+            => from leading in ParserCommon.WhitespaceExceptNewline.Many()
+                from item in parser
+                from trailing in ParserCommon.WhitespaceExceptNewline.Many()
+                select item;
 
         internal static OclDocument Execute(string input)
         {
@@ -107,6 +121,9 @@ namespace Octopus.Ocl.Parsing
 
         internal static (OclDocument? document, string? error) TryExecute(string input)
         {
+            if (string.IsNullOrWhiteSpace(input))
+                return (new OclDocument(), null);
+
             var result = Document.TryParse(input);
             if (!result.WasSuccessful)
                 return (null, result.ToString());

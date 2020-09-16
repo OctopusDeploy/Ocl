@@ -13,17 +13,13 @@ namespace Octopus.Ocl
     /// </remarks>
     public class OclBody : IEnumerable<IOclElement>
     {
-        private readonly List<IOclElement> elements;
+        readonly List<IOclElement> elements;
 
         public OclBody()
-        {
-            elements = new List<IOclElement>();
-        }
+            => elements = new List<IOclElement>();
 
         public OclBody(IEnumerable<IOclElement> elements)
-        {
-            this.elements = elements.ToList();
-        }
+            => this.elements = elements.ToList();
 
         public IEnumerator<IOclElement> GetEnumerator()
             => elements.GetEnumerator();
@@ -33,7 +29,7 @@ namespace Octopus.Ocl
 
         public void Add(IOclElement element)
             => elements.Add(element);
-		
+
         public void InsertRange(int index, IEnumerable<IOclElement> collection)
             => elements.InsertRange(index, collection);
     }

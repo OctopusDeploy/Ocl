@@ -11,11 +11,10 @@ namespace Tests.ComplexDocument
     class DeploymentStep
     {
         public DeploymentStep(string name)
-        {
-            Name = name;
-        }
+            => Name = name;
 
         public string Name { get; }
+        public string? Description { get; }
         public List<string>? Roles { get; set; }
         public List<DeploymentAction> Actions { get; set; } = new List<DeploymentAction>();
     }

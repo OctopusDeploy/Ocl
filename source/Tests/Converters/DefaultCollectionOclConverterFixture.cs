@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
@@ -8,9 +9,9 @@ namespace Tests.Converters
 {
     public class DefaultCollectionOclConverterFixture
     {
-        private const string Value = "Daffy";
+        const string Value = "Daffy";
 
-        private OclConversionContext context = new OclConversionContext(new OclSerializerOptions());
+        readonly OclConversionContext context = new OclConversionContext(new OclSerializerOptions());
 
         [Test]
         public void FromElement_IEnumerableTargetWithCurrentAsNullReturnsAList()

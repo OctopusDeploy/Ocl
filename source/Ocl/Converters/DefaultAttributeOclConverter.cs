@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Octopus.Ocl.Converters
 {
@@ -17,6 +16,6 @@ namespace Octopus.Ocl.Converters
         }
 
         protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
-             => new OclAttribute(GetName(name, obj), obj);
+            => new OclAttribute(GetName(name, obj), obj);
     }
 }

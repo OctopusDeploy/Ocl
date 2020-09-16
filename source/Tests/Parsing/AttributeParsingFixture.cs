@@ -32,6 +32,25 @@ namespace Tests.Parsing
                 .Should()
                 .HaveChildrenExactly(new OclAttribute("Foo", 1.5m));
 
+        [Test]
+        public void Null()
+            => OclParser.Execute("Foo = null")
+                .Should()
+                .HaveChildrenExactly(new OclAttribute("Foo", null));
+
+        [Test]
+        public void True()
+            => OclParser.Execute("Foo = true")
+                .Should()
+                .HaveChildrenExactly(new OclAttribute("Foo", true));
+
+
+        [Test]
+        public void False()
+            => OclParser.Execute("Foo = false")
+                .Should()
+                .HaveChildrenExactly(new OclAttribute("Foo", false));
+
         [TestCase("Foo=[]")]
         [TestCase("Foo = []")]
         [TestCase("Foo = [ ] ")]
@@ -82,5 +101,34 @@ namespace Tests.Parsing
             error.Should().NotBeEmpty();
             document.Should().BeNull();
         }
+
+        [Test]
+        public void MultipleInRoot()
+            => OclParser.Execute(@"
+                One = 1
+                Two = 2
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("One", 1),
+                    new OclAttribute("Two", 2)
+                );
+
+        [Test]
+        public void MultipleInBlock()
+            => OclParser.Execute(@"
+                MyBlock {
+                    One = 1
+                    Two = 2
+                }
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclBlock("MyBlock")
+                    {
+                        new OclAttribute("One", 1),
+                        new OclAttribute("Two", 2)
+                    }
+                );
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Octopus.Ocl.Converters
 {
@@ -44,7 +43,7 @@ namespace Octopus.Ocl.Converters
             return collection;
         }
 
-        private Type GetElementType(Type type)
+        Type GetElementType(Type type)
         {
             if (type.IsArray)
                 return type.GetElementType()!;
@@ -59,7 +58,7 @@ namespace Octopus.Ocl.Converters
             throw new Exception("Only arrays and collection types with a single generic argument are supported");
         }
 
-        private object CreateNewCollection(Type type, Type collectionType)
+        object CreateNewCollection(Type type, Type collectionType)
         {
             if (type.IsArray)
                 return Array.CreateInstance(collectionType, 0);

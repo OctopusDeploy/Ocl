@@ -30,7 +30,8 @@ namespace Tests.ToOclDoc
         {
             var data = new
             {
-                Cars = new List<Car>() { new Car(), new Car() }
+                Cars = new List<Car>
+                    { new Car(), new Car() }
             };
 
             var result = OclConvert.ToOclDocument(data, new OclSerializerOptions());

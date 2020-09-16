@@ -15,7 +15,7 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(obj, new OclSerializerOptions())
                 .Should()
                 .Be(
-                    new OclDocument()
+                    new OclDocument
                     {
                         new OclAttribute("Sample", "My Value")
                     }
@@ -29,17 +29,11 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(obj, new OclSerializerOptions())
                 .Should()
                 .Be(
-                    new OclDocument()
+                    new OclDocument
                     {
                         new OclAttribute("Custom Name", "The Label")
                     }
                 );
-        }
-
-        class SampleWithElementNameAttribute
-        {
-            [OclElement(Name = "Custom Name")]
-            public string ALabel { get; } = "The Label";
         }
 
         [Test]
@@ -58,11 +52,17 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(obj, options)
                 .Should()
                 .Be(
-                    new OclDocument()
+                    new OclDocument
                     {
                         new OclBlock("The Name")
                     }
                 );
+        }
+
+        class SampleWithElementNameAttribute
+        {
+            [OclElement(Name = "Custom Name")]
+            public string ALabel { get; } = "The Label";
         }
 
         class SampleWithANameProperty
@@ -81,6 +81,5 @@ namespace Tests.ToOclDoc
             protected override IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)
                 => new IOclElement[0];
         }
-
     }
 }

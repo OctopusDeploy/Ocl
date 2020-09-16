@@ -20,7 +20,7 @@ namespace Octopus.Ocl.Parsing
     ///   Goes here
     /// EOF
     /// ]]></summary>
-    internal class HeredocParser
+    class HeredocParser
     {
         /// <summary>
         /// Parses the first line of heredoc, including the newline
@@ -48,6 +48,19 @@ namespace Octopus.Ocl.Parsing
             from newline in ParserCommon.NewLine
             select line;
 
+        public static readonly Parser<OclStringLiteral> Literal =
+            from start in Start
+            let endParser = End(start.tag)
+            from lines in Line.Except(endParser).Many()
+            from end in endParser
+            let trimmed = TrimCarriageReturn(lines)
+            let unindented = Unindent(trimmed.lines, start.format)
+            let joined = string.Join(trimmed.lineSeparator, unindented)
+            select new OclStringLiteral(joined, start.format)
+            {
+                HeredocTag = start.tag
+            };
+
         internal static Parser<string> End(string tag)
         {
             var endLine = from leadingWhitespace in ParserCommon.WhitespaceExceptNewline.Many()
@@ -64,20 +77,7 @@ namespace Octopus.Ocl.Parsing
             return terminateWithNewline.Or(terminateWithEof);
         }
 
-        public static readonly Parser<OclStringLiteral> Literal =
-            from start in Start
-            let endParser = End(start.tag)
-            from lines in Line.Except(endParser).Many()
-            from end in endParser
-            let trimmed = TrimCarriageReturn(lines)
-            let unindented = Unindent(trimmed.lines, start.format)
-            let joined = string.Join(trimmed.lineSeparator, unindented)
-            select new OclStringLiteral(joined, start.format)
-            {
-                HeredocTag = start.tag
-            };
-
-        private static (string lineSeparator, IReadOnlyList<string> lines) TrimCarriageReturn(IEnumerable<string> lines)
+        static (string lineSeparator, IReadOnlyList<string> lines) TrimCarriageReturn(IEnumerable<string> lines)
         {
             var lineArr = lines.ToArray();
             var hasCarriageReturn = lineArr.Any(l => l.EndsWith('\r'));
@@ -96,7 +96,7 @@ namespace Octopus.Ocl.Parsing
 
             int CountLeadingWhitespace(string input)
             {
-                for(int x = 0; x < input.Length; x++)
+                for (var x = 0; x < input.Length; x++)
                     if (!char.IsWhiteSpace(input[x]))
                         return x;
                 return int.MaxValue;

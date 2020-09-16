@@ -29,12 +29,6 @@ namespace Tests.ToOclDoc
                 );
         }
 
-        class SampleWithLabelAttribute
-        {
-            [OclLabel]
-            public string ALabel { get; } = "The Label";
-        }
-
         [Test]
         public void LabelsCanBeDefinedViaConverter()
         {
@@ -53,6 +47,12 @@ namespace Tests.ToOclDoc
                 .HaveChildrenExactly(
                     new OclBlock("Sample", "the name")
                 );
+        }
+
+        class SampleWithLabelAttribute
+        {
+            [OclLabel]
+            public string ALabel { get; } = "The Label";
         }
 
         class SampleWithANameProperty

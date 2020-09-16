@@ -9,7 +9,7 @@ namespace Tests.ComplexDocument
 {
     class DeploymentStepOclConverter : OclConverter
     {
-        private const string RollingBlockName = "rolling";
+        const string RollingBlockName = "rolling";
 
         public override bool CanConvert(Type type)
             => typeof(DeploymentStep).IsAssignableFrom(type);
@@ -60,7 +60,7 @@ namespace Tests.ComplexDocument
             return step;
         }
 
-        private IEnumerable<PropertyInfo> GetSettableProperties()
+        IEnumerable<PropertyInfo> GetSettableProperties()
             => from p in GetNonLabelProperties(typeof(DeploymentStep), true)
                 where p.Name != nameof(DeploymentStep.Name)
                 where p.Name != nameof(DeploymentStep.Actions)

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -103,7 +104,11 @@ namespace Tests.Parsing
         [TestCase("    A", "\t\t\t\tB")]
         [TestCase("    A", "        B")]
         [TestCase("    A", "        B")]
-        [TestCase("    A", "  ", "                    ", "    B", Description = "Empty lines do not affect unindent")]
+        [TestCase("    A",
+            "  ",
+            "                    ",
+            "    B",
+            Description = "Empty lines do not affect unindent")]
         public void UnindentBy4Chars(params string[] input)
         {
             var expected = input.Select(i => i.Length < 4 ? "" : i.Substring(4));

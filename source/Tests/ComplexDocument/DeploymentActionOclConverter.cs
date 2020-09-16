@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Octopus.Ocl;
 using Octopus.Ocl.Converters;
 
@@ -60,7 +59,7 @@ namespace Tests.ComplexDocument
         protected override void SetLabels(Type type, OclBlock block, object target)
             => ((DeploymentAction)target).Name = block.Labels[0];
 
-        private IEnumerable<PropertyInfo> GetSettableProperties()
+        IEnumerable<PropertyInfo> GetSettableProperties()
         {
             var properties = from p in GetNonLabelProperties(typeof(DeploymentAction), false)
                 where p.Name != nameof(DeploymentAction.Type)

@@ -6,7 +6,6 @@ namespace Octopus.Ocl
     {
         public OclException(string message) : base(message)
         {
-
         }
     }
 }

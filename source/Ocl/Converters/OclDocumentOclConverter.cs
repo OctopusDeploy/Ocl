@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace Octopus.Ocl.Converters
 {
-    internal class OclDocumentOclConverter : DefaultBlockOclConverter
+    class OclDocumentOclConverter : DefaultBlockOclConverter
     {
         public OclDocument Convert(object? obj, OclConversionContext context)
         {

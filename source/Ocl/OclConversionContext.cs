@@ -7,7 +7,7 @@ namespace Octopus.Ocl
 {
     public class OclConversionContext
     {
-        private readonly IReadOnlyList<IOclConverter> converters;
+        readonly IReadOnlyList<IOclConverter> converters;
 
         internal OclConversionContext(OclSerializerOptions options)
         {
@@ -18,7 +18,7 @@ namespace Octopus.Ocl
                     {
                         new DefaultAttributeOclConverter(),
                         new DefaultCollectionOclConverter(),
-                        new DefaultBlockOclConverter(),
+                        new DefaultBlockOclConverter()
                     })
                 .ToArray();
         }
@@ -26,7 +26,7 @@ namespace Octopus.Ocl
         public IEnumerable<IOclElement> ToElements(string name, object? value)
         {
             if (value == null)
-                return new[] { new OclAttribute(name, null) };
+                return new IOclElement[0];
 
             return GetConverterFor(value.GetType())
                 .ToElements(this, name, value);

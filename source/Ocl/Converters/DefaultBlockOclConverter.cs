@@ -34,17 +34,17 @@ namespace Octopus.Ocl.Converters
             if (block.Labels.Count > labelProperties.Length)
                 throw new OclException($"The block '{block.Name}' defines {block.Labels.Count} labels ({string.Join(", ", block.Labels)}) but the type {type.Name} only has {labelProperties.Length} label properties");
 
-            for (int x = 0; x < block.Labels.Count; x++)
+            for (var x = 0; x < block.Labels.Count; x++)
                 labelProperties[x].SetValue(target, block.Labels[x]);
         }
 
-        private void SetProperties(OclConversionContext context, Type type, OclBody body, object target)
+        void SetProperties(OclConversionContext context, Type type, OclBody body, object target)
         {
             var properties = GetNonLabelProperties(type, true).ToArray();
 
             var notFound = SetProperties(context, body, target, properties);
 
-            if(notFound.Any())
+            if (notFound.Any())
                 throw new OclException($"The propert{(notFound.Count > 1 ? "ies" : "y")} '{string.Join("', '", notFound.Select(a => a.Name))}' {(notFound.Count > 1 ? "were" : "was")} not found on '{type.Name}'");
         }
 
@@ -64,7 +64,7 @@ namespace Octopus.Ocl.Converters
             return labels;
         }
 
-        private static IEnumerable<PropertyInfo> GetLabelProperties(Type type, bool forWriting)
+        static IEnumerable<PropertyInfo> GetLabelProperties(Type type, bool forWriting)
             => from p in type.GetProperties()
                 where p.CanRead
                 where !forWriting || p.CanWrite
@@ -75,7 +75,5 @@ namespace Octopus.Ocl.Converters
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)
             => GetElements(obj, GetNonLabelProperties(obj.GetType(), false), context);
-
-
     }
 }
