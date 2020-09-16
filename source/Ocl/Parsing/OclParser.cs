@@ -19,6 +19,10 @@ namespace Octopus.Ocl.Parsing
                 .Text()
             select name;
 
+        static readonly Parser<object?> NullLiteral =
+            from _ in Parse.String("null")
+            select (object?) null;
+
         static readonly Parser<int> IntegerLiteral =
             from number in Parse.Number
             select int.Parse(number);
@@ -50,9 +54,10 @@ namespace Octopus.Ocl.Parsing
             from close in ArrayClose.Token()
             select values.ToArray();
 
-        static readonly Parser<object> Literal =
-            QuotedStringParser.QuotedStringLiteral
-                .Or<object>(HeredocParser.Literal)
+        static readonly Parser<object?> Literal =
+            NullLiteral
+                .Or(QuotedStringParser.QuotedStringLiteral)
+                .Or(HeredocParser.Literal)
                 .Or(DecimalLiteral.Select(d => (object)d))
                 .Or(IntegerLiteral.Select(d => (object)d))
                 .Or(EmptyArrayLiteral)
