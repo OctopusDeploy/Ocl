@@ -100,7 +100,7 @@ namespace Octopus.Ocl.Parsing
             select new OclBlock(name, labels.ToArray(), children.Single());
 
         static readonly Parser<OclDocument> Document =
-            from child in Block.Or<IOclElement>(Attribute).Many().Token().End()
+            from child in Block.Or<IOclElement>(Attribute).Token().Many().End()
             select new OclDocument(child);
 
         public static Parser<T> SameLineToken<T>(this Parser<T> parser)
@@ -121,6 +121,9 @@ namespace Octopus.Ocl.Parsing
 
         internal static (OclDocument? document, string? error) TryExecute(string input)
         {
+            if (string.IsNullOrWhiteSpace(input))
+                return (new OclDocument(), null);
+
             var result = Document.TryParse(input);
             if (!result.WasSuccessful)
                 return (null, result.ToString());

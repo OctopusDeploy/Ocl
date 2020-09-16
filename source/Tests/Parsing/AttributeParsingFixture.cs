@@ -101,5 +101,34 @@ namespace Tests.Parsing
             error.Should().NotBeEmpty();
             document.Should().BeNull();
         }
+
+        [Test]
+        public void MultipleInRoot()
+            => OclParser.Execute(@"
+                One = 1
+                Two = 2
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("One", 1),
+                    new OclAttribute("Two", 2)
+                );
+
+        [Test]
+        public void MultipleInBlock()
+            => OclParser.Execute(@"
+                MyBlock {
+                    One = 1
+                    Two = 2
+                }
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclBlock("MyBlock")
+                    {
+                        new OclAttribute("One", 1),
+                        new OclAttribute("Two", 2)
+                    }
+                );
     }
 }
