@@ -23,6 +23,14 @@ namespace Octopus.Ocl.Parsing
             from _ in Parse.String("null")
             select (object?) null;
 
+        static readonly Parser<bool> TrueLiteral =
+            from _ in Parse.String("true")
+            select true;
+
+        static readonly Parser<bool> FalseLiteral =
+            from _ in Parse.String("false")
+            select true;
+
         static readonly Parser<int> IntegerLiteral =
             from number in Parse.Number
             select int.Parse(number);
@@ -56,6 +64,8 @@ namespace Octopus.Ocl.Parsing
 
         static readonly Parser<object?> Literal =
             NullLiteral
+                .Or(TrueLiteral.Select(d => (object)d))
+                .Or(FalseLiteral.Select(d => (object)d))
                 .Or(QuotedStringParser.QuotedStringLiteral)
                 .Or(HeredocParser.Literal)
                 .Or(DecimalLiteral.Select(d => (object)d))
