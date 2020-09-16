@@ -62,18 +62,24 @@ namespace Octopus.Ocl.Parsing
             from close in ArrayClose.Token()
             select values.ToArray();
 
+        static readonly Parser<object> ArrayLiteral =
+            EmptyArrayLiteral
+                .Or(QuotedStringArrayLiteral)
+                .Or<object>(DecimalArrayLiteral)
+                .Or(IntArrayLiteral);
+
+        static readonly Parser<object> NumberLiteral =
+            DecimalLiteral.Select(d => (object)d)
+                .Or(IntegerLiteral.Select(d => (object)d));
+
         static readonly Parser<object?> Literal =
             NullLiteral
-                .Or(TrueLiteral.Select(d => (object)d))
-                .Or(FalseLiteral.Select(d => (object)d))
-                .Or(QuotedStringParser.QuotedStringLiteral)
-                .Or(HeredocParser.Literal)
-                .Or(DecimalLiteral.Select(d => (object)d))
-                .Or(IntegerLiteral.Select(d => (object)d))
-                .Or(EmptyArrayLiteral)
-                .Or(QuotedStringArrayLiteral)
-                .Or(DecimalArrayLiteral)
-                .Or(IntArrayLiteral);
+                .XOr(TrueLiteral.Select(d => (object)d))
+                .XOr(FalseLiteral.Select(d => (object)d))
+                .XOr(QuotedStringParser.QuotedStringLiteral)
+                .XOr(HeredocParser.Literal)
+                .XOr(NumberLiteral)
+                .XOr(ArrayLiteral);
 
         static readonly Parser<OclAttribute> Attribute =
             from name in Name.SameLineToken()
