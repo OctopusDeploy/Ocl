@@ -91,7 +91,6 @@ namespace Tests.ComplexDocument
                     new OclDocument
                     {
                         new OclAttribute("Name", "MyStep"),
-                        new OclAttribute("Roles", null),
                         new OclBlock("decisive", new[] { "run" }),
                         new OclBlock("take_no", new[] { "sit" })
                     }
