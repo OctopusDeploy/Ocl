@@ -16,6 +16,7 @@ namespace Octopus.Ocl
                 .Concat(
                     new IOclConverter[]
                     {
+                        new EnumAttributeOclConverter(),
                         new DefaultAttributeOclConverter(),
                         new DefaultCollectionOclConverter(),
                         new DefaultBlockOclConverter()

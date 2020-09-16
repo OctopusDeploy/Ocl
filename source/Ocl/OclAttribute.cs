@@ -49,11 +49,18 @@ namespace Octopus.Ocl
         }
 
         public static bool IsSupportedValueType(Type type)
-            => type.IsPrimitive ||
+        {
+            bool IsNullableSupportedValueType()
+                => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && IsSupportedValueType(type.GetGenericArguments()[0]);
+
+            return type.IsPrimitive ||
                 type == typeof(string) ||
                 type == typeof(decimal) ||
                 type == typeof(OclStringLiteral) ||
+                IsNullableSupportedValueType() ||
                 IsSupportedValueCollectionType(type);
+        }
+
 
         internal static bool IsSupportedValueCollectionType(Type type)
             => type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!) ||
