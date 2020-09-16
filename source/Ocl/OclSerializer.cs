@@ -2,10 +2,19 @@ using System;
 
 namespace Octopus.Ocl
 {
+    public interface IOclSerializer
+    {
+        OclSerializerOptions Options { get; }
+        string Serialize(OclDocument document);
+        string Serialize(object obj);
+        T Deserialize<T>(string document) where T : notnull;
+        T Deserialize<T>(OclDocument document) where T : notnull;
+    }
+
     /// <summary>
     /// This class is thread safe
     /// </summary>
-    public class OclSerializer
+    public class OclSerializer : IOclSerializer
     {
         public OclSerializer(OclSerializerOptions? options = null)
         {
