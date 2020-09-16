@@ -7,5 +7,6 @@ namespace Octopus.Ocl
     {
         bool CanConvert(Type type);
         IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value);
+        object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue);
     }
 }

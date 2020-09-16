@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Assent;
+using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
 
@@ -13,7 +14,7 @@ namespace Tests.ComplexDocument
             {
                 Steps = new List<DeploymentStep>
                 {
-                    new DeploymentStep("Simple Script Step")
+                    new DeploymentStep("Simple Script")
                     {
                         Roles = new List<string>
                             { "web-server" },
@@ -21,9 +22,9 @@ namespace Tests.ComplexDocument
                         {
                             new DeploymentAction
                             {
-                                Name = "Simple Script Action",
+                                Name = "Simple Script",
                                 Type = "Inline Script Action",
-                                Properties = new Dictionary<string, string>
+                                Properties = new Dictionary<string, string>()
                                 {
                                     { "Syntax", "PowerShell" },
                                     { "Body", "Write-Host 'Hi'" }
@@ -41,7 +42,7 @@ namespace Tests.ComplexDocument
                             {
                                 Name = "Deploy Website",
                                 Type = "Deploy to IIS",
-                                Properties = new Dictionary<string, string>
+                                Properties = new Dictionary<string, string>()
                                 {
                                     { "AppPool.Framework", "v4.0" },
                                     { "AppPool.Identity", "ApplicationPoolIdentity" },
@@ -52,7 +53,7 @@ namespace Tests.ComplexDocument
                             {
                                 Name = "Deploy Website",
                                 Type = "Deploy to IIS",
-                                Properties = new Dictionary<string, string>
+                                Properties = new Dictionary<string, string>()
                                 {
                                     { "AppPool.Framework", "v4.0" },
                                     { "AppPool.Identity", "ApplicationPoolIdentity" },
@@ -61,6 +62,17 @@ namespace Tests.ComplexDocument
                             }
                         }
                     }
+                }
+            };
+
+        private static OclSerializerOptions GetOptions()
+            => new OclSerializerOptions()
+            {
+                Converters = new List<IOclConverter>()
+                {
+                    new DeploymentProcessConverter(),
+                    new DeploymentStepOclConverter(),
+                    new DeploymentActionOclConverter()
                 }
             };
 
@@ -100,17 +112,21 @@ namespace Tests.ComplexDocument
         [Test]
         public void Serialization()
         {
-            var options = new OclSerializerOptions
-            {
-                Converters = new List<IOclConverter>
-                {
-                    new DeploymentStepOclConverter(),
-                    new DeploymentActionOclConverter()
-                }
-            };
-
-            var result = OclConvert.Serialize(GetTestData(), options);
+            var options = new OclSerializerOptions()
             this.Assent(result);
+        }
+                Converters = new List<IOclConverter>()
+
+        [Test]
+        public void Roundtrip()
+        {
+            var oclSerializerOptions = GetOptions();
+            var input = GetTestData();
+
+            var ocl = OclConvert.Serialize(input, oclSerializerOptions);
+            var result = OclConvert.Deserialize<DeploymentProcess>(ocl, oclSerializerOptions);
+
+            result.Should().BeEquivalentTo(input);
         }
     }
 }

@@ -38,15 +38,13 @@ namespace Octopus.Ocl
                 case OclBlock block:
                     Write(block);
                     return;
+                case OclDocument document:
+                    foreach (var item in document)
+                        Write(item);
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException(element.GetType().Name);
             }
-        }
-
-        public void Write(OclBody body)
-        {
-            foreach (var item in body)
-                Write(item);
         }
 
         public void Write(OclAttribute attribute)
