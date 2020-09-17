@@ -18,6 +18,9 @@ namespace Octopus.Ocl.Converters
                         yield return element;
         }
 
+        public OclDocument ToDocument(OclConversionContext context, object obj)
+            => new OclDocument(ToElements(context, "", obj));
+
         public object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
         {
             var collectionType = GetElementType(type);
