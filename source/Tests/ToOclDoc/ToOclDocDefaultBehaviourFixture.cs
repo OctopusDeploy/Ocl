@@ -6,7 +6,7 @@ using Octopus.Ocl;
 
 namespace Tests.ToOclDoc
 {
-    public class ToOclBodyDefaultBehaviourFixture
+    public class ToOclDocDefaultBehaviourFixture
     {
         [Test]
         public void Null()

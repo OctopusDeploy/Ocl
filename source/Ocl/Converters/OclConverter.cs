@@ -12,6 +12,9 @@ namespace Octopus.Ocl.Converters
         public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
             => new[] { ConvertInternal(context, name, obj) };
 
+        public virtual OclDocument ToDocument(OclConversionContext context, object obj)
+            => throw new NotSupportedException("This type does not support conversion to the OCL root document");
+
         public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue);
 
         protected abstract IOclElement ConvertInternal(OclConversionContext context, string name, object obj);

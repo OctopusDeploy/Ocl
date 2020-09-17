@@ -10,6 +10,13 @@ namespace Octopus.Ocl.Converters
         public override bool CanConvert(Type type)
             => !OclAttribute.IsSupportedValueType(type);
 
+        public override OclDocument ToDocument(OclConversionContext context, object obj)
+        {
+            var labelAndNonLabelProperties = GetLabelProperties(obj.GetType(), false).Concat(GetNonLabelProperties(obj.GetType(), false));
+            var children = GetElements(obj, labelAndNonLabelProperties, context);
+            return new OclDocument(children);
+        }
+
         public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
         {
             var target = CreateInstance(type, element);

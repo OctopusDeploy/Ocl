@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using Octopus.Ocl.Converters;
 using Octopus.Ocl.Parsing;
@@ -27,7 +28,14 @@ namespace Octopus.Ocl
         }
 
         public static OclDocument ToOclDocument(object? obj, OclSerializerOptions? options = null)
-            => new OclDocumentOclConverter().Convert(obj, new OclConversionContext(options ?? new OclSerializerOptions()));
+        {
+            if (obj == null)
+                return new OclDocument();
+
+            var context = new OclConversionContext(options ?? new OclSerializerOptions());
+            var converter = context.GetConverterFor(obj.GetType());
+            return converter.ToDocument(context, obj);
+        }
 
         public static T Deserialize<T>(string ocl, OclSerializerOptions? options = null)
             where T : notnull
