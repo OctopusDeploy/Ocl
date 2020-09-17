@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
@@ -20,17 +21,24 @@ namespace Tests.Parsing
                 .Should()
                 .HaveChildrenExactly(new OclAttribute("Foo", "Bar"));
 
-        [Test]
-        public void Int()
-            => OclParser.Execute(@"Foo = 1")
+        [TestCase("1", 1)]
+        [TestCase("-1", -1)]
+        public void Int(string input, int expected)
+        {
+            var result = OclParser.Execute(@"Foo = " + input);
+            result
                 .Should()
-                .HaveChildrenExactly(new OclAttribute("Foo", 1));
+                .HaveChildrenExactly(new OclAttribute("Foo", expected));
 
-        [Test]
-        public void Decimal()
-            => OclParser.Execute(@"Foo = 1.5")
+            result.OfType<OclAttribute>().First().Value.Should().BeOfType(typeof(int));
+        }
+
+        [TestCase("1.5", 1.5)]
+        [TestCase("-1.5", -1.5)]
+        public void Decimal(string input, decimal expected)
+            => OclParser.Execute(@"Foo = " + input)
                 .Should()
-                .HaveChildrenExactly(new OclAttribute("Foo", 1.5m));
+                .HaveChildrenExactly(new OclAttribute("Foo", expected));
 
         [Test]
         public void Null()
