@@ -52,7 +52,6 @@ namespace Tests.Parsing
                 .Should()
                 .HaveChildrenExactly(new OclAttribute("Foo", true));
 
-
         [Test]
         public void False()
             => OclParser.Execute("Foo = false")
