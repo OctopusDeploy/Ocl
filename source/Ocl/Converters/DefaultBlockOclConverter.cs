@@ -12,7 +12,7 @@ namespace Octopus.Ocl.Converters
 
         protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
             => new OclBlock(
-                GetName(name, obj),
+                GetName(context, name, obj),
                 GetLabels(obj),
                 GetElements(obj, context)
             );

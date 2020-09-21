@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl
 {
@@ -12,5 +13,6 @@ namespace Octopus.Ocl
         public int IndentDepth { get; set; } = 4;
         public string DefaultHeredocTag { get; set; } = "EOT";
         public List<IOclConverter> Converters { get; set; } = new List<IOclConverter>();
+        public IOclNamer Namer { get; set; } = new SnakeCaseOclNamer();
     }
 }

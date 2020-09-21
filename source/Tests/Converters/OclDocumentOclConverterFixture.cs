@@ -18,7 +18,7 @@ namespace Tests.Converters
                 .Be(
                     new OclBlock("Test")
                     {
-                        new OclAttribute("MyProp", "MyValue")
+                        new OclAttribute("my_prop", "MyValue")
                     }
                 );
         }

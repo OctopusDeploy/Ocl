@@ -15,7 +15,7 @@ namespace Tests.Converters
             var context = new OclConversionContext(new OclSerializerOptions());
             var data = new object();
             var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
-            result.Name.Should().Be("Test");
+            result.Name.Should().Be("test");
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace Tests.Converters
             var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
             result.First()
                 .Should()
-                .BeEquivalentTo(new OclAttribute("MyProp", "MyValue"));
+                .BeEquivalentTo(new OclAttribute("my_prop", "MyValue"));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Tests.Converters
                 .Be(
                     new OclBlock("Test")
                     {
-                        new OclAttribute("MyProp", "MyValue")
+                        new OclAttribute("my_prop", "MyValue")
                     }
                 );
         }

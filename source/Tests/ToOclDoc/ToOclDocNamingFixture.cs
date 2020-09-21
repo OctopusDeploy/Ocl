@@ -17,7 +17,7 @@ namespace Tests.ToOclDoc
                 .Be(
                     new OclDocument
                     {
-                        new OclAttribute("Sample", "My Value")
+                        new OclAttribute("sample", "My Value")
                     }
                 );
         }
@@ -31,7 +31,7 @@ namespace Tests.ToOclDoc
                 .Be(
                     new OclDocument
                     {
-                        new OclAttribute("Custom Name", "The Label")
+                        new OclAttribute("custom_name", "The Label")
                     }
                 );
         }
@@ -54,7 +54,7 @@ namespace Tests.ToOclDoc
                 .Be(
                     new OclDocument
                     {
-                        new OclBlock("The Name")
+                        new OclBlock("the_name")
                     }
                 );
         }
@@ -75,8 +75,8 @@ namespace Tests.ToOclDoc
             public override bool CanConvert(Type type)
                 => type == typeof(SampleWithANameProperty);
 
-            protected override string GetName(string name, object obj)
-                => ((dynamic)obj).Name;
+            protected override string GetName(OclConversionContext context, string name, object obj)
+                => context.Namer.FormatName(((dynamic)obj).Name);
 
             protected override IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)
                 => new IOclElement[0];

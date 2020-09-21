@@ -11,7 +11,7 @@ namespace Tests.ComplexDocument
         public override bool CanConvert(Type type)
             => typeof(DeploymentAction).IsAssignableFrom(type);
 
-        protected override string GetName(string name, object obj)
+        protected override string GetName(OclConversionContext context, string name, object obj)
             => ((DeploymentAction)obj).Type.Replace(" ", "_").ToLower();
 
         protected override IEnumerable<string> GetLabels(object obj)
