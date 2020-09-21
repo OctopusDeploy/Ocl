@@ -61,7 +61,7 @@ namespace Tests.ComplexDocument
         }
 
         IEnumerable<PropertyInfo> GetSettableProperties()
-            => from p in GetNonLabelProperties(typeof(DeploymentStep), true)
+            => from p in GetProperties(typeof(DeploymentStep))
                 where p.Name != nameof(DeploymentStep.Name)
                 where p.Name != nameof(DeploymentStep.Actions)
                 select p;

@@ -61,7 +61,7 @@ namespace Tests.ComplexDocument
 
         IEnumerable<PropertyInfo> GetSettableProperties()
         {
-            var properties = from p in GetNonLabelProperties(typeof(DeploymentAction), false)
+            var properties = from p in GetProperties(typeof(DeploymentAction))
                 where p.Name != nameof(DeploymentAction.Type)
                 where p.Name != nameof(DeploymentAction.Name)
                 where p.Name != nameof(DeploymentAction.Properties)

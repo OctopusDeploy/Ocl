@@ -12,8 +12,8 @@ namespace Octopus.Ocl.Converters
 
         public override OclDocument ToDocument(OclConversionContext context, object obj)
         {
-            var labelAndNonLabelProperties = GetLabelProperties(obj.GetType(), false).Concat(GetNonLabelProperties(obj.GetType(), false));
-            var children = GetElements(obj, labelAndNonLabelProperties, context);
+            var properties = GetProperties(obj.GetType());
+            var children = GetElements(obj, properties, context);
             return new OclDocument(children);
         }
 
@@ -38,7 +38,7 @@ namespace Octopus.Ocl.Converters
 
         protected virtual void SetLabels(Type type, OclBlock block, object target)
         {
-            var labelProperties = GetLabelProperties(type, true).ToArray();
+            var labelProperties = GetLabelProperties(type).ToArray();
 
             if (block.Labels.Count > labelProperties.Length)
                 throw new OclException($"The block '{block.Name}' defines {block.Labels.Count} labels ({string.Join(", ", block.Labels)}) but the type {type.Name} only has {labelProperties.Length} label properties");
@@ -49,7 +49,7 @@ namespace Octopus.Ocl.Converters
 
         protected virtual void SetProperties(OclConversionContext context, Type type, OclBody body, object target)
         {
-            var properties = GetNonLabelProperties(type, true).ToArray();
+            var properties = GetProperties(type).Except(GetLabelProperties(type)).ToArray();
 
             var notFound = SetProperties(context, body, target, properties);
 
@@ -66,23 +66,26 @@ namespace Octopus.Ocl.Converters
 
         protected virtual IEnumerable<string> GetLabels(object obj)
         {
-            var labels = from p in GetLabelProperties(obj.GetType(), false)
+            var labels = from p in GetLabelProperties(obj.GetType())
                 let labelObj = p.GetValue(obj) ?? throw new OclException($"Labels cannot be null ({p.DeclaringType?.FullName}.{p.Name})")
                 let label = labelObj as string ?? throw new Exception($"Labels must be strings ({p.DeclaringType?.FullName}.{p.Name})")
                 select label;
             return labels;
         }
 
-        protected virtual IEnumerable<PropertyInfo> GetLabelProperties(Type type, bool forWriting)
-            => from p in type.GetProperties()
-                where p.CanRead
-                where !forWriting || p.CanWrite
+        protected virtual IEnumerable<PropertyInfo> GetLabelProperties(Type type)
+            => from p in GetProperties(type)
                 let attr = p.GetCustomAttribute<OclLabelAttribute>()
                 where attr != null
                 orderby attr.Ordinal
                 select p;
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)
-            => GetElements(obj, GetNonLabelProperties(obj.GetType(), false), context);
+        {
+            var properties = GetProperties(obj.GetType())
+                .Except(GetLabelProperties(obj.GetType()))
+                .ToArray();
+            return GetElements(obj, properties, context);
+        }
     }
 }

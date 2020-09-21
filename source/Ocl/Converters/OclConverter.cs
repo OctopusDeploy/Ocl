@@ -87,14 +87,12 @@ namespace Octopus.Ocl.Converters
             return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? throw new Exception($"Could not coerce value of type {valueToSet.GetType().Name} to {type.Name}");
         }
 
-        protected virtual IEnumerable<PropertyInfo> GetNonLabelProperties(Type type, bool forWriting)
+        protected virtual IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             var defaultProperties = type.GetDefaultMembers().OfType<PropertyInfo>();
             var properties = from p in type.GetProperties()
                 where p.CanRead
-                where !forWriting || p.CanWrite
                 where p.GetCustomAttribute<OclIgnoreAttribute>() == null
-                where p.GetCustomAttribute<OclLabelAttribute>() == null
                 select p;
 
             return properties.Except(defaultProperties);
