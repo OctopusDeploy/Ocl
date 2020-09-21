@@ -124,12 +124,47 @@ namespace Tests.FromOclDoc
                 .WithMessage("*The property 'Wings' was not found on 'Car'*");
         }
 
+        [Test]
+        public void ExceptionIsThrownIfPropertyCantBeSet()
+        {
+            var document = new OclDocument()
+            {
+                new OclAttribute("ReadOnly", 1)
+            };
+
+            Action action = () => OclConvert.Deserialize<Car>(document, new OclSerializerOptions());
+            action.Should()
+                .Throw<OclException>()
+                .WithMessage("*The property 'ReadOnly' on 'Car' does not have a setter*");
+        }
+
+        [Test]
+        public void ReadOnlyPropertiesWorkIfTheReferenceMatches()
+        {
+            var document = new OclDocument()
+            {
+                new OclBlock("ReadOnlyPassengers")
+                {
+                    new OclAttribute("Name", "Bob")
+                }
+            };
+
+            var expected = new Car();
+            expected.ReadOnlyPassengers.Add(new Person() { Name = "Bob" });
+
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+                .Should()
+                .BeEquivalentTo(expected);
+        }
+
         class Car
         {
             public string Name { get; set; } = "";
             public int Doors { get; set; }
+            public int ReadOnly { get; } = 1;
             public Person? Driver { get; set; }
             public List<Person>? Passengers { get; set; }
+            public List<Person> ReadOnlyPassengers { get; } = new List<Person>();
         }
 
         class Person

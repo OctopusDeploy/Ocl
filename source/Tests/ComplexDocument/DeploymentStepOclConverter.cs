@@ -35,7 +35,7 @@ namespace Tests.ComplexDocument
             return element;
         }
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
             => StepFromElement(context, element);
 
         public DeploymentStep StepFromElement(OclConversionContext context, IOclElement element)

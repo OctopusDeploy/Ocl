@@ -21,15 +21,13 @@ namespace Octopus.Ocl.Converters
         public OclDocument ToDocument(OclConversionContext context, object obj)
             => new OclDocument(ToElements(context, "", obj));
 
-        public object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
             var collectionType = GetElementType(type);
 
-            var collection = getCurrentValue();
-            if (collection == null)
-                collection = CreateNewCollection(type, collectionType);
+            var collection = currentValue ?? CreateNewCollection(type, collectionType);
 
-            var item = context.FromElement(collectionType, element, () => null);
+            var item = context.FromElement(collectionType, element, null);
 
             if (collection is IList list)
             {

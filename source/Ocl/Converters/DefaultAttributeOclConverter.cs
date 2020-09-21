@@ -7,7 +7,7 @@ namespace Octopus.Ocl.Converters
         public override bool CanConvert(Type type)
             => OclAttribute.IsSupportedValueType(type);
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
             if (element is OclAttribute attribute)
                 return attribute.Value;

@@ -17,7 +17,7 @@ namespace Octopus.Ocl.Converters
             return new OclDocument(children);
         }
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
             var target = CreateInstance(type, element);
 

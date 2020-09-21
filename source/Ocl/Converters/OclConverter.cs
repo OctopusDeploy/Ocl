@@ -15,7 +15,7 @@ namespace Octopus.Ocl.Converters
         public virtual OclDocument ToDocument(OclConversionContext context, object obj)
             => throw new NotSupportedException("This type does not support conversion to the OCL root document");
 
-        public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue);
+        public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue);
 
         protected abstract IOclElement ConvertInternal(OclConversionContext context, string name, object obj);
 
@@ -51,8 +51,16 @@ namespace Octopus.Ocl.Converters
 
                 if (propertyLookup.TryGetValue(name, out var property))
                 {
-                    var valueToSet = context.FromElement(property.PropertyType, child, () => property.GetValue(target));
-                    property.SetValue(target, CoerceValue(valueToSet, property.PropertyType));
+                    var currentValue = property.GetValue(target);
+                    var valueToSet = context.FromElement(property.PropertyType, child, currentValue);
+
+                    if (currentValue != valueToSet)
+                    {
+                        if (!property.CanWrite)
+                            throw new OclException($"The property '{property.Name}' on '{target.GetType().Name}' does not have a setter");
+
+                        property.SetValue(target, CoerceValue(valueToSet, property.PropertyType));
+                    }
                 }
                 else
                 {
