@@ -54,7 +54,7 @@ namespace Tests.ToString
         {
             Action action = () => Execute(w => w.Write(new OclAttribute("MyAttr", new Random())));
             action.Should()
-                .Throw<ArgumentException>()
+                .Throw<OclException>()
                 .WithMessage("*System.Random*");
         }
 
