@@ -1,11 +1,11 @@
 Inline_Script_Action "Simple Script" {
-    Roles = ["web-server"]
+    roles = ["web-server"]
     Syntax = "PowerShell"
     Body = "Write-Host 'Hi'"
 }
 
 rolling "Rolling Step" {
-    Roles = ["role1", "role2"]
+    roles = ["role1", "role2"]
 
     Deploy_to_IIS "Deploy Website" {
         AppPool_Framework = "v4.0"

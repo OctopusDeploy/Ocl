@@ -32,12 +32,18 @@ namespace Octopus.Ocl.Parsing
             select false;
 
         static readonly Parser<int> IntegerLiteral =
+            from neg in Parse.Char('-').Optional()
             from number in Parse.Number
-            select int.Parse(number);
+            let result = int.Parse(number)
+            select neg.IsDefined ? 0 - result : result;
 
         static readonly Parser<decimal> DecimalLiteral =
-            from number in Parse.DecimalInvariant
-            select decimal.Parse(number);
+            from neg in Parse.Char('-').Optional()
+            from whole in Parse.Digit.AtLeastOnce().Text()
+            from dot in Parse.Char('.')
+            from fraction in Parse.Digit.AtLeastOnce().Text()
+            let result = decimal.Parse(whole + "." + fraction)
+            select neg.IsDefined ? 0 - result : result;
 
         static readonly Parser<string[]> QuotedStringArrayLiteral =
             from open in ArrayOpen.Token()
@@ -62,18 +68,24 @@ namespace Octopus.Ocl.Parsing
             from close in ArrayClose.Token()
             select values.ToArray();
 
+        static readonly Parser<object> ArrayLiteral =
+            EmptyArrayLiteral
+                .Or(QuotedStringArrayLiteral)
+                .Or<object>(DecimalArrayLiteral)
+                .Or(IntArrayLiteral);
+
+        static readonly Parser<object> NumberLiteral =
+            DecimalLiteral.Select(d => (object)d)
+                .Or(IntegerLiteral.Select(d => (object)d));
+
         static readonly Parser<object?> Literal =
             NullLiteral
-                .Or(TrueLiteral.Select(d => (object)d))
-                .Or(FalseLiteral.Select(d => (object)d))
-                .Or(QuotedStringParser.QuotedStringLiteral)
-                .Or(HeredocParser.Literal)
-                .Or(DecimalLiteral.Select(d => (object)d))
-                .Or(IntegerLiteral.Select(d => (object)d))
-                .Or(EmptyArrayLiteral)
-                .Or(QuotedStringArrayLiteral)
-                .Or(DecimalArrayLiteral)
-                .Or(IntArrayLiteral);
+                .XOr(TrueLiteral.Select(d => (object)d))
+                .XOr(FalseLiteral.Select(d => (object)d))
+                .XOr(QuotedStringParser.QuotedStringLiteral)
+                .XOr(HeredocParser.Literal)
+                .XOr(NumberLiteral)
+                .XOr(ArrayLiteral);
 
         static readonly Parser<OclAttribute> Attribute =
             from name in Name.SameLineToken()

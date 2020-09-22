@@ -14,7 +14,7 @@ namespace Tests.Converters
         {
             var context = new OclConversionContext(new OclSerializerOptions());
             var result = (OclAttribute)new DefaultAttributeOclConverter().ToElements(context, "Test", "Value").Single();
-            result.Name.Should().Be("Test");
+            result.Name.Should().Be("test");
         }
     }
 }

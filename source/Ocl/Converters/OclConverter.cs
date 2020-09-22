@@ -19,8 +19,8 @@ namespace Octopus.Ocl.Converters
 
         protected abstract IOclElement ConvertInternal(OclConversionContext context, string name, object obj);
 
-        protected virtual string GetName(string name, object obj)
-            => name;
+        protected virtual string GetName(OclConversionContext context, string name, object obj)
+            => context.Namer.FormatName(name);
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {
