@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Octopus.Ocl.Converters;
+using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl
 {
@@ -22,7 +23,10 @@ namespace Octopus.Ocl
                         new DefaultBlockOclConverter()
                     })
                 .ToArray();
+            Namer = options.Namer;
         }
+
+        public IOclNamer Namer { get; }
 
         public IEnumerable<IOclElement> ToElements(string name, object? value)
         {
@@ -33,7 +37,7 @@ namespace Octopus.Ocl
                 .ToElements(this, name, value);
         }
 
-        public object? FromElement(Type type, IOclElement element, Func<object?> getCurrentValue)
+        public object? FromElement(Type type, IOclElement element, object? getCurrentValue)
             => GetConverterFor(type)
                 .FromElement(this, type, element, getCurrentValue);
 

@@ -50,7 +50,7 @@ namespace Octopus.Ocl
             where T : notnull
         {
             var context = new OclConversionContext(options ?? new OclSerializerOptions());
-            var result = context.FromElement(typeof(T), document, () => null);
+            var result = context.FromElement(typeof(T), document, null);
             if (result == null)
                 throw new OclException("Document conversion resulted in null, which is not valid");
             return (T)result;

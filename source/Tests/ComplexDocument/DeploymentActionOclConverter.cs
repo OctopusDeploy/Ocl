@@ -12,7 +12,7 @@ namespace Tests.ComplexDocument
         public override bool CanConvert(Type type)
             => typeof(DeploymentAction).IsAssignableFrom(type);
 
-        protected override string GetName(string name, object obj)
+        protected override string GetName(OclConversionContext context, string name, object obj)
             => ((DeploymentAction)obj).Type.Replace(" ", "_");
 
         protected override IEnumerable<string> GetLabels(object obj)
@@ -26,7 +26,7 @@ namespace Tests.ComplexDocument
             var elements = GetElements(obj, properties, context).ToList();
 
             var actionProperties = action.Properties
-                .SelectMany(kvp => context.ToElements(kvp.Key, kvp.Value));
+                .Select(kvp => new OclAttribute(kvp.Key.Replace(".", "_"), kvp.Value));
 
             var firstBlockIndex = elements.FindIndex(e => e is OclBlock);
             if (firstBlockIndex == -1)
@@ -59,14 +59,14 @@ namespace Tests.ComplexDocument
         protected override void SetLabels(Type type, OclBlock block, object target)
             => ((DeploymentAction)target).Name = block.Labels[0];
 
-        IEnumerable<PropertyInfo> GetSettableProperties()
+        IReadOnlyList<PropertyInfo> GetSettableProperties()
         {
-            var properties = from p in GetNonLabelProperties(typeof(DeploymentAction), false)
+            var properties = from p in GetProperties(typeof(DeploymentAction))
                 where p.Name != nameof(DeploymentAction.Type)
                 where p.Name != nameof(DeploymentAction.Name)
                 where p.Name != nameof(DeploymentAction.Properties)
                 select p;
-            return properties;
+            return properties.ToArray();
         }
     }
 }

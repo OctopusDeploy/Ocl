@@ -15,12 +15,12 @@ namespace Octopus.Ocl.Converters
         public virtual OclDocument ToDocument(OclConversionContext context, object obj)
             => throw new NotSupportedException("This type does not support conversion to the OCL root document");
 
-        public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue);
+        public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue);
 
         protected abstract IOclElement ConvertInternal(OclConversionContext context, string name, object obj);
 
-        protected virtual string GetName(string name, object obj)
-            => name;
+        protected virtual string GetName(OclConversionContext context, string name, object obj)
+            => context.Namer.FormatName(name);
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {
@@ -39,9 +39,8 @@ namespace Octopus.Ocl.Converters
             OclConversionContext context,
             OclBody body,
             object target,
-            IEnumerable<PropertyInfo> properties)
+            IReadOnlyList<PropertyInfo> properties)
         {
-            var propertyLookup = properties.ToDictionary(p => p.Name);
             var notFound = new List<IOclElement>();
             foreach (var child in body)
             {
@@ -49,14 +48,23 @@ namespace Octopus.Ocl.Converters
                 if (string.IsNullOrWhiteSpace(name))
                     throw new OclException("Encountered invalid child: " + child.GetType());
 
-                if (propertyLookup.TryGetValue(name, out var property))
+                var propertyToSet = context.Namer.GetProperty(name, properties);
+                if (propertyToSet == null)
                 {
-                    var valueToSet = context.FromElement(property.PropertyType, child, () => property.GetValue(target));
-                    property.SetValue(target, CoerceValue(valueToSet, property.PropertyType));
+                    notFound.Add(child);
                 }
                 else
                 {
-                    notFound.Add(child);
+                    var currentValue = propertyToSet.GetValue(target);
+                    var valueToSet = context.FromElement(propertyToSet.PropertyType, child, currentValue);
+
+                    if (currentValue != valueToSet)
+                    {
+                        if (!propertyToSet.CanWrite)
+                            throw new OclException($"The property '{propertyToSet.Name}' on '{target.GetType().Name}' does not have a setter");
+
+                        propertyToSet.SetValue(target, CoerceValue(valueToSet, propertyToSet.PropertyType));
+                    }
                 }
             }
 
@@ -87,14 +95,12 @@ namespace Octopus.Ocl.Converters
             return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? throw new Exception($"Could not coerce value of type {valueToSet.GetType().Name} to {type.Name}");
         }
 
-        protected virtual IEnumerable<PropertyInfo> GetNonLabelProperties(Type type, bool forWriting)
+        protected virtual IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             var defaultProperties = type.GetDefaultMembers().OfType<PropertyInfo>();
             var properties = from p in type.GetProperties()
                 where p.CanRead
-                where !forWriting || p.CanWrite
                 where p.GetCustomAttribute<OclIgnoreAttribute>() == null
-                where p.GetCustomAttribute<OclLabelAttribute>() == null
                 select p;
 
             return properties.Except(defaultProperties);

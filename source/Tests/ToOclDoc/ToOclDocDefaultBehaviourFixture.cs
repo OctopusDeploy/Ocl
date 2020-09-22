@@ -22,7 +22,7 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(new { MyProp = "MyValue" }, new OclSerializerOptions())
                 .Should()
                 .HaveChildrenExactly(
-                    new OclAttribute("MyProp", "MyValue")
+                    new OclAttribute("my_prop", "MyValue")
                 );
         }
 
@@ -40,11 +40,11 @@ namespace Tests.ToOclDoc
                 .HaveChildrenExactly(
                     new OclBlock("car")
                     {
-                        new OclAttribute("Doors", 2)
+                        new OclAttribute("doors", 2)
                     },
                     new OclBlock("car")
                     {
-                        new OclAttribute("Doors", 2)
+                        new OclAttribute("doors", 2)
                     }
                 );
         }
@@ -61,7 +61,7 @@ namespace Tests.ToOclDoc
 
             result.Should()
                 .HaveChildrenExactly(
-                    new OclAttribute("MyProp", "Static")
+                    new OclAttribute("my_prop", "Static")
                 );
         }
 

@@ -35,7 +35,7 @@ namespace Tests.ComplexDocument
             return element;
         }
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
             => StepFromElement(context, element);
 
         public DeploymentStep StepFromElement(OclConversionContext context, IOclElement element)
@@ -61,7 +61,7 @@ namespace Tests.ComplexDocument
         }
 
         IEnumerable<PropertyInfo> GetSettableProperties()
-            => from p in GetNonLabelProperties(typeof(DeploymentStep), true)
+            => from p in GetProperties(typeof(DeploymentStep))
                 where p.Name != nameof(DeploymentStep.Name)
                 where p.Name != nameof(DeploymentStep.Actions)
                 select p;

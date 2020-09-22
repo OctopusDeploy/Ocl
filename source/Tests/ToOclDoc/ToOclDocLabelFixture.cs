@@ -14,7 +14,7 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(new SampleWithLabelAttribute())
                 .Should()
                 .HaveChildrenExactly(
-                    new OclAttribute("ALabel", "The Label")
+                    new OclAttribute("my_label", "The Label")
                 );
         }
 
@@ -25,7 +25,7 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(obj)
                 .Should()
                 .HaveChildrenExactly(
-                    new OclBlock("Sample", "The Label")
+                    new OclBlock("sample", "The Label")
                 );
         }
 
@@ -35,7 +35,7 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(new SampleWithLabelAttribute())
                 .Should()
                 .HaveChildrenExactly(
-                    new OclAttribute("ALabel", "The Label")
+                    new OclAttribute("my_label", "The Label")
                 );
         }
 
@@ -55,14 +55,14 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(obj, options)
                 .Should()
                 .HaveChildrenExactly(
-                    new OclBlock("Sample", "the name")
+                    new OclBlock("sample", "the name")
                 );
         }
 
         class SampleWithLabelAttribute
         {
             [OclLabel]
-            public string ALabel { get; } = "The Label";
+            public string MyLabel { get; } = "The Label";
         }
 
         class SampleWithANameProperty

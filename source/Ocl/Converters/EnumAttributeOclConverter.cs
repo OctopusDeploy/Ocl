@@ -7,7 +7,7 @@ namespace Octopus.Ocl.Converters
         public override bool CanConvert(Type type)
             => type.IsEnum;
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
             if (element is OclAttribute attribute)
             {
@@ -27,6 +27,6 @@ namespace Octopus.Ocl.Converters
         }
 
         protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
-            => new OclAttribute(GetName(name, obj), obj.ToString());
+            => new OclAttribute(GetName(context, name, obj), obj.ToString());
     }
 }

@@ -10,7 +10,7 @@ namespace Tests.ComplexDocument
         public override bool CanConvert(Type type)
             => type == typeof(DeploymentProcess);
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
             var process = new DeploymentProcess();
 

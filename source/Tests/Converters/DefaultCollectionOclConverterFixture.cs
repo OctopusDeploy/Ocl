@@ -50,6 +50,6 @@ namespace Tests.Converters
 
         object? ExecuteFromElement<TTarget>(object? currentValue)
             => new DefaultCollectionOclConverter()
-                .FromElement(context, typeof(TTarget), new OclAttribute("Test", Value), () => currentValue);
+                .FromElement(context, typeof(TTarget), new OclAttribute("Test", Value), currentValue);
     }
 }

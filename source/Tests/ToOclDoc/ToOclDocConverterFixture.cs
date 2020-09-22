@@ -34,7 +34,7 @@ namespace Tests.ToOclDoc
             public OclDocument ToDocument(OclConversionContext context, object obj)
                 => new OclDocument(new[] { new OclAttribute("Fake", null) });
 
-            public object? FromElement(OclConversionContext context, Type type, IOclElement element, Func<object?> getCurrentValue)
+            public object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
                 => throw new NotImplementedException();
         }
     }
