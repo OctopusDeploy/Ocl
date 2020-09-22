@@ -37,26 +37,26 @@ namespace Octopus.Ocl.Converters
 
         protected virtual IReadOnlyList<IOclElement> SetProperties(
             OclConversionContext context,
-            OclBody body,
+            IEnumerable<IOclElement> elements,
             object target,
             IReadOnlyList<PropertyInfo> properties)
         {
             var notFound = new List<IOclElement>();
-            foreach (var child in body)
+            foreach (var element in elements)
             {
-                var name = child.Name?.Trim();
+                var name = element.Name?.Trim();
                 if (string.IsNullOrWhiteSpace(name))
-                    throw new OclException("Encountered invalid child: " + child.GetType());
+                    throw new OclException("Encountered invalid child: " + element.GetType());
 
                 var propertyToSet = context.Namer.GetProperty(name, properties);
                 if (propertyToSet == null)
                 {
-                    notFound.Add(child);
+                    notFound.Add(element);
                 }
                 else
                 {
                     var currentValue = propertyToSet.GetValue(target);
-                    var valueToSet = context.FromElement(propertyToSet.PropertyType, child, currentValue);
+                    var valueToSet = context.FromElement(propertyToSet.PropertyType, element, currentValue);
 
                     if (currentValue != valueToSet)
                     {
@@ -73,6 +73,9 @@ namespace Octopus.Ocl.Converters
 
         object? CoerceValue(object? valueToSet, Type type)
         {
+            if (valueToSet is OclStringLiteral literal)
+                valueToSet = literal.Value;
+
             if (valueToSet == null)
                 return null;
 
