@@ -90,7 +90,7 @@ namespace Tests.ComplexDocument
                 .Be(
                     new OclDocument
                     {
-                        new OclAttribute("Name", "MyStep"),
+                        new OclAttribute("name", "MyStep"),
                         new OclBlock("decisive", new[] { "run" }),
                         new OclBlock("take_no", new[] { "sit" })
                     }
