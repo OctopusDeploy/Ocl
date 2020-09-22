@@ -29,7 +29,7 @@ namespace Octopus.Ocl
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Attribute names cannot be blank");
+                    throw new OclException("Attribute names cannot be blank");
                 name = value;
             }
         }
@@ -43,7 +43,7 @@ namespace Octopus.Ocl
             set
             {
                 if (value != null && !IsSupportedValueType(value.GetType()))
-                    throw new ArgumentException($"The type {value.GetType().FullName} is not a support value type HCL attribute");
+                    throw new OclException($"The type {value.GetType().FullName} is not a support value type OCL attribute value");
                 this.value = value;
             }
         }

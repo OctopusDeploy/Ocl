@@ -10,7 +10,7 @@ namespace Octopus.Ocl
     {
         readonly IReadOnlyList<IOclConverter> converters;
 
-        internal OclConversionContext(OclSerializerOptions options)
+        public OclConversionContext(OclSerializerOptions options)
         {
             converters = options
                 .Converters

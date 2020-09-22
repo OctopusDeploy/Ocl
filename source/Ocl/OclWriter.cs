@@ -104,7 +104,7 @@ namespace Octopus.Ocl
         void WriteIdentifier(string identifier)
         {
             if (string.IsNullOrWhiteSpace(identifier))
-                throw new ArgumentException("Identifier cannot be blank");
+                throw new OclException("Identifier cannot be blank");
 
             if (char.IsDigit(identifier[0]))
                 writer.Write('_');

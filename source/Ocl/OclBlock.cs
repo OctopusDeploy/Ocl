@@ -44,7 +44,7 @@ namespace Octopus.Ocl
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Block names cannot be blank");
+                    throw new OclException("Block names cannot be blank");
                 name = value;
             }
         }

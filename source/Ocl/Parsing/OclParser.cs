@@ -21,7 +21,7 @@ namespace Octopus.Ocl.Parsing
 
         static readonly Parser<object?> NullLiteral =
             from _ in Parse.String("null")
-            select (object?) null;
+            select (object?)null;
 
         static readonly Parser<bool> TrueLiteral =
             from _ in Parse.String("true")
