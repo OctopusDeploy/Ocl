@@ -17,7 +17,7 @@ namespace Octopus.Ocl.Namers
         {
             var nameWithoutUnderscores = name.Replace("_", "");
             var matches = properties.Where(p => p.Name.Equals(nameWithoutUnderscores, StringComparison.OrdinalIgnoreCase)).ToArray();
-            if(matches.Length > 1)
+            if (matches.Length > 1)
                 throw new OclException($"Multiple properties match the name '{name}': {string.Join(", ", matches.Select(m => m.Name))}");
 
             return matches.FirstOrDefault();
