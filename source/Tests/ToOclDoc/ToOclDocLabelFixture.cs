@@ -35,7 +35,7 @@ namespace Tests.ToOclDoc
             OclConvert.ToOclDocument(new SampleWithLabelAttribute())
                 .Should()
                 .HaveChildrenExactly(
-                    new OclAttribute("ALabel", "The Label")
+                    new OclAttribute("my_label", "The Label")
                 );
         }
 

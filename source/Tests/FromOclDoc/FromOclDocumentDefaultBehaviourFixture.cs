@@ -43,6 +43,19 @@ namespace Tests.FromOclDoc
         }
 
         [Test]
+        public void CaseIsIgnoredAttribute()
+        {
+            var document = new OclDocument()
+            {
+                new OclAttribute("nAMe", "Mystery Machine")
+            };
+
+            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+                .Should()
+                .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
+        }
+
+        [Test]
         public void Block()
         {
             var document = new OclDocument()

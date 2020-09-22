@@ -39,9 +39,8 @@ namespace Octopus.Ocl.Converters
             OclConversionContext context,
             OclBody body,
             object target,
-            IEnumerable<PropertyInfo> properties)
+            IReadOnlyList<PropertyInfo> properties)
         {
-            var propertyLookup = properties.ToDictionary(p => p.Name);
             var notFound = new List<IOclElement>();
             foreach (var child in body)
             {
@@ -49,22 +48,23 @@ namespace Octopus.Ocl.Converters
                 if (string.IsNullOrWhiteSpace(name))
                     throw new OclException("Encountered invalid child: " + child.GetType());
 
-                if (propertyLookup.TryGetValue(name, out var property))
+                var propertyToSet = context.Namer.GetProperty(name, properties);
+                if (propertyToSet == null)
                 {
-                    var currentValue = property.GetValue(target);
-                    var valueToSet = context.FromElement(property.PropertyType, child, currentValue);
-
-                    if (currentValue != valueToSet)
-                    {
-                        if (!property.CanWrite)
-                            throw new OclException($"The property '{property.Name}' on '{target.GetType().Name}' does not have a setter");
-
-                        property.SetValue(target, CoerceValue(valueToSet, property.PropertyType));
-                    }
+                    notFound.Add(child);
                 }
                 else
                 {
-                    notFound.Add(child);
+                    var currentValue = propertyToSet.GetValue(target);
+                    var valueToSet = context.FromElement(propertyToSet.PropertyType, child, currentValue);
+
+                    if (currentValue != valueToSet)
+                    {
+                        if (!propertyToSet.CanWrite)
+                            throw new OclException($"The property '{propertyToSet.Name}' on '{target.GetType().Name}' does not have a setter");
+
+                        propertyToSet.SetValue(target, CoerceValue(valueToSet, propertyToSet.PropertyType));
+                    }
                 }
             }
 
