@@ -38,6 +38,14 @@ namespace Tests.Converters
                 .BeEquivalentTo(new[] { Value });
 
         [Test]
+        public void FromElement_CustomCollectionIsSupported()
+            => ExecuteFromElement<MyCollection>(null)
+                .Should()
+                .BeOfType<MyCollection>()
+                .And
+                .BeEquivalentTo(new[] { Value });
+
+        [Test]
         public void FromElement_ReusesCurrentCollection()
         {
             var existing = new HashSet<string>() { "ExistingItem" };
@@ -51,5 +59,11 @@ namespace Tests.Converters
         object? ExecuteFromElement<TTarget>(object? currentValue)
             => new DefaultCollectionOclConverter()
                 .FromElement(context, typeof(TTarget), new OclAttribute("Test", Value), currentValue);
+
+
+        class MyCollection : HashSet<string>
+        {
+
+        }
     }
 }
