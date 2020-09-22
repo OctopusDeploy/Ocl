@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Octopus.Ocl.Converters
 {
@@ -46,20 +47,23 @@ namespace Octopus.Ocl.Converters
 
         Type GetElementType(Type type)
         {
+            static bool IsIEnumerableOfT(Type t)
+                => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+
             if (type.IsArray)
                 return type.GetElementType()!;
 
-            if (type.IsGenericType)
-            {
-                var arguments = type.GetGenericArguments();
-                if (arguments.Length == 1)
-                    return arguments[0];
-            }
+            if (IsIEnumerableOfT(type))
+                return type.GenericTypeArguments[0];
 
-            if (type.BaseType != null)
-                return GetElementType(type.BaseType);
+            var implementsIEnumerableOfT = type
+                .GetInterfaces()
+                .FirstOrDefault(IsIEnumerableOfT);
 
-            throw new Exception("Only arrays and collection types with a single generic argument are supported");
+            if (implementsIEnumerableOfT != null)
+                return implementsIEnumerableOfT.GenericTypeArguments[0];
+
+            throw new Exception($"Could not find element type for {type.Name}, Only arrays and types that implement IEnumerable<T> are supported");
         }
 
         object CreateNewCollection(Type type, Type collectionType)
