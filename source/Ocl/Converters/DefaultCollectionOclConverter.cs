@@ -56,6 +56,9 @@ namespace Octopus.Ocl.Converters
                     return arguments[0];
             }
 
+            if (type.BaseType != null)
+                return GetElementType(type.BaseType);
+
             throw new Exception("Only arrays and collection types with a single generic argument are supported");
         }
 
