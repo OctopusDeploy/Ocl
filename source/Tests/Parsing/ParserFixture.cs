@@ -29,8 +29,7 @@ namespace Tests.Parsing
                     Foo = ""Bar
             ");
 
-            var firstNewLineChar = Environment.NewLine[0];
-            error.Should().Be($"Parsing failure: unexpected '{firstNewLineChar}'; expected \" (Line 4, Column 31); recently consumed: Foo = \"Bar");
+            error.Should().MatchRegex("Parsing failure: unexpected '\r|\n'; expected \" \\(Line 4, Column 31\\); recently consumed: Foo = \"Bar");
         }
     }
 }
