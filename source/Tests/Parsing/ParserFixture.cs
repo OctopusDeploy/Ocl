@@ -23,13 +23,16 @@ namespace Tests.Parsing
         [Test]
         public void InvalidDocumentReportsCorrectLineNumber()
         {
-            var (_, error) = OclParser.TryExecute(@"
+            var fooBarFooBar = @"
                     Foo = ""Bar""
 
                     Foo = ""Bar
-            ");
+            ".ToUnixLineEndings();
 
-            error.Should().Be("Parsing failure: unexpected 'F'; expected end of input (Line 4, Column 21); recently consumed:           ");
+            var (_, error) = OclParser.TryExecute(fooBarFooBar);
+
+            var expected = "Parsing failure: unexpected '\n'; expected \" (Line 4, Column 31); recently consumed: Foo = \"Bar";
+            error?.Should().Be(expected);
         }
     }
 }
