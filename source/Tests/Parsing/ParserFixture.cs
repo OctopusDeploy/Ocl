@@ -29,7 +29,7 @@ namespace Tests.Parsing
                     Foo = ""Bar
             ");
 
-            error.Should().Be("Parsing failure: unexpected '\r'; expected \" (Line 4, Column 31); recently consumed: Foo = \"Bar");
+            error.Should().Be("Parsing failure: unexpected '\n'; expected \" (Line 4, Column 31); recently consumed: Foo = \"Bar");
         }
     }
 }
