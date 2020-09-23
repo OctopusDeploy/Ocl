@@ -9,7 +9,7 @@ namespace Octopus.Ocl.Converters
     {
         public abstract bool CanConvert(Type type);
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
+        public virtual IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
             => new[] { ConvertInternal(context, name, obj) };
 
         public virtual OclDocument ToDocument(OclConversionContext context, object obj)

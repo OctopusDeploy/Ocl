@@ -9,11 +9,25 @@ namespace Tests.Parsing
 {
     public class AttributeParsingFixture
     {
-        [Test]
-        public void String()
-            => OclParser.Execute(@"Foo = ""Bar""")
+        [TestCase("Bar", "Bar")]
+        [TestCase(@"\r", "\r")]
+        [TestCase(@"\n", "\n")]
+        [TestCase(@"\t", "\t")]
+        [TestCase(@"\\", @"\")]
+        [TestCase(@"\""", @"""")]
+        [TestCase(@"\\\\\\\""\""", @"\\\""""")]
+
+        public void String(string text, string expected)
+            => OclParser.Execute($@"Foo = ""{text}""")
                 .Should()
-                .HaveChildrenExactly(new OclAttribute("Foo", "Bar"));
+                .HaveChildrenExactly(new OclAttribute("Foo", expected));
+
+        [Test]
+        public void StringInvalidEscape()
+        {
+            Action action = () => OclParser.Execute(@"Foo = ""\q""");
+            action.Should().Throw<OclException>().WithMessage(@"Unrecognised character escape: \q");
+        }
 
         [Test]
         public void WithExtraWhitespace()
