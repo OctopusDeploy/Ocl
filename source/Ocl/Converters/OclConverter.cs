@@ -25,10 +25,8 @@ namespace Octopus.Ocl.Converters
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {
             var elements = from p in properties
-                let attr = p.GetCustomAttribute<OclElementAttribute>() ?? new OclElementAttribute()
-                from element in context.ToElements(attr.Name ?? p.Name, p.GetValue(obj))
+                from element in context.ToElements(p.Name, p.GetValue(obj))
                 orderby
-                    attr.Ordinal,
                     element is OclBlock,
                     element.Name
                 select element;
@@ -103,7 +101,6 @@ namespace Octopus.Ocl.Converters
             var defaultProperties = type.GetDefaultMembers().OfType<PropertyInfo>();
             var properties = from p in type.GetProperties()
                 where p.CanRead
-                where p.GetCustomAttribute<OclIgnoreAttribute>() == null
                 select p;
 
             return properties.Except(defaultProperties);
