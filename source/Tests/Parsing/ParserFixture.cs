@@ -29,7 +29,8 @@ namespace Tests.Parsing
                     Foo = ""Bar
             ");
 
-            error.Should().Be("Parsing failure: unexpected '\n'; expected \" (Line 4, Column 31); recently consumed: Foo = \"Bar");
+            var firstNewLineChar = Environment.NewLine[0];
+            error.Should().Be($"Parsing failure: unexpected '{firstNewLineChar}'; expected \" (Line 4, Column 31); recently consumed: Foo = \"Bar");
         }
     }
 }
