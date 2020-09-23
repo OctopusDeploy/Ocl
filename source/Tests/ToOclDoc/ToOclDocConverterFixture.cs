@@ -13,7 +13,7 @@ namespace Tests.ToOclDoc
             var options = new OclSerializerOptions();
             options.Converters.Add(new FakeConverter());
 
-            OclConvert.ToOclDocument(new FakeType(), options)
+            new OclSerializer(options).ToOclDocument(new FakeType())
                 .Should()
                 .HaveChildrenExactly(new OclAttribute("Fake", null));
         }

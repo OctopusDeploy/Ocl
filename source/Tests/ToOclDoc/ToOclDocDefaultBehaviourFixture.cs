@@ -10,7 +10,7 @@ namespace Tests.ToOclDoc
         [Test]
         public void Null()
         {
-            OclConvert.ToOclDocument(null, new OclSerializerOptions())
+            new OclSerializer().ToOclDocument(null)
                 .Should()
                 .Be(new OclDocument());
         }
@@ -18,7 +18,7 @@ namespace Tests.ToOclDoc
         [Test]
         public void SimpleObject()
         {
-            OclConvert.ToOclDocument(new { MyProp = "MyValue" }, new OclSerializerOptions())
+            new OclSerializer().ToOclDocument(new { MyProp = "MyValue" })
                 .Should()
                 .HaveChildrenExactly(
                     new OclAttribute("my_prop", "MyValue")
@@ -34,7 +34,7 @@ namespace Tests.ToOclDoc
                     { new Car(), new Car() }
             };
 
-            var result = OclConvert.ToOclDocument(data, new OclSerializerOptions());
+            var result = new OclSerializer().ToOclDocument(data);
             result.Should()
                 .HaveChildrenExactly(
                     new OclBlock("car")

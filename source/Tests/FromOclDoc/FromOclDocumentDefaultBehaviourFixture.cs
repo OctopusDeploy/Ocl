@@ -11,7 +11,12 @@ namespace Tests.FromOclDoc
         [Test]
         public void Empty()
         {
-            OclConvert.Deserialize<Car>(new OclDocument(), new OclSerializerOptions())
+            OclDocument document = new OclDocument();
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car());
         }
@@ -24,7 +29,11 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Doors", 4)
             };
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car() { Doors = 4 });
         }
@@ -37,7 +46,11 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Name", "Mystery Machine")
             };
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
         }
@@ -50,7 +63,11 @@ namespace Tests.FromOclDoc
                 new OclAttribute("nAMe", "Mystery Machine")
             };
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
         }
@@ -66,7 +83,11 @@ namespace Tests.FromOclDoc
                 }
             };
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car()
                 {
@@ -85,7 +106,11 @@ namespace Tests.FromOclDoc
                 }
             };
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car()
                 {
@@ -111,7 +136,11 @@ namespace Tests.FromOclDoc
                 }
             };
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(new Car()
                 {
@@ -131,7 +160,14 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Wings", 1)
             };
 
-            Action action = () => OclConvert.Deserialize<Car>(document, new OclSerializerOptions());
+            Action action = () =>
+            {
+                var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+                var result = context.FromElement(typeof(Car), document, null);
+                if (result == null)
+                    throw new OclException("Document conversion resulted in null, which is not valid");
+                Car temp = (Car)result;
+            };
             action.Should()
                 .Throw<OclException>()
                 .WithMessage("*The property 'Wings' was not found on 'Car'*");
@@ -145,7 +181,14 @@ namespace Tests.FromOclDoc
                 new OclAttribute("ReadOnly", 1)
             };
 
-            Action action = () => OclConvert.Deserialize<Car>(document, new OclSerializerOptions());
+            Action action = () =>
+            {
+                var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+                var result = context.FromElement(typeof(Car), document, null);
+                if (result == null)
+                    throw new OclException("Document conversion resulted in null, which is not valid");
+                Car temp = (Car)result;
+            };
             action.Should()
                 .Throw<OclException>()
                 .WithMessage("*The property 'ReadOnly' on 'Car' does not have a setter*");
@@ -165,7 +208,11 @@ namespace Tests.FromOclDoc
             var expected = new Car();
             expected.ReadOnlyPassengers.Add(new Person() { Name = "Bob" });
 
-            OclConvert.Deserialize<Car>(document, new OclSerializerOptions())
+            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var result = context.FromElement(typeof(Car), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            ((Car)result)
                 .Should()
                 .BeEquivalentTo(expected);
         }

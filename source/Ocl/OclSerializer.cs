@@ -1,13 +1,15 @@
 using System;
+using System.Text;
+using Octopus.Ocl.Parsing;
 
 namespace Octopus.Ocl
 {
     public interface IOclSerializer
     {
-        OclSerializerOptions Options { get; }
         string Serialize(OclDocument document);
         string Serialize(object obj);
-        T Deserialize<T>(string document) where T : notnull;
+        OclDocument ToOclDocument(object? obj);
+        T Deserialize<T>(string str) where T : notnull;
         T Deserialize<T>(OclDocument document) where T : notnull;
     }
 
@@ -16,21 +18,60 @@ namespace Octopus.Ocl
     /// </summary>
     public class OclSerializer : IOclSerializer
     {
-        public OclSerializer(OclSerializerOptions? options = null)
-            => Options = options ?? new OclSerializerOptions();
+        readonly OclSerializerOptions options;
 
-        public OclSerializerOptions Options { get; }
+        public OclSerializer(OclSerializerOptions? options = null)
+            => this.options = options ?? new OclSerializerOptions();
 
         public string Serialize(OclDocument document)
-            => OclConvert.Serialize(document, Options);
+        {
+            var sb = new StringBuilder();
+            // ReSharper disable once ConvertToUsingDeclaration
+            using (var writer = new OclWriter(sb, options))
+            {
+                writer.Write(document);
+            }
+
+            return sb.ToString();
+        }
 
         public string Serialize(object obj)
-            => OclConvert.Serialize(obj, Options);
+        {
+            var document = obj as OclDocument ?? ToOclDocument(obj);
+            var sb = new StringBuilder();
+            // ReSharper disable once ConvertToUsingDeclaration
+            using (var writer = new OclWriter(sb, options))
+                writer.Write(document);
 
-        public T Deserialize<T>(string document) where T : notnull
-            => OclConvert.Deserialize<T>(document, Options);
+            return sb.ToString();
+        }
+
+        public OclDocument ToOclDocument(object? obj)
+        {
+            if (obj == null)
+                return new OclDocument();
+
+            var context = new OclConversionContext(options);
+
+            var converter = context.GetConverterFor(obj.GetType());
+            return converter.ToDocument(context, obj);
+        }
+
+        public T Deserialize<T>(string ocl) where T : notnull
+        {
+            var document = OclParser.Execute(ocl);
+            return typeof(T) == typeof(OclDocument)
+                ? (T)(object)document
+                : Deserialize<T>(document);
+        }
 
         public T Deserialize<T>(OclDocument document) where T : notnull
-            => OclConvert.Deserialize<T>(document, Options);
+        {
+            var context = new OclConversionContext(options);
+            var result = context.FromElement(typeof(T), document, null);
+            if (result == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            return (T)result;
+        }
     }
 }

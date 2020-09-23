@@ -12,7 +12,7 @@ namespace Tests.ToOclDoc
         public void TheDefaultNameIsThePropertyName()
         {
             var obj = new { Sample = "My Value" };
-            OclConvert.ToOclDocument(obj, new OclSerializerOptions())
+            new OclSerializer().ToOclDocument(obj)
                 .Should()
                 .Be(
                     new OclDocument
@@ -35,7 +35,7 @@ namespace Tests.ToOclDoc
                 }
             };
 
-            OclConvert.ToOclDocument(obj, options)
+            new OclSerializer(options).ToOclDocument(obj)
                 .Should()
                 .Be(
                     new OclDocument
