@@ -24,7 +24,7 @@ namespace Tests.FromOclDoc
         [Test]
         public void IntAttribute()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("Doors", 4)
             };
@@ -35,26 +35,28 @@ namespace Tests.FromOclDoc
                 throw new OclException("Document conversion resulted in null, which is not valid");
             ((Car)result)
                 .Should()
-                .BeEquivalentTo(new Car() { Doors = 4 });
+                .BeEquivalentTo(new Car
+                    { Doors = 4 });
         }
 
         [Test]
         public void IntNullAttribute()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("Doors", null)
             };
 
             new OclSerializer().Deserialize<Car>(document)
                 .Should()
-                .BeEquivalentTo(new Car() { Doors = null });
+                .BeEquivalentTo(new Car
+                    { Doors = null });
         }
 
         [Test]
         public void StringAttribute()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("Name", "Mystery Machine")
             };
@@ -65,26 +67,28 @@ namespace Tests.FromOclDoc
                 throw new OclException("Document conversion resulted in null, which is not valid");
             ((Car)result)
                 .Should()
-                .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
+                .BeEquivalentTo(new Car
+                    { Name = "Mystery Machine" });
         }
 
         [Test]
         public void EnumAttribute()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("Type", "Suv")
             };
 
             new OclSerializer().Deserialize<Car>(document)
                 .Should()
-                .BeEquivalentTo(new Car() { Type = CarType.Suv });
+                .BeEquivalentTo(new Car
+                    { Type = CarType.Suv });
         }
 
         [Test]
         public void CaseIsIgnoredAttribute()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("nAMe", "Mystery Machine")
             };
@@ -95,13 +99,14 @@ namespace Tests.FromOclDoc
                 throw new OclException("Document conversion resulted in null, which is not valid");
             ((Car)result)
                 .Should()
-                .BeEquivalentTo(new Car() { Name = "Mystery Machine" });
+                .BeEquivalentTo(new Car
+                    { Name = "Mystery Machine" });
         }
 
         [Test]
         public void Block()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclBlock("Driver")
                 {
@@ -115,16 +120,17 @@ namespace Tests.FromOclDoc
                 throw new OclException("Document conversion resulted in null, which is not valid");
             ((Car)result)
                 .Should()
-                .BeEquivalentTo(new Car()
+                .BeEquivalentTo(new Car
                 {
-                    Driver = new Person() { Name = "Bob" }
+                    Driver = new Person
+                        { Name = "Bob" }
                 });
         }
 
         [Test]
         public void CollectionSingleItem()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclBlock("Passengers")
                 {
@@ -138,11 +144,12 @@ namespace Tests.FromOclDoc
                 throw new OclException("Document conversion resulted in null, which is not valid");
             ((Car)result)
                 .Should()
-                .BeEquivalentTo(new Car()
+                .BeEquivalentTo(new Car
                 {
                     Passengers = new List<Person>
                     {
-                        new Person() { Name = "Bob" }
+                        new Person
+                            { Name = "Bob" }
                     }
                 });
         }
@@ -150,7 +157,7 @@ namespace Tests.FromOclDoc
         [Test]
         public void CollectionMultipleItems()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclBlock("Passengers")
                 {
@@ -168,12 +175,14 @@ namespace Tests.FromOclDoc
                 throw new OclException("Document conversion resulted in null, which is not valid");
             ((Car)result)
                 .Should()
-                .BeEquivalentTo(new Car()
+                .BeEquivalentTo(new Car
                 {
                     Passengers = new List<Person>
                     {
-                        new Person() { Name = "Bob" },
-                        new Person() { Name = "George" }
+                        new Person
+                            { Name = "Bob" },
+                        new Person
+                            { Name = "George" }
                     }
                 });
         }
@@ -181,7 +190,7 @@ namespace Tests.FromOclDoc
         [Test]
         public void ExceptionIsThrownIfPropertyDoesNotExist()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("Wings", 1)
             };
@@ -202,7 +211,7 @@ namespace Tests.FromOclDoc
         [Test]
         public void ExceptionIsThrownIfPropertyCantBeSet()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("ReadOnly", 1)
             };
@@ -223,7 +232,7 @@ namespace Tests.FromOclDoc
         [Test]
         public void ReadOnlyPropertiesWorkIfTheReferenceMatches()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclBlock("ReadOnlyPassengers")
                 {
@@ -232,7 +241,8 @@ namespace Tests.FromOclDoc
             };
 
             var expected = new Car();
-            expected.ReadOnlyPassengers.Add(new Person() { Name = "Bob" });
+            expected.ReadOnlyPassengers.Add(new Person
+                { Name = "Bob" });
 
             var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
             var result = context.FromElement(typeof(Car), document, null);

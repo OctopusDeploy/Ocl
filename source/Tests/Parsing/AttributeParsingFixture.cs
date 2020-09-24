@@ -16,7 +16,6 @@ namespace Tests.Parsing
         [TestCase(@"\\", @"\")]
         [TestCase(@"\""", @"""")]
         [TestCase(@"\\\\\\\""\""", @"\\\""""")]
-
         public void String(string text, string expected)
             => OclParser.Execute($@"Foo = ""{text}""")
                 .Should()

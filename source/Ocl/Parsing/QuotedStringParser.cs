@@ -10,6 +10,15 @@ namespace Octopus.Ocl.Parsing
             from ch in Parse.AnyChar
             select ConvertEscapedChar(ch);
 
+        static readonly Parser<char> AnythingOtherThanEolOrQuote
+            = Parse.CharExcept(new[] { '"', '\r', '\n' });
+
+        public static readonly Parser<string> QuotedStringLiteral =
+            from startQuote in Parse.Char('"')
+            from str in EscapedChar.XOr(AnythingOtherThanEolOrQuote).Many().Text()
+            from endQuote in Parse.Char('"')
+            select str;
+
         static char ConvertEscapedChar(in char ch)
         {
             switch (ch)
@@ -28,14 +37,5 @@ namespace Octopus.Ocl.Parsing
                     throw new OclException(@"Unrecognised character escape: \" + ch);
             }
         }
-
-        static readonly Parser<char> AnythingOtherThanEolOrQuote
-            = Parse.CharExcept(new[] { '"', '\r', '\n' });
-
-        public static readonly Parser<string> QuotedStringLiteral =
-            from startQuote in Parse.Char('"')
-            from str in EscapedChar.XOr(AnythingOtherThanEolOrQuote).Many().Text()
-            from endQuote in Parse.Char('"')
-            select str;
     }
 }

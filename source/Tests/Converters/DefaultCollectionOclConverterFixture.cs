@@ -48,7 +48,8 @@ namespace Tests.Converters
         [Test]
         public void FromElement_ReusesCurrentCollection()
         {
-            var existing = new HashSet<string>() { "ExistingItem" };
+            var existing = new HashSet<string>
+                { "ExistingItem" };
             ExecuteFromElement<HashSet<string>>(existing)
                 .Should()
                 .BeSameAs(existing)
@@ -60,10 +61,8 @@ namespace Tests.Converters
             => new DefaultCollectionOclConverter()
                 .FromElement(context, typeof(TTarget), new OclAttribute("Test", Value), currentValue);
 
-
         class MyCollection : HashSet<string>
         {
-
         }
     }
 }

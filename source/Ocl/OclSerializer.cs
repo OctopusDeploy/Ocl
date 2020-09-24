@@ -41,7 +41,9 @@ namespace Octopus.Ocl
             var sb = new StringBuilder();
             // ReSharper disable once ConvertToUsingDeclaration
             using (var writer = new OclWriter(sb, options))
+            {
                 writer.Write(document);
+            }
 
             return sb.ToString();
         }

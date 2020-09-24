@@ -36,7 +36,7 @@ namespace Octopus.Ocl.Converters
                 return list;
             }
 
-            var addMethod = collection.GetType().GetMethod("Add", new[]{ collectionType });
+            var addMethod = collection.GetType().GetMethod("Add", new[] { collectionType });
             if (addMethod == null)
                 throw new Exception("Only collections that implement an Add method are supported");
 

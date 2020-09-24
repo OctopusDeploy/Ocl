@@ -61,7 +61,6 @@ namespace Octopus.Ocl
                 IsSupportedValueCollectionType(type);
         }
 
-
         internal static bool IsSupportedValueCollectionType(Type type)
             => type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!) ||
                 typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType && type.GenericTypeArguments.Length == 1 && IsSupportedValueType(type.GenericTypeArguments[0]);

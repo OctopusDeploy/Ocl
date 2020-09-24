@@ -68,9 +68,9 @@ namespace Tests.ComplexDocument
             };
 
         static OclSerializerOptions GetOptions()
-            => new OclSerializerOptions()
+            => new OclSerializerOptions
             {
-                Converters = new List<IOclConverter>()
+                Converters = new List<IOclConverter>
                 {
                     new DeploymentProcessConverter(),
                     new DeploymentStepOclConverter(),
@@ -100,7 +100,9 @@ namespace Tests.ComplexDocument
 
             OclDocument ret;
             if (obj == null)
+            {
                 ret = new OclDocument();
+            }
             else
             {
                 var context = new OclConversionContext(options ?? new OclSerializerOptions());
@@ -136,7 +138,9 @@ namespace Tests.ComplexDocument
             object? obj = GetTestData();
             OclDocument ret;
             if (obj == null)
+            {
                 ret = new OclDocument();
+            }
             else
             {
                 var context = new OclConversionContext(options ?? new OclSerializerOptions());
@@ -166,7 +170,9 @@ namespace Tests.ComplexDocument
 
             OclDocument ret;
             if (input == null)
+            {
                 ret = new OclDocument();
+            }
             else
             {
                 var context = new OclConversionContext(oclSerializerOptions ?? new OclSerializerOptions());
