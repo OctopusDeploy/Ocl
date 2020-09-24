@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 using Octopus.Ocl;
 
@@ -45,6 +46,22 @@ namespace Tests.ToOclDoc
                     {
                         new OclAttribute("doors", 2)
                     }
+                );
+        }
+
+        [Test]
+        public void Enum()
+        {
+            var data = new
+            {
+                MyProp = BindingFlags.Static
+            };
+
+            var result = OclConvert.ToOclDocument(data, new OclSerializerOptions());
+
+            result.Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("my_prop", "Static")
                 );
         }
 
