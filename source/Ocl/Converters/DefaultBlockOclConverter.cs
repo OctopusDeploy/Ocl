@@ -74,11 +74,7 @@ namespace Octopus.Ocl.Converters
         }
 
         protected virtual IEnumerable<PropertyInfo> GetLabelProperties(Type type)
-            => from p in GetProperties(type)
-                let attr = p.GetCustomAttribute<OclLabelAttribute>()
-                where attr != null
-                orderby attr.Ordinal
-                select p;
+            => Array.Empty<PropertyInfo>();
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)
         {

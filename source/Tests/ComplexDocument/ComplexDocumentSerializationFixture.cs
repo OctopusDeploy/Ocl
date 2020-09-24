@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Assent;
 using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
+using Octopus.Ocl.Parsing;
 
 namespace Tests.ComplexDocument
 {
@@ -96,7 +98,17 @@ namespace Tests.ComplexDocument
                 }
             };
 
-            var result = OclConvert.ToOclDocument(obj, options);
+            OclDocument ret;
+            if (obj == null)
+                ret = new OclDocument();
+            else
+            {
+                var context = new OclConversionContext(options ?? new OclSerializerOptions());
+                var converter = context.GetConverterFor(obj.GetType());
+                ret = converter.ToDocument(context, obj);
+            }
+
+            var result = ret;
 
             result.Should()
                 .Be(
@@ -121,7 +133,28 @@ namespace Tests.ComplexDocument
                 }
             };
 
-            var result = OclConvert.Serialize(GetTestData(), options);
+            object? obj = GetTestData();
+            OclDocument ret;
+            if (obj == null)
+                ret = new OclDocument();
+            else
+            {
+                var context = new OclConversionContext(options ?? new OclSerializerOptions());
+                var converter = context.GetConverterFor(obj.GetType());
+                ret = converter.ToDocument(context, obj);
+            }
+
+            var document = obj as OclDocument ?? ret;
+            OclSerializerOptions? options1 = null;
+            options1 ??= new OclSerializerOptions();
+            var sb = new StringBuilder();
+            // ReSharper disable once ConvertToUsingDeclaration
+            using (var writer = new OclWriter(sb, options1))
+            {
+                writer.Write(document);
+            }
+
+            var result = sb.ToString();
             this.Assent(result);
         }
 
@@ -131,8 +164,35 @@ namespace Tests.ComplexDocument
             var oclSerializerOptions = GetOptions();
             var input = GetTestData();
 
-            var ocl = OclConvert.Serialize(input, oclSerializerOptions);
-            var result = OclConvert.Deserialize<DeploymentProcess>(ocl, oclSerializerOptions);
+            OclDocument ret;
+            if (input == null)
+                ret = new OclDocument();
+            else
+            {
+                var context = new OclConversionContext(oclSerializerOptions ?? new OclSerializerOptions());
+                var converter = context.GetConverterFor(input.GetType());
+                ret = converter.ToDocument(context, input);
+            }
+
+            var document = (object?)input as OclDocument ?? ret;
+            OclSerializerOptions? options1 = null;
+            options1 ??= new OclSerializerOptions();
+            var sb = new StringBuilder();
+            // ReSharper disable once ConvertToUsingDeclaration
+            using (var writer = new OclWriter(sb, options1))
+            {
+                writer.Write(document);
+            }
+
+            var ocl = sb.ToString();
+            var document1 = OclParser.Execute(ocl);
+            var context1 = new OclConversionContext(oclSerializerOptions ?? new OclSerializerOptions());
+            var result1 = context1.FromElement(typeof(DeploymentProcess), document1, null);
+            if (result1 == null)
+                throw new OclException("Document conversion resulted in null, which is not valid");
+            var result = typeof(DeploymentProcess) == typeof(OclDocument)
+                ? (DeploymentProcess)(object)document1
+                : (DeploymentProcess)result1;
 
             result.Should().BeEquivalentTo(input);
         }

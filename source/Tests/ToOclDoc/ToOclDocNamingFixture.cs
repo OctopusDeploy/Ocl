@@ -12,26 +12,12 @@ namespace Tests.ToOclDoc
         public void TheDefaultNameIsThePropertyName()
         {
             var obj = new { Sample = "My Value" };
-            OclConvert.ToOclDocument(obj, new OclSerializerOptions())
+            new OclSerializer().ToOclDocument(obj)
                 .Should()
                 .Be(
                     new OclDocument
                     {
                         new OclAttribute("sample", "My Value")
-                    }
-                );
-        }
-
-        [Test]
-        public void TheNameFromTheOclElementAttributeIsUsed()
-        {
-            var obj = new SampleWithElementNameAttribute();
-            OclConvert.ToOclDocument(obj, new OclSerializerOptions())
-                .Should()
-                .Be(
-                    new OclDocument
-                    {
-                        new OclAttribute("custom_name", "The Label")
                     }
                 );
         }
@@ -49,7 +35,7 @@ namespace Tests.ToOclDoc
                 }
             };
 
-            OclConvert.ToOclDocument(obj, options)
+            new OclSerializer(options).ToOclDocument(obj)
                 .Should()
                 .Be(
                     new OclDocument
@@ -57,12 +43,6 @@ namespace Tests.ToOclDoc
                         new OclBlock("the_name")
                     }
                 );
-        }
-
-        class SampleWithElementNameAttribute
-        {
-            [OclElement(Name = "Custom Name")]
-            public string ALabel { get; } = "The Label";
         }
 
         class SampleWithANameProperty
