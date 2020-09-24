@@ -102,9 +102,9 @@ ZZZ
 
             var expected = @"MyBlock {
     MyAttr = <<-EOT
-     a
-        b
-    EOT
+             a
+                b
+        EOT
 }";
 
             Execute(w => w.Write(block))
@@ -121,9 +121,9 @@ ZZZ
             };
 
             var expected = @"MyAttr = <<-YYY
-a
-b
-YYY";
+        a
+        b
+    YYY";
 
             Execute(w => w.Write(new OclAttribute("MyAttr", "a\nb")), options)
                 .Should()

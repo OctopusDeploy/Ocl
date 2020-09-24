@@ -72,10 +72,10 @@ namespace Octopus.Ocl
 
             writer.Write(" {");
 
-            currentIndent += Options.IndentDepth;
+            currentIndent++;
             foreach (var child in block)
                 Write(child);
-            currentIndent -= Options.IndentDepth;
+            currentIndent--;
 
             writer.WriteLine();
 
@@ -95,9 +95,10 @@ namespace Octopus.Ocl
             lastWrittenWasBlock = false;
         }
 
-        void WriteIndent()
+        void WriteIndent(int extraIndent = 0)
         {
-            for (var x = 0; x < currentIndent; x++)
+            var indent = (currentIndent + extraIndent) * Options.IndentDepth;
+            for (var x = 0; x < indent; x++)
                 writer.Write(Options.IndentChar);
         }
 
@@ -214,12 +215,12 @@ namespace Octopus.Ocl
             foreach (var line in literal.Value.Split('\n'))
             {
                 if (isIndented)
-                    WriteIndent();
+                    WriteIndent(2);
                 writer.WriteLine(line.TrimEnd('\r'));
             }
 
             if (isIndented)
-                WriteIndent();
+                WriteIndent(1);
             writer.Write(literal.HeredocTag);
         }
 
