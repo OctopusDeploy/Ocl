@@ -11,7 +11,7 @@ namespace Tests.ToOclDoc
         [Test]
         public void LabelAttributeOnRootDocumentIsIgnoredAndPropertyIsIncludedAsAChild()
         {
-            OclConvert.ToOclDocument(new SampleWithLabelAttribute(), new OclSerializerOptions())
+            OclConvert.ToOclDocument(new SampleWithLabelAttribute())
                 .Should()
                 .HaveChildrenExactly(
                     new OclAttribute("my_label", "The Label")
@@ -22,10 +22,20 @@ namespace Tests.ToOclDoc
         public void ByDefaultLabelsAreIdentifiedViaAttributeAndNotIncludedAsAChild()
         {
             var obj = new { Sample = new SampleWithLabelAttribute() };
-            OclConvert.ToOclDocument(obj, new OclSerializerOptions())
+            OclConvert.ToOclDocument(obj)
                 .Should()
                 .HaveChildrenExactly(
                     new OclBlock("sample", "The Label")
+                );
+        }
+
+        [Test]
+        public void LabelsAreIncludedAsAttributesInTheRootDocument()
+        {
+            OclConvert.ToOclDocument(new SampleWithLabelAttribute())
+                .Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("my_label", "The Label")
                 );
         }
 
