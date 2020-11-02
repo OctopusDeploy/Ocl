@@ -1,0 +1,69 @@
+default_guided_failure_mode = "On"
+description = <<-EOT
+This is a 
+Multiline description
+EOT
+environment_scope = "Specified"
+environments = ["Production", "Development"]
+multi_tenancy_mode = "TenantedOrUntenanted"
+name = "My Runbook"
+
+connectivity_policy {
+    allow_deployments_to_no_targets = true
+    exclude_unhealthy_targets = true
+    skip_machine_behavior = "SkipUnavailableMachines"
+    target_roles = ["Target Role"]
+}
+
+project_id = "Projects-1"
+
+steps "Script Step" {
+    condition = "Always"
+    package_requirement = "BeforePackageAcquisition"
+    start_trigger = "StartWithPrevious"
+
+    actions "Script Step" {
+        action_type = "Octopus.Script"
+        channels = ["Release", "Beta"]
+        condition = "Variable"
+        environments = ["Pre Production"]
+        excluded_environments = ["Production"]
+        is_disabled = true
+        is_required = true
+        tenant_tags = ["David/Who"]
+        worker_pool_id_or_name = "My Worker Pool"
+        worker_pool_variable = "WorkerPoolVar"
+
+        container {
+            feed_id = "Container Feed"
+            image = "ContainerImage"
+        }
+
+        packages {
+            acquisition_location = "ExecutionTarget"
+            feed_id = "External Feed"
+            id = "15ee43d9-fa99-4290-84bf-e583e451b77a"
+            is_primary_package = true
+            name = ""
+            package_id = "OctoFx.Web"
+        }
+
+        packages {
+            acquisition_location = "Server"
+            feed_id = "External Feed"
+            id = "e33a701a-6e6e-44c3-a351-f5a05d0ccb6d"
+            is_primary_package = false
+            name = "Helper Package"
+            package_id = "OctoFx.Helper"
+        }
+
+        properties {
+            Action_Prop = "The Value"
+        }
+    }
+
+    properties {
+        StepProperty = "Value1"
+        Octopus_Action_TargetRoles = "Portal"
+    }
+}

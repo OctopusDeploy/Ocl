@@ -1,0 +1,49 @@
+default_guided_failure_mode = "EnvironmentDefault"
+description = ""
+environment_scope = "All"
+multi_tenancy_mode = "Untenanted"
+name = "My Runbook"
+
+connectivity_policy {
+    allow_deployments_to_no_targets = true
+    exclude_unhealthy_targets = false
+    skip_machine_behavior = "None"
+}
+
+project_id = "Projects-1"
+
+steps "Deploy Website" {
+    condition = "Success"
+    package_requirement = "LetOctopusDecide"
+    start_trigger = "StartAfterPrevious"
+
+    actions "Deploy Website" {
+        action_type = "Octopus.IIS"
+        condition = "Success"
+        is_disabled = false
+        is_required = false
+
+        properties {
+            Octopus_Action_IISWebSite_DeploymentType = "webSite"
+            Octopus_Action_IISWebSite_CreateOrUpdateWebSite = "True"
+            Octopus_Action_IISWebSite_Bindings = "[{\"protocol\",\"https\",\"port\",\"443\",\"host\",\"#{Domain}\",\"thumbprint\",null,\"certificateVariable\",\"Certificate\",\"requireSni\",\"True\",\"enabled\",\"True\"){\"protocol\",\"https\",\"ipAddress\",\"\",\"port\",\"443\",\"host\",\"#{DirectDomainPrefix}.#{Domain}\",\"thumbprint\",null,\"certificateVariable\",\"Certificate\",\"requireSni\",\"True\",\"enabled\",true){\"protocol\",\"http\",\"ipAddress\",\"*\",\"port\",\"80\",\"host\",\"#{Domain}\",\"thumbprint\",null,\"certificateVariable\",null,\"requireSni\",false,\"enabled\",true){\"protocol\",\"http\",\"ipAddress\",\"*\",\"port\",\"80\",\"host\",\"www.#{Domain}\",\"thumbprint\",null,\"certificateVariable\",null,\"requireSni\",false,\"enabled\",true){\"protocol\",\"https\",\"ipAddress\",\"*\",\"port\",\"443\",\"host\",\"www.#{domain}\",\"thumbprint\",null,\"certificateVariable\",\"Certificate\",\"requireSni\",\"True\",\"enabled\",true}]"
+            Octopus_Action_IISWebSite_ApplicationPoolIdentityType = "ApplicationPoolIdentity"
+            Octopus_Action_IISWebSite_EnableAnonymousAuthentication = "True"
+            Octopus_Action_IISWebSite_EnableBasicAuthentication = "False"
+            Octopus_Action_IISWebSite_EnableWindowsAuthentication = "False"
+            Octopus_Action_IISWebSite_WebApplication_ApplicationPoolFrameworkVersion = "v4.0"
+            Octopus_Action_IISWebSite_WebApplication_ApplicationPoolIdentityType = "ApplicationPoolIdentity"
+            Octopus_Action_EnabledFeatures = "Octopus.Features.IISWebSite,Octopus.Features.JsonConfigurationVariables"
+            Octopus_Action_Package_FeedId = "My External Feed"
+            Octopus_Action_Package_DownloadOnTentacle = "True"
+            Octopus_Action_IISWebSite_WebRootType = "packageRoot"
+            Octopus_Action_IISWebSite_StartApplicationPool = "True"
+            Octopus_Action_IISWebSite_StartWebSite = "True"
+            Octopus_Action_Package_PackageId = "OctoFX.Web"
+            Octopus_Action_IISWebSite_WebSiteName = "#{Domain}"
+            Octopus_Action_IISWebSite_ApplicationPoolName = "#{Domain}"
+            Octopus_Action_Package_JsonConfigurationVariablesEnabled = "True"
+            Octopus_Action_Package_JsonConfigurationVariablesTargets = "appsettings.json"
+        }
+    }
+}
