@@ -24,9 +24,13 @@ integer_array = "[", { integer }, "]"
 
 literal = string | heredoc | decimal | integer | empty_array | string_array | decimal_array | integer_array
 
+dictionary_key = string | { not_a_double_quote_or_whitespace }
+dictionary_entry = dictionary_key, "=", literal
+dictionary = "{", newline, [ dictionary_entry, newline ], "}", newline
+
 label = string
 
-attribute = name, "=", literal 
+attribute = name, "=", literal | dictionary
 
 block = name, { label }, "{", newline, [ body, newline ], "}", newline
 
