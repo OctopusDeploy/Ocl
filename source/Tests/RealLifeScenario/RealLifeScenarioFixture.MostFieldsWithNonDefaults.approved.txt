@@ -49,18 +49,12 @@ steps "Script Step" {
             acquisition_location = "ExecutionTarget"
             feed_id_or_name = "External Feed"
             package_id = "OctoFx.Web"
-            properties = {
-            }
-
         }
 
         packages "Helper Package" {
             acquisition_location = "Server"
             feed_id_or_name = "External Feed"
             package_id = "OctoFx.Helper"
-            properties = {
-            }
-
         }
     }
 }
