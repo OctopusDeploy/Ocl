@@ -16,13 +16,16 @@ using Tests.RealLifeScenario.Entities;
 
 namespace Tests.RealLifeScenario
 {
-    public abstract class RealLifeScenarioFixtureBase
+    public class RealLifeScenarioFixture
     {
         const string SpaceId = "Spaces-1";
         const string ProjectId = "Projects-1";
 
-        protected abstract string Serialize(VcsRunbookPersistenceModel model);
-        protected abstract VcsRunbookPersistenceModel Deserialize(string ocl);
+        protected string Serialize(VcsRunbookPersistenceModel model)
+            => new OclSerializerFactory().Create().Serialize(model);
+
+        protected VcsRunbookPersistenceModel Deserialize(string ocl)
+            => new OclSerializerFactory().Create().Deserialize<VcsRunbookPersistenceModel>(ocl);
 
         [Test]
         public void MostFieldsWithNonDefaults()
