@@ -13,6 +13,7 @@ using Octopus.Server.Extensibility.HostServices.Model.Tenants;
 using Octopus.Server.Extensibility.Resources;
 using Tests.RealLifeScenario.ConverterStrategy.Implementation;
 using Tests.RealLifeScenario.Entities;
+using Tests.RealLifeScenario.Implementation;
 
 namespace Tests.RealLifeScenario
 {
