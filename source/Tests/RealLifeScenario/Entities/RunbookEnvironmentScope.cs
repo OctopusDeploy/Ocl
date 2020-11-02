@@ -6,6 +6,6 @@ namespace Tests.RealLifeScenario.Entities
     {
         All = 0,
         Specified,
-        FromProjectLifecycles,
+        FromProjectLifecycles
     }
 }

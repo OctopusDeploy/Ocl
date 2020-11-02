@@ -28,7 +28,7 @@ namespace Tests.RealLifeScenario.Implementation
 
         public OclDocument ToDocument(OclConversionContext context, object obj)
         {
-            var model = (VcsRunbookPersistenceModel) obj;
+            var model = (VcsRunbookPersistenceModel)obj;
 
             var doc = runbookConverter.ToDocument(context, model.Runbook);
             if (model.Process != null)

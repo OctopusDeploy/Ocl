@@ -14,7 +14,7 @@ namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
 
         public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
         {
-            var dict = (PropertiesDictionary) value;
+            var dict = (PropertiesDictionary)value;
 
             if (dict.None())
                 yield break;
@@ -39,7 +39,7 @@ namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
             if (!(element is OclBlock block))
                 throw new OclException("The properties must be a block");
 
-            var dict = currentValue == null ? new PropertiesDictionary() : (PropertiesDictionary) currentValue;
+            var dict = currentValue == null ? new PropertiesDictionary() : (PropertiesDictionary)currentValue;
 
             foreach (var child in block)
             {

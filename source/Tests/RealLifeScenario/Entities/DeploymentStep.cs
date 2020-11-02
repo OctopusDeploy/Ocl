@@ -30,6 +30,5 @@ namespace Tests.RealLifeScenario.Entities
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
         public PropertiesDictionary Properties { get; } = new PropertiesDictionary();
-
     }
 }

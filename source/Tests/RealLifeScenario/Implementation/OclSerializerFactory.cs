@@ -9,9 +9,9 @@ namespace Tests.RealLifeScenario.Implementation
     {
         public IOclSerializer Create()
             => new OclSerializer(
-                new OclSerializerOptions()
+                new OclSerializerOptions
                 {
-                    Converters = new List<IOclConverter>()
+                    Converters = new List<IOclConverter>
                     {
                         new ReferenceCollectionOclConverter(),
                         new TinyTypeOclConverter(),
@@ -20,7 +20,7 @@ namespace Tests.RealLifeScenario.Implementation
                         new DeploymentActionOclConverter(),
                         new PackageReferenceOclConverter(),
                         new PropertiesDictionaryOclConverter(),
-                        new VcsRunbookPersistenceModelOclConverter(),
+                        new VcsRunbookPersistenceModelOclConverter()
                     }
                 });
     }

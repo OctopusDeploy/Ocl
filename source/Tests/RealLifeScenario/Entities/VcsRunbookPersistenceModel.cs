@@ -5,9 +5,7 @@ namespace Tests.RealLifeScenario.Entities
     public class VcsRunbookPersistenceModel
     {
         public VcsRunbookPersistenceModel(VcsRunbook runbook)
-        {
-            Runbook = runbook;
-        }
+            => Runbook = runbook;
 
         public VcsRunbook Runbook { get; }
 

@@ -13,7 +13,7 @@ namespace Tests.RealLifeScenario.Implementation
 
         public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
         {
-            var collection = (ReferenceCollection) value;
+            var collection = (ReferenceCollection)value;
 
             if (collection.Count == 0)
                 return Array.Empty<IOclElement>();
@@ -35,7 +35,7 @@ namespace Tests.RealLifeScenario.Implementation
             if (!(attrib.Value is string[] valuesToAdd))
                 throw new Exception($"The {element.Name} attribute must have a string array value");
 
-            var collection = currentValue == null ? new ReferenceCollection() : (ReferenceCollection) currentValue;
+            var collection = currentValue == null ? new ReferenceCollection() : (ReferenceCollection)currentValue;
 
             collection.ReplaceAll(valuesToAdd);
 

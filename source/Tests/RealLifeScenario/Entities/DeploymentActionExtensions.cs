@@ -7,7 +7,7 @@ namespace Tests.RealLifeScenario.Entities
     {
         public static DeploymentAction WithProperty(this DeploymentAction action, string key, string value)
         {
-            action.Properties[key] = new PropertyValue(value, false);
+            action.Properties[key] = new PropertyValue(value);
             return action;
         }
 

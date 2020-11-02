@@ -25,12 +25,12 @@ namespace Tests.RealLifeScenario.Implementation
             if (block.Labels.Count > 1)
                 throw new OclException("Package reference blocks can only have zero or one label");
 
-            ((PackageReference) target).Name = block.Labels[0];
+            ((PackageReference)target).Name = block.Labels[0];
         }
 
         protected override IEnumerable<string> GetLabels(object obj)
         {
-            var name = ((PackageReference) obj).Name;
+            var name = ((PackageReference)obj).Name;
             return string.IsNullOrWhiteSpace(name) ? Array.Empty<string>() : new[] { name };
         }
 

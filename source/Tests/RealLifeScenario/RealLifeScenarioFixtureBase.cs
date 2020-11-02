@@ -5,13 +5,11 @@ using Assent;
 using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Data.Model;
-using Octopus.Ocl;
 using Octopus.Server.Extensibility.HostServices.Model;
 using Octopus.Server.Extensibility.HostServices.Model.Feeds;
 using Octopus.Server.Extensibility.HostServices.Model.Projects;
 using Octopus.Server.Extensibility.HostServices.Model.Tenants;
 using Octopus.Server.Extensibility.Resources;
-using Tests.RealLifeScenario.ConverterStrategy.Implementation;
 using Tests.RealLifeScenario.Entities;
 using Tests.RealLifeScenario.Implementation;
 
@@ -36,7 +34,7 @@ namespace Tests.RealLifeScenario
                     Description = "This is a description",
                     EnvironmentScope = RunbookEnvironmentScope.Specified,
                     Environments = { "Production", "Development" },
-                    ConnectivityPolicy = new ProjectConnectivityPolicy()
+                    ConnectivityPolicy = new ProjectConnectivityPolicy
                     {
                         TargetRoles = new ReferenceCollection("Target Role"),
                         ExcludeUnhealthyTargets = true,
@@ -64,7 +62,7 @@ namespace Tests.RealLifeScenario
                             PackageRequirement = DeploymentStepPackageRequirement.BeforePackageAcquisition,
                             Properties =
                             {
-                                { "StepProperty", new PropertyValue("Value1", false) },
+                                { "StepProperty", new PropertyValue("Value1") },
                                 { "Octopus.Action.TargetRoles", new PropertyValue("Portal") }
                             },
                             Actions =
@@ -74,7 +72,7 @@ namespace Tests.RealLifeScenario
                                     Id = "Should Not Appear",
                                     Channels = { new ChannelIdOrName("Release"), new ChannelIdOrName("Beta") },
                                     Condition = DeploymentActionCondition.Variable,
-                                    Container = new DeploymentActionContainer()
+                                    Container = new DeploymentActionContainer
                                     {
                                         Image = "ContainerImage",
                                         FeedId = "Container Feed"
@@ -93,10 +91,10 @@ namespace Tests.RealLifeScenario
                                     },
                                     Properties =
                                     {
-                                        { "Action.Prop", new PropertyValue("The Value") },
+                                        { "Action.Prop", new PropertyValue("The Value") }
                                         // { "Action.Sensitive", new PropertyValue("Sensitive Value", true) }
                                     }
-                                },
+                                }
                             }
                         }
                     }
@@ -116,7 +114,7 @@ namespace Tests.RealLifeScenario
                             Actions =
                             {
                                 new DeploymentAction("First", ActionNames.Script),
-                                new DeploymentAction("Second", ActionNames.Script),
+                                new DeploymentAction("Second", ActionNames.Script)
                             }
                         }
                     }

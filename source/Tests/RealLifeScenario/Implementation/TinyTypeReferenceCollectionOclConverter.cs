@@ -23,7 +23,7 @@ namespace Tests.RealLifeScenario.Implementation
 
         public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
         {
-            var values = ((IEnumerable) value)
+            var values = ((IEnumerable)value)
                 .Cast<object>()
                 .Select(v => v.ToString())
                 .ToArray();
@@ -54,7 +54,7 @@ namespace Tests.RealLifeScenario.Implementation
             foreach (var value in valuesToAdd)
                 collection.Add(Activator.CreateInstance(tinyTypeType, value));
 
-            return (object) collection;
+            return (object)collection;
         }
     }
 }

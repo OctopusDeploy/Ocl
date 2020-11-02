@@ -16,7 +16,7 @@ namespace Tests.RealLifeScenario.Entities
 
         public TenantedDeploymentMode MultiTenancyMode { get; set; }
 
-        public ProjectConnectivityPolicy ConnectivityPolicy { get; set; } = new ProjectConnectivityPolicy()
+        public ProjectConnectivityPolicy ConnectivityPolicy { get; set; } = new ProjectConnectivityPolicy
         {
             AllowDeploymentsToNoTargets = true
         };
