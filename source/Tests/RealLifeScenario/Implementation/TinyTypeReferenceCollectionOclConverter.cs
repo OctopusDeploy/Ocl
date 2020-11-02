@@ -6,7 +6,7 @@ using Octopus.Data.Model;
 using Octopus.Ocl;
 using Octopus.TinyTypes;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class TinyTypeReferenceCollectionOclConverter : IOclConverter
     {

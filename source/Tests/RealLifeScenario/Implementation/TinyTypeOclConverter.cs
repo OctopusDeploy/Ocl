@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Octopus.Ocl;
 using Octopus.TinyTypes;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class TinyTypeOclConverter : IOclConverter
     {

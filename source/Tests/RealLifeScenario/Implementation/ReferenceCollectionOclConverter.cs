@@ -4,7 +4,7 @@ using System.Linq;
 using Octopus.Data.Model;
 using Octopus.Ocl;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class ReferenceCollectionOclConverter : IOclConverter
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Octopus.Ocl;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class OclSerializerFactory
     {

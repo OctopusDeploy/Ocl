@@ -6,7 +6,7 @@ using Octopus.Ocl;
 using Octopus.Ocl.Converters;
 using Tests.RealLifeScenario.Entities;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class DeploymentStepOclConverter : DefaultBlockOclConverter
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Octopus.Ocl;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public static class OclConverterExtensions
     {

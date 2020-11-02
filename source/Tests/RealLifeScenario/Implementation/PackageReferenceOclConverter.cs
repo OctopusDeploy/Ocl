@@ -6,7 +6,7 @@ using Octopus.Ocl;
 using Octopus.Ocl.Converters;
 using Octopus.Server.Extensibility.HostServices.Model;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class PackageReferenceOclConverter : DefaultBlockOclConverter
     {
