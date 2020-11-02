@@ -41,13 +41,13 @@ steps "Script Step" {
 
         packages {
             acquisition_location = "ExecutionTarget"
-            feed_id = "External Feed"
+            feed_id_or_name = "External Feed"
             package_id = "OctoFx.Web"
         }
 
         packages "Helper Package" {
             acquisition_location = "Server"
-            feed_id = "External Feed"
+            feed_id_or_name = "External Feed"
             package_id = "OctoFx.Helper"
         }
 
