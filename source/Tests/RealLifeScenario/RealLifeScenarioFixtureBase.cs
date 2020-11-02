@@ -11,7 +11,6 @@ using Octopus.Server.Extensibility.HostServices.Model.Feeds;
 using Octopus.Server.Extensibility.HostServices.Model.Projects;
 using Octopus.Server.Extensibility.HostServices.Model.Tenants;
 using Octopus.Server.Extensibility.Resources;
-using Tests.RealLifeScenario.ConverterStrategy.Implementation;
 using Tests.RealLifeScenario.Entities;
 using Tests.RealLifeScenario.Implementation;
 

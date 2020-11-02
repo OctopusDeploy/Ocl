@@ -22,45 +22,45 @@ steps "Backup the Database" {
         condition = "Success"
         is_disabled = false
         is_required = false
-
-        properties {
-            Octopus_Action_RunOnServer = "true"
-            Octopus_Action_Script_Syntax = "PowerShell"
-            Octopus_Action_Script_ScriptSource = "Inline"
-            Octopus_Action_Script_ScriptBody = <<-EOT
-                    $backupResult = $OctopusParameters["Octopus.Action[Backup Octofront Prod SQL Database].Output.backupResult"]
-                    
-                    
-                    $TableSAName = 'infrascoreprodaccount'
-                    $TableName = 'results'
-                    $partitionKey = "OctofrontSQL"
-                    
-                    $data = @{
-                      RowKey = ([guid]::NewGuid().tostring())
-                      PartitionKey = $partitionKey
-                      state = $backupResult 
-                      description = "Octofront SQL Backup weekly"
-                      dtDate = [datetime]::UtcNow
-                    }
-                    New-AzureTableEntity -StorageAccountName $TableSAName `
-                                         -StorageAccountAccessKey $TableStorageKey `
-                                         -TableName $TableName `
-                                         -Entities $data        
-                    
-                    $querystring = "(PartitionKey eq '$partitionKey')"
-                    $tableWrite = Get-AzureTableEntity -TableName $TableName `
-                                                     -StorageAccountName $TableSAName `
-                                                     -StorageAccountAccessKey $TableStorageKey  `
-                                                     -QueryString $querystring `
-                                                     -ConvertDateTimeFields $true `
-                                                     -GetAll $false 
-                    
-                    $ordered = $tableWrite | Sort-Object -Descending -Property Timestamp 
-                    $entryResult = $ordered[0] | Sort-Object -Descending -Property Timestamp | Select-Object description, state
-                    
-                    write-output $entryResult | ft
-                    
-                EOT
+        properties = {
+            Octopus.Action.RunOnServer = "true"
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                $backupResult = $OctopusParameters["Octopus.Action[Backup Octofront Prod SQL Database].Output.backupResult"]
+                
+                
+                $TableSAName = 'infrascoreprodaccount'
+                $TableName = 'results'
+                $partitionKey = "OctofrontSQL"
+                
+                $data = @{
+                  RowKey = ([guid]::NewGuid().tostring())
+                  PartitionKey = $partitionKey
+                  state = $backupResult 
+                  description = "Octofront SQL Backup weekly"
+                  dtDate = [datetime]::UtcNow
+                }
+                New-AzureTableEntity -StorageAccountName $TableSAName `
+                                     -StorageAccountAccessKey $TableStorageKey `
+                                     -TableName $TableName `
+                                     -Entities $data        
+                
+                $querystring = "(PartitionKey eq '$partitionKey')"
+                $tableWrite = Get-AzureTableEntity -TableName $TableName `
+                                                 -StorageAccountName $TableSAName `
+                                                 -StorageAccountAccessKey $TableStorageKey  `
+                                                 -QueryString $querystring `
+                                                 -ConvertDateTimeFields $true `
+                                                 -GetAll $false 
+                
+                $ordered = $tableWrite | Sort-Object -Descending -Property Timestamp 
+                $entryResult = $ordered[0] | Sort-Object -Descending -Property Timestamp | Select-Object description, state
+                
+                write-output $entryResult | ft
+                
+            EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
         }
+
     }
 }

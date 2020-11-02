@@ -80,6 +80,17 @@ namespace Octopus.Ocl.Converters
             if (type.IsInstanceOfType(valueToSet))
                 return valueToSet;
 
+            if (valueToSet is Dictionary<string, object?> dict)
+            {
+                if (type.IsAssignableFrom(typeof(Dictionary<string, string>)))
+                    return dict.ToDictionary(kvp => kvp.Key, kvp => (string?) CoerceValue(kvp.Value, typeof(string)));
+
+                throw new OclException($"Could not coerce dictionary to {type.Name}. Only Dictionary<string, string> and Dictionary<string, object?> are supported.");
+            }
+
+            if (type == typeof(string) && valueToSet.GetType().IsPrimitive)
+                return valueToSet.ToString();
+
             object? FromArray<T>()
             {
                 if (valueToSet is T[] array)

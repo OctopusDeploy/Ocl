@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sprache;
 
@@ -87,10 +88,27 @@ namespace Octopus.Ocl.Parsing
                 .XOr(NumberLiteral)
                 .XOr(ArrayLiteral);
 
+        static readonly Parser<string> UnquotedDictionaryKey =
+            Parse.CharExcept(c => char.IsWhiteSpace(c) || c == '"', "Not whitespace or quotes")
+                .Many()
+                .Text();
+
+        static readonly Parser<KeyValuePair<string, object?>> DictionaryEntry =
+            from key in UnquotedDictionaryKey.Or(QuotedStringParser.QuotedStringLiteral).SameLineToken()
+            from _ in Parse.Char('=')
+            from value in Literal.SameLineToken()
+            select new KeyValuePair<string, object?>(key, value);
+
+        static readonly Parser<Dictionary<string, object?>> Dictionary =
+            from open in BlockOpen.Token()
+            from entries in DictionaryEntry.Token().Many()
+            from close in BlockClose.Token()
+            select new Dictionary<string, object?>(entries);
+
         static readonly Parser<OclAttribute> Attribute =
             from name in Name.SameLineToken()
             from _ in Parse.Char('=')
-            from value in Literal.SameLineToken()
+            from value in Dictionary.XOr(Literal).SameLineToken()
             select new OclAttribute(name, value);
 
         static readonly Parser<IOclElement[]> EmptyBlockBody =

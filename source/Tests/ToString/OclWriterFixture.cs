@@ -71,6 +71,28 @@ namespace Tests.ToString
                 .Be("My0__2___-Attr = 5");
 
         [Test]
+        public void WriteDictionaryAttributes()
+        {
+            var dict = new Dictionary<string, object?>
+            {
+                { "One.One", "1" },
+                { "Two Two", 2 },
+                { "Three\"Three", null }
+            };
+
+            var expected = @"properties = {
+    One.One = ""1""
+    ""Three\""Three"" = null
+    ""Two Two"" = 2
+}";
+
+            Execute(w => w.Write(new OclAttribute("properties", dict)))
+                .Trim()
+                .Should()
+                .Be(expected.ToUnixLineEndings());
+        }
+
+        [Test]
         public void Heredoc()
         {
             var literal = new OclStringLiteral(" a\n    b", OclStringLiteralFormat.Heredoc) { HeredocTag = "ZZZ" };

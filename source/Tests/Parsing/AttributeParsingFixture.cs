@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -149,6 +150,55 @@ namespace Tests.Parsing
                         new OclAttribute("One", 1),
                         new OclAttribute("Two", 2)
                     }
+                );
+
+        [Test]
+        public void Dictionary()
+            => OclParser.Execute(@"
+                Properties = {
+                    One.One = ""1""
+                    ""Two Two"" = ""2""
+                    ""Three\""Three"" = ""3""
+                }
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("Properties",
+                        new Dictionary<string, string>
+                        {
+                            { "One.One", "1" },
+                            { "Two Two", "2" },
+                            { "Three\"Three", "3" },
+                        }
+                    )
+                );
+
+        [Test]
+        public void DictionaryOneItem()
+            => OclParser.Execute(@"
+                Properties = {
+                    ""One"" = ""1""
+                }
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("Properties",
+                        new Dictionary<string, string>
+                        {
+                            { "One", "1" },
+                        }
+                    )
+                );
+
+        [Test]
+        public void DictionaryEmpty()
+            => OclParser.Execute(@"
+                Properties = {
+                }
+                ")
+                .Should()
+                .HaveChildrenExactly(
+                    new OclAttribute("Properties", new Dictionary<string, string>())
                 );
     }
 }
