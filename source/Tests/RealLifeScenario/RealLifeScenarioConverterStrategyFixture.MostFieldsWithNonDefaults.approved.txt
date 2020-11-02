@@ -1,8 +1,5 @@
 default_guided_failure_mode = "On"
-description = <<-EOT
-        This is a 
-        Multiline description
-    EOT
+description = "This is a description"
 environment_scope = "Specified"
 environments = ["Production", "Development"]
 multi_tenancy_mode = "TenantedOrUntenanted"

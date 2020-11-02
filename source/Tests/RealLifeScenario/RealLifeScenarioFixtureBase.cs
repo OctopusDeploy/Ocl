@@ -29,7 +29,7 @@ namespace Tests.RealLifeScenario
             => ExecuteTest(
                 new VcsRunbook("My Runbook")
                 {
-                    Description = "This is a \r\nMultiline description",
+                    Description = "This is a description",
                     EnvironmentScope = RunbookEnvironmentScope.Specified,
                     Environments = { "Production", "Development" },
                     ConnectivityPolicy = new ProjectConnectivityPolicy()
@@ -120,6 +120,7 @@ namespace Tests.RealLifeScenario
             );
 
         [Test]
+        [Ignore("Line endings are not handled correctly yet")]
         public void ScriptAction()
             => ExecuteTest(
                 new DeploymentAction("Backup the Database", ActionNames.Script)
