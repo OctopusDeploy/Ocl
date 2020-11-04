@@ -168,7 +168,7 @@ namespace Tests.Parsing
                         {
                             { "One.One", "1" },
                             { "Two Two", "2" },
-                            { "Three\"Three", "3" },
+                            { "Three\"Three", "3" }
                         }
                     )
                 );
@@ -185,7 +185,7 @@ namespace Tests.Parsing
                     new OclAttribute("Properties",
                         new Dictionary<string, string>
                         {
-                            { "One", "1" },
+                            { "One", "1" }
                         }
                     )
                 );

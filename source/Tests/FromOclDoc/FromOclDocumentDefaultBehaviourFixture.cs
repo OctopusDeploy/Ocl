@@ -42,14 +42,15 @@ namespace Tests.FromOclDoc
         [Test]
         public void IntAttributeToString()
         {
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("Name", 4)
             };
 
             new OclSerializer().Deserialize<Car>(document)
                 .Should()
-                .BeEquivalentTo(new Car() { Name = "4" });
+                .BeEquivalentTo(new Car
+                    { Name = "4" });
         }
 
         [Test]
@@ -101,22 +102,22 @@ namespace Tests.FromOclDoc
         [Test]
         public void DictionaryOfStrings()
         {
-            var dictionary = new Dictionary<string, object?>()
+            var dictionary = new Dictionary<string, object?>
             {
                 { "One", "1" },
-                { "Two", 2 },
+                { "Two", 2 }
             };
 
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("StringDictionary", dictionary)
             };
 
             new OclSerializer().Deserialize<Car>(document)
                 .Should()
-                .BeEquivalentTo(new Car()
+                .BeEquivalentTo(new Car
                 {
-                    StringDictionary = new Dictionary<string, string>()
+                    StringDictionary = new Dictionary<string, string>
                     {
                         { "One", "1" },
                         { "Two", "2" }
@@ -127,20 +128,20 @@ namespace Tests.FromOclDoc
         [Test]
         public void DictionaryOfObjects()
         {
-            var dictionary = new Dictionary<string, object?>()
+            var dictionary = new Dictionary<string, object?>
             {
                 { "One", "1" },
-                { "Two", "2" },
+                { "Two", "2" }
             };
 
-            var document = new OclDocument()
+            var document = new OclDocument
             {
                 new OclAttribute("ObjectDictionary", dictionary)
             };
 
             new OclSerializer().Deserialize<Car>(document)
                 .Should()
-                .BeEquivalentTo(new Car()
+                .BeEquivalentTo(new Car
                 {
                     ObjectDictionary = dictionary
                 });

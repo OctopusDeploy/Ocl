@@ -229,15 +229,16 @@ namespace Octopus.Ocl
             writer.WriteLine(literal.HeredocTag);
 
             var lines = literal.Value.Split('\n');
-            for(var x = 0; x < lines.Length; x++)
+            for (var x = 0; x < lines.Length; x++)
             {
-                if(x > 0)
+                if (x > 0)
                     writer.Write('\n');
 
                 if (isIndented)
                     WriteIndent(2);
                 writer.Write(lines[x]);
             }
+
             writer.WriteLine();
 
             if (isIndented)
@@ -256,13 +257,12 @@ namespace Octopus.Ocl
             writer.WriteLine("{");
             foreach (var (key, value) in dictionary.OrderBy(v => v.Key))
             {
-
-                if(key.Any(char.IsControl))
+                if (key.Any(char.IsControl))
                     throw new OclException("Control characters such as new lines are not allowed in dictionary key values");
 
                 WriteIndent(1);
 
-                if(key.Contains('"') || key.Any(char.IsWhiteSpace))
+                if (key.Contains('"') || key.Any(char.IsWhiteSpace))
                     WriteSingleLineStringLiteral(key);
                 else
                     writer.Write(key);
@@ -272,7 +272,7 @@ namespace Octopus.Ocl
                 writer.WriteLine();
             }
 
-            WriteIndent(0);
+            WriteIndent();
             writer.WriteLine("}");
         }
 

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Octopus.Ocl.Converters
 {
@@ -32,12 +31,11 @@ namespace Octopus.Ocl.Converters
                 if (obj.Equals(false) || obj.Equals(0) || obj.Equals(0m) || obj.Equals(0f) || obj.Equals('\0'))
                     yield break;
 
-            if(!(obj is string) && obj is IEnumerable enumerable)
-                if(!enumerable.GetEnumerator().MoveNext())
+            if (!(obj is string) && obj is IEnumerable enumerable)
+                if (!enumerable.GetEnumerator().MoveNext())
                     yield break;
 
             yield return new OclAttribute(context.Namer.FormatName(name), obj);
         }
-
     }
 }

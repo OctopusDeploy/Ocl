@@ -5,7 +5,6 @@ using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
-using Octopus.Ocl.Converters;
 using Octopus.Ocl.Parsing;
 using Sprache;
 
@@ -108,7 +107,9 @@ namespace Tests.Parsing
             var sb = new StringBuilder();
             using (var tw = new StringWriter(sb) { NewLine = documentLineEnding })
             using (var writer = new OclWriter(tw))
+            {
                 writer.Write(attribute);
+            }
 
             OclParser.Execute(sb.ToString())
                 .Should()
