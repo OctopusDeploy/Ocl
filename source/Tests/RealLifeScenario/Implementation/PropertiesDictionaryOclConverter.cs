@@ -5,7 +5,7 @@ using Octopus.Ocl;
 using Octopus.Server.Extensibility.HostServices.Model;
 using Tests.RealLifeScenario.Entities;
 
-namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
+namespace Tests.RealLifeScenario.Implementation
 {
     public class PropertiesDictionaryOclConverter : IOclConverter
     {
@@ -22,13 +22,12 @@ namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
             if (dict.Values.Any(v => v.IsSensitive))
                 throw new NotSupportedException("Sensitive property values are not supported");
 
-            var attributes =
-                from kvp in dict
-                let key = kvp.Key.Replace(".", "_")
-                where kvp.Value.HasValue
-                select new OclAttribute(key, kvp.Value.Value);
+            var stringDict = dict.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Value
+            );
 
-            yield return new OclBlock("properties", Array.Empty<string>(), attributes);
+            yield return new OclAttribute("properties", stringDict);
         }
 
         public OclDocument ToDocument(OclConversionContext context, object obj)
@@ -36,27 +35,22 @@ namespace Tests.RealLifeScenario.ConverterStrategy.Implementation
 
         public object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
-            if (!(element is OclBlock block))
-                throw new OclException("The properties must be a block");
+            if (!(element is OclAttribute attribute))
+                throw new OclException("The properties must be an attribute");
 
-            var dict = currentValue == null ? new PropertiesDictionary() : (PropertiesDictionary)currentValue;
+            var properties = currentValue == null ? new PropertiesDictionary() : (PropertiesDictionary)currentValue;
 
-            foreach (var child in block)
+            if (!(attribute.Value is Dictionary<string, object?> source))
+                throw new OclException("The properties attribute value must be a dictionary");
+
+            foreach (var item in source)
             {
-                if (!(child is OclAttribute attr))
-                    throw new OclException("The properties block may only contain attributes");
-
-                var key = attr.Name.Replace("_", ".");
-
-                if (dict.ContainsKey(key))
-                    throw new OclException($"The properties {attr.Name} has been specified more than once");
-
-                dict[key] = attr.Value is OclStringLiteral lit
-                    ? new PropertyValue(lit.Value)
-                    : new PropertyValue(attr.Value?.ToString() ?? "");
+                var itemValue = item.Value is OclStringLiteral lit ? lit.Value : item.Value?.ToString();
+                if (itemValue != null)
+                    properties[item.Key] = new PropertyValue(itemValue);
             }
 
-            return dict;
+            return properties;
         }
     }
 }

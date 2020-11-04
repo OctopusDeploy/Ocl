@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Octopus.Ocl;
-using Tests.RealLifeScenario.ConverterStrategy.Implementation;
 
 namespace Tests.RealLifeScenario.Implementation
 {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Octopus.Ocl
@@ -57,9 +58,17 @@ namespace Octopus.Ocl
                 type == typeof(string) ||
                 type == typeof(decimal) ||
                 type == typeof(OclStringLiteral) ||
+                IsObjectDictionary(type) ||
+                IsStringDictionary(type) ||
                 IsNullableSupportedValueType() ||
                 IsSupportedValueCollectionType(type);
         }
+
+        internal static bool IsObjectDictionary(Type type)
+            => typeof(IEnumerable<KeyValuePair<string, object?>>).IsAssignableFrom(type);
+
+        internal static bool IsStringDictionary(Type type)
+            => typeof(IEnumerable<KeyValuePair<string, string>>).IsAssignableFrom(type);
 
         internal static bool IsSupportedValueCollectionType(Type type)
             => type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!) ||

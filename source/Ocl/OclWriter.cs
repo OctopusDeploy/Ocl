@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Octopus.Ocl
@@ -177,7 +179,21 @@ namespace Octopus.Ocl
                     return;
             }
 
-            if (OclAttribute.IsSupportedValueCollectionType(value.GetType()))
+            var valueType = value.GetType();
+
+            if (OclAttribute.IsObjectDictionary(valueType))
+            {
+                WriteValue((IReadOnlyDictionary<string, object?>)value);
+                return;
+            }
+
+            if (OclAttribute.IsStringDictionary(valueType))
+            {
+                WriteValue((IReadOnlyDictionary<string, string>)value);
+                return;
+            }
+
+            if (OclAttribute.IsSupportedValueCollectionType(valueType))
             {
                 var enumerable = (IEnumerable)value;
                 writer.Write('[');
@@ -227,6 +243,37 @@ namespace Octopus.Ocl
             if (isIndented)
                 WriteIndent(1);
             writer.Write(literal.HeredocTag);
+        }
+
+        void WriteValue(IReadOnlyDictionary<string, string> dictionary)
+        {
+            var asObjects = dictionary.Select(kvp => new KeyValuePair<string, object?>(kvp.Key, kvp.Value));
+            WriteValue(asObjects);
+        }
+
+        void WriteValue(IEnumerable<KeyValuePair<string, object?>> dictionary)
+        {
+            writer.WriteLine("{");
+            foreach (var (key, value) in dictionary.OrderBy(v => v.Key))
+            {
+
+                if(key.Any(char.IsControl))
+                    throw new OclException("Control characters such as new lines are not allowed in dictionary key values");
+
+                WriteIndent(1);
+
+                if(key.Contains('"') || key.Any(char.IsWhiteSpace))
+                    WriteSingleLineStringLiteral(key);
+                else
+                    writer.Write(key);
+
+                writer.Write(" = ");
+                WriteValue(value);
+                writer.WriteLine();
+            }
+
+            WriteIndent(0);
+            writer.WriteLine("}");
         }
 
         void WriteSingleLineStringLiteral(string s)

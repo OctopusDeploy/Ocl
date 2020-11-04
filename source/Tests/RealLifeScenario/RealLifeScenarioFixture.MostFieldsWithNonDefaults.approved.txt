@@ -21,6 +21,11 @@ project_id = "Projects-1"
 steps "Script Step" {
     condition = "Always"
     package_requirement = "BeforePackageAcquisition"
+    properties = {
+        Octopus.Action.TargetRoles = "Portal"
+        StepProperty = "Value1"
+    }
+
     start_trigger = "StartWithPrevious"
 
     actions "Script Step" {
@@ -31,6 +36,10 @@ steps "Script Step" {
         excluded_environments = ["Production"]
         is_disabled = true
         is_required = true
+        properties = {
+            Action.Prop = "The Value"
+        }
+
         tenant_tags = ["David/Who"]
         worker_pool_id_or_name = "My Worker Pool"
         worker_pool_variable = "WorkerPoolVar"
@@ -44,21 +53,18 @@ steps "Script Step" {
             acquisition_location = "ExecutionTarget"
             feed_id_or_name = "External Feed"
             package_id = "OctoFx.Web"
+            properties = {
+            }
+
         }
 
         packages "Helper Package" {
             acquisition_location = "Server"
             feed_id_or_name = "External Feed"
             package_id = "OctoFx.Helper"
-        }
+            properties = {
+            }
 
-        properties {
-            Action_Prop = "The Value"
         }
-    }
-
-    properties {
-        StepProperty = "Value1"
-        Octopus_Action_TargetRoles = "Portal"
     }
 }

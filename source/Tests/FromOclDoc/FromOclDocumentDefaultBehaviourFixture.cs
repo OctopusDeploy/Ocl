@@ -12,7 +12,7 @@ namespace Tests.FromOclDoc
         public void Empty()
         {
             OclDocument document = new OclDocument();
-            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var context = new OclConversionContext(new OclSerializerOptions());
             var result = context.FromElement(typeof(Car), document, null);
             if (result == null)
                 throw new OclException("Document conversion resulted in null, which is not valid");
@@ -29,7 +29,7 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Doors", 4)
             };
 
-            var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
+            var context = new OclConversionContext(new OclSerializerOptions());
             var result = context.FromElement(typeof(Car), document, null);
             if (result == null)
                 throw new OclException("Document conversion resulted in null, which is not valid");
@@ -37,6 +37,19 @@ namespace Tests.FromOclDoc
                 .Should()
                 .BeEquivalentTo(new Car
                     { Doors = 4 });
+        }
+
+        [Test]
+        public void IntAttributeToString()
+        {
+            var document = new OclDocument()
+            {
+                new OclAttribute("Name", 4)
+            };
+
+            new OclSerializer().Deserialize<Car>(document)
+                .Should()
+                .BeEquivalentTo(new Car() { Name = "4" });
         }
 
         [Test]
@@ -83,6 +96,54 @@ namespace Tests.FromOclDoc
                 .Should()
                 .BeEquivalentTo(new Car
                     { Type = CarType.Suv });
+        }
+
+        [Test]
+        public void DictionaryOfStrings()
+        {
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "One", "1" },
+                { "Two", 2 },
+            };
+
+            var document = new OclDocument()
+            {
+                new OclAttribute("StringDictionary", dictionary)
+            };
+
+            new OclSerializer().Deserialize<Car>(document)
+                .Should()
+                .BeEquivalentTo(new Car()
+                {
+                    StringDictionary = new Dictionary<string, string>()
+                    {
+                        { "One", "1" },
+                        { "Two", "2" }
+                    }
+                });
+        }
+
+        [Test]
+        public void DictionaryOfObjects()
+        {
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "One", "1" },
+                { "Two", "2" },
+            };
+
+            var document = new OclDocument()
+            {
+                new OclAttribute("ObjectDictionary", dictionary)
+            };
+
+            new OclSerializer().Deserialize<Car>(document)
+                .Should()
+                .BeEquivalentTo(new Car()
+                {
+                    ObjectDictionary = dictionary
+                });
         }
 
         [Test]
@@ -262,6 +323,8 @@ namespace Tests.FromOclDoc
             public List<Person>? Passengers { get; set; }
             public List<Person> ReadOnlyPassengers { get; } = new List<Person>();
             public CarType Type { get; set; }
+            public Dictionary<string, string>? StringDictionary { get; set; }
+            public Dictionary<string, object?>? ObjectDictionary { get; set; }
         }
 
         enum CarType
