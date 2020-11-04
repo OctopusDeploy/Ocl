@@ -1,13 +1,18 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Octopus.Ocl.Converters
 {
-    public class EnumAttributeOclConverter : OclConverter
+    public class EnumAttributeOclConverter : IOclConverter
     {
-        public override bool CanConvert(Type type)
+        public bool CanConvert(Type type)
             => type.IsEnum;
 
-        public override object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
+        public OclDocument ToDocument(OclConversionContext context, object obj)
+            => throw new NotSupportedException("This type does not support conversion to the OCL root document");
+
+        public object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {
             if (element is OclAttribute attribute)
             {
@@ -26,7 +31,11 @@ namespace Octopus.Ocl.Converters
             throw new OclException("Can only convert attribute elements");
         }
 
-        protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
-            => new OclAttribute(GetName(context, name, obj), obj.ToString());
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
+        {
+            var isDefault = Activator.CreateInstance(obj.GetType()).Equals(obj);
+            if (!isDefault)
+                yield return new OclAttribute(context.Namer.FormatName(name), obj.ToString());
+        }
     }
 }
