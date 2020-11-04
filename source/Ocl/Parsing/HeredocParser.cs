@@ -80,7 +80,7 @@ namespace Octopus.Ocl.Parsing
         static (string lineSeparator, IReadOnlyList<string> lines) TrimCarriageReturn(IEnumerable<string> lines)
         {
             var lineArr = lines.ToArray();
-            var hasCarriageReturn = lineArr.Any(l => l.EndsWith('\r'));
+            var hasCarriageReturn = lineArr.Take(lineArr.Length - 1).Any(l => l.EndsWith('\r'));
             var trimmed = lineArr.Select(l => l.TrimEnd('\r')).ToArray();
             var lineSeparator = hasCarriageReturn ? "\r\n" : "\n";
             return (lineSeparator, trimmed);

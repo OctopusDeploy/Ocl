@@ -1,8 +1,11 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
+using Octopus.Ocl.Converters;
 using Octopus.Ocl.Parsing;
 using Sprache;
 
@@ -86,6 +89,31 @@ namespace Tests.Parsing
                         }
                     )
                 );
+
+        [TestCase("\r\n")]
+        [TestCase("\n")]
+        public void LineEndingsArePreserved(string lineEnding)
+        {
+            var documentLineEnding = lineEnding == "\n" ? "\r\n" : "\n"; // The opposite
+
+            var expected = $"{lineEnding}A{lineEnding}B{lineEnding}";
+
+            var attribute = new OclAttribute("value",
+                new OclStringLiteral(expected, OclStringLiteralFormat.Heredoc)
+                {
+                    HeredocTag = "ZZZ"
+                }
+            );
+
+            var sb = new StringBuilder();
+            using (var tw = new StringWriter(sb) { NewLine = documentLineEnding })
+            using (var writer = new OclWriter(tw))
+                writer.Write(attribute);
+
+            OclParser.Execute(sb.ToString())
+                .Should()
+                .HaveChildrenExactly(attribute);
+        }
 
         [TestCase("")]
         [TestCase("A")]

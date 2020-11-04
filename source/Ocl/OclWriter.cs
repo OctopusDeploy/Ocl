@@ -212,12 +212,17 @@ namespace Octopus.Ocl
                 writer.Write("-");
             writer.WriteLine(literal.HeredocTag);
 
-            foreach (var line in literal.Value.Split('\n'))
+            var lines = literal.Value.Split('\n');
+            for(var x = 0; x < lines.Length; x++)
             {
+                if(x > 0)
+                    writer.Write('\n');
+
                 if (isIndented)
                     WriteIndent(2);
-                writer.WriteLine(line.TrimEnd('\r'));
+                writer.Write(lines[x]);
             }
+            writer.WriteLine();
 
             if (isIndented)
                 WriteIndent(1);
