@@ -27,4 +27,12 @@ namespace Tests.RealLifeScenario.Entities
 
         public GuidedFailureMode DefaultGuidedFailureMode { get; set; }
     }
+
+    public class ProjectConnectivityPolicy
+    {
+        public bool AllowDeploymentsToNoTargets { get; set; }
+        public ReferenceCollection? TargetRoles { get; set; }
+        public bool ExcludeUnhealthyTargets { get; set; }
+        public SkipMachineBehavior SkipMachineBehavior { get; set; }
+    }
 }
