@@ -8,10 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{900879BA-C300-47
 ProjectSection(SolutionItems) = preProject
 	..\.gitattributes = ..\.gitattributes
 	..\.gitignore = ..\.gitignore
-	..\build.cmd = ..\build.cmd
-	..\build.ps1 = ..\build.ps1
-	..\build.sh = ..\build.sh
-	..\GitVersion.yml = ..\GitVersion.yml
 	..\LICENSE.txt = ..\LICENSE.txt
 	..\README.md = ..\README.md
 EndProjectSection
@@ -25,10 +21,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8E82EBC5-EBAB-4D54-953E-12C217C3099D}"
 ProjectSection(SolutionItems) = preProject
 	..\build\.editorconfig = ..\build\.editorconfig
-	..\build\_build.csproj = ..\build\_build.csproj
-	..\build\_build.csproj.DotSettings = ..\build\_build.csproj.DotSettings
-	..\build\Build.cs = ..\build\Build.cs
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_build", "..\build\_build.csproj", "{A5D7D80B-35A2-4D84-9081-89BAF06A6015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,5 +39,7 @@ Global
 		{43A59954-CE41-4554-92C0-750E9F29994E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43A59954-CE41-4554-92C0-750E9F29994E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43A59954-CE41-4554-92C0-750E9F29994E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D7D80B-35A2-4D84-9081-89BAF06A6015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D7D80B-35A2-4D84-9081-89BAF06A6015}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 EndGlobal

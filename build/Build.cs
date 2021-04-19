@@ -1,18 +1,13 @@
 using System;
-using System.Linq;
 using Nuke.Common;
-using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Execution;
-using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.EnvironmentInfo;
+using Nuke.OctoVersion;
+using OctoVersion.Core;
 using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 [CheckBuildProjectConfigurations]
@@ -25,7 +20,7 @@ class Build : NukeBuild
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
 
-    public static int Main () => Execute<Build>(x => x.Default);
+    public static int Main () => Execute<Build>(x => x.Pack);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -33,7 +28,7 @@ class Build : NukeBuild
     [Solution]
     readonly Solution Solution;
 
-    GitVersion GitVersion;
+    [NukeOctoVersion] readonly OctoVersionInfo OctoVersionInfo;
 
     AbsolutePath SourceDirectory => RootDirectory / "source";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
@@ -57,14 +52,7 @@ class Build : NukeBuild
     Target CalculateVersion => _ => _
         .Executes(() =>
         {
-            GitVersion = GitVersionTasks
-                .GitVersion(s => s
-                    .SetTargetPath(".")
-                    .SetNoFetch(true)
-                    .SetFramework("netcoreapp3.0")
-                )
-                .Result;
-
+            //all the magic happens inside `[NukeOctoVersion]` above. we just need a target for TeamCity to call
         });
 
     Target Compile => _ => _
@@ -73,15 +61,14 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            Logger.Info("Building Octopus.Ocl v{0}", GitVersion.NuGetVersion);
-            Logger.Info("Informational Version {0}", GitVersion.InformationalVersion);
+            Logger.Info("Building Octopus.Ocl v{0}", OctoVersionInfo.NuGetVersion);
+            Logger.Info("Informational Version {0}", OctoVersionInfo.InformationalVersion);
 
             DotNetBuild(_ => _
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                .SetFileVersion(GitVersion.AssemblySemFileVer)
-                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetVersion(OctoVersionInfo.FullSemVer)
+                .SetInformationalVersion(OctoVersionInfo.InformationalVersion)
                 .EnableNoRestore());
         });
 
@@ -107,19 +94,16 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(ArtifactsDirectory)
                 .SetNoBuild(true)
-                .AddProperty("Version", GitVersion.NuGetVersion)
+                .AddProperty("Version", OctoVersionInfo.NuGetVersion)
             );
         });
 
     Target CopyToLocalPackages => _ => _
         .OnlyWhenStatic(() => IsLocalBuild)
-        .DependsOn(Pack)
+        .TriggeredBy(Pack)
         .Executes(() =>
         {
             EnsureExistingDirectory(LocalPackagesDirectory);
-            CopyFileToDirectory(ArtifactsDirectory / $"Octopus.Ocl.{GitVersion.NuGetVersion}.nupkg", LocalPackagesDirectory, FileExistsPolicy.Overwrite);
+            CopyFileToDirectory(ArtifactsDirectory / $"Octopus.Ocl.{OctoVersionInfo.NuGetVersion}.nupkg", LocalPackagesDirectory, FileExistsPolicy.Overwrite);
         });
-
-    Target Default => _ => _
-        .DependsOn(CopyToLocalPackages);
 }
