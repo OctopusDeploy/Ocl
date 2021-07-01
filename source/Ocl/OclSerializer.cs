@@ -10,7 +10,9 @@ namespace Octopus.Ocl
         string Serialize(object obj);
         OclDocument ToOclDocument(object? obj);
         T Deserialize<T>(string str) where T : notnull;
+        object Deserialize(string ocl, Type type);
         T Deserialize<T>(OclDocument document) where T : notnull;
+        object Deserialize(OclDocument document, Type type);
     }
 
     /// <summary>
@@ -61,19 +63,29 @@ namespace Octopus.Ocl
 
         public T Deserialize<T>(string ocl) where T : notnull
         {
+            return (T)Deserialize(ocl, typeof(T));
+        }
+
+        public object Deserialize(string ocl, Type type)
+        {
             var document = OclParser.Execute(ocl);
-            return typeof(T) == typeof(OclDocument)
-                ? (T)(object)document
-                : Deserialize<T>(document);
+            return type == typeof(OclDocument)
+                ? document
+                : Deserialize(document, type);
         }
 
         public T Deserialize<T>(OclDocument document) where T : notnull
         {
+            return (T)Deserialize(document, typeof(T));
+        }
+        
+        public object Deserialize(OclDocument document, Type type)
+        {
             var context = new OclConversionContext(options);
-            var result = context.FromElement(typeof(T), document, null);
+            var result = context.FromElement(type, document, null);
             if (result == null)
                 throw new OclException("Document conversion resulted in null, which is not valid");
-            return (T)result;
+            return result;
         }
     }
 }
