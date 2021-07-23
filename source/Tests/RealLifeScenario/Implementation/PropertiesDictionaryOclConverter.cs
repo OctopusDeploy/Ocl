@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Octopus.Ocl;
 using Octopus.Server.Extensibility.HostServices.Model;
 using Tests.RealLifeScenario.Entities;
@@ -12,7 +13,7 @@ namespace Tests.RealLifeScenario.Implementation
         public bool CanConvert(Type type)
             => type == typeof(PropertiesDictionary);
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
         {
             var dict = (PropertiesDictionary)value;
 

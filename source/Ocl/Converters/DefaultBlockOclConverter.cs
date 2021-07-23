@@ -57,9 +57,9 @@ namespace Octopus.Ocl.Converters
                 throw new OclException($"The propert{(notFound.Count > 1 ? "ies" : "y")} '{string.Join("', '", notFound.Select(a => a.Name))}' {(notFound.Count > 1 ? "were" : "was")} not found on '{type.Name}'");
         }
 
-        protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
+        protected override IOclElement ConvertInternal(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
             => new OclBlock(
-                GetName(context, name, obj),
+                GetName(context, propertyInfo, obj),
                 GetLabels(obj),
                 GetElements(obj, context)
             );

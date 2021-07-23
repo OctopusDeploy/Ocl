@@ -14,7 +14,7 @@ namespace Tests.Converters
         {
             var context = new OclConversionContext(new OclSerializerOptions());
             var data = new object();
-            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
+            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, typeof(WithIndexer).GetProperty(nameof(WithIndexer.Test))!, data).Single();
             result.Name.Should().Be("test");
         }
 
@@ -27,7 +27,7 @@ namespace Tests.Converters
                 MyBlock = new { BlockProp = "OtherValue" },
                 MyProp = "MyValue"
             };
-            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
+            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, typeof(WithIndexer).GetProperty(nameof(WithIndexer.MyProp)), data).Single();
             result.First()
                 .Should()
                 .BeEquivalentTo(new OclAttribute("my_prop", "MyValue"));
@@ -38,7 +38,7 @@ namespace Tests.Converters
         {
             var context = new OclConversionContext(new OclSerializerOptions());
             var data = new WithIndexer();
-            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
+            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, typeof(WithIndexer).GetProperty(nameof(WithIndexer.MyProp)), data).Single();
             result.Should()
                 .Be(
                     new OclBlock("Test")
@@ -50,6 +50,7 @@ namespace Tests.Converters
 
         class WithIndexer
         {
+            public string Test { get; } = "Value";
             public string MyProp => "MyValue";
             public string this[int index] => throw new NotImplementedException();
         }

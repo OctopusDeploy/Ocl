@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Octopus.Data.Model;
 using Octopus.Ocl;
 using Octopus.TinyTypes;
@@ -21,7 +22,7 @@ namespace Tests.RealLifeScenario.Implementation
             return type.BaseType == null ? null : GetUnderlyingTypeOfReferenceCollection(type.BaseType);
         }
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
         {
             var values = ((IEnumerable)value)
                 .Cast<object>()
@@ -33,7 +34,7 @@ namespace Tests.RealLifeScenario.Implementation
 
             return new[]
             {
-                new OclAttribute(context.Namer.FormatName(name), values)
+                new OclAttribute(context.Namer.FormatName(propertyInfo!.Name), values)
             };
         }
 

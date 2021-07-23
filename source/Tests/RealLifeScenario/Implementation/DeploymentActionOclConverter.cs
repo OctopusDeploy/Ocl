@@ -14,13 +14,13 @@ namespace Tests.RealLifeScenario.Implementation
         public override bool CanConvert(Type type)
             => type == typeof(DeploymentAction);
 
-        protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
+        protected override IOclElement ConvertInternal(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
         {
             var action = (DeploymentAction)obj;
             if (string.IsNullOrWhiteSpace(action.Name))
                 throw new Exception("The name of the action must be set");
 
-            return base.ConvertInternal(context, name, obj);
+            return base.ConvertInternal(context, propertyInfo, obj);
         }
 
         protected override object CreateInstance(Type type, IOclElement oclElement)

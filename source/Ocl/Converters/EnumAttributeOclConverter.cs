@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl.Converters
 {
@@ -30,11 +32,11 @@ namespace Octopus.Ocl.Converters
             throw new OclException("Can only convert attribute elements");
         }
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
         {
             var isDefault = Activator.CreateInstance(obj.GetType()).Equals(obj);
             if (!isDefault)
-                yield return new OclAttribute(context.Namer.FormatName(name), obj.ToString());
+                yield return new OclAttribute(context.Namer.GetOclAttributeName(propertyInfo!), obj.ToString());
         }
     }
 }
