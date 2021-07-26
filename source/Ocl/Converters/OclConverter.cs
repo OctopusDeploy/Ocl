@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl.Converters
 {
@@ -20,7 +21,7 @@ namespace Octopus.Ocl.Converters
         protected abstract IOclElement ConvertInternal(OclConversionContext context, PropertyInfo? propertyInfo, object obj);
 
         protected virtual string GetName(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
-            => context.Namer.FormatName(propertyInfo?.Name ?? "");
+            => propertyInfo != null ? context.Namer.GetOclNameForProperty(propertyInfo) : "";
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {

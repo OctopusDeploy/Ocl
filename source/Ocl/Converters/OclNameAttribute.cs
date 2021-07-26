@@ -3,17 +3,17 @@ using System;
 namespace Octopus.Ocl.Converters
 {
     [AttributeUsage(AttributeTargets.Property,  AllowMultiple = false)]
-    public sealed class OclAttributeAttribute : Attribute
+    public sealed class OclNameAttribute : Attribute
     {
-        public OclAttributeAttribute(string attributeName)
+        public OclNameAttribute(string name)
         {
-            AttributeName = attributeName;
+            Name = name;
         } 
         
         /// <summary>
-        /// The name of the OCL attribute.
+        /// The name of the OCL attribute or block.
         /// See https://github.com/OctopusDeploy/Ocl#ebnf
         /// </summary>
-        public string AttributeName { get; set; }
+        public string Name { get; set; }
     }
 }
