@@ -50,9 +50,7 @@ namespace Octopus.Ocl.Converters
         protected virtual void SetProperties(OclConversionContext context, Type type, IEnumerable<IOclElement> elements, object target)
         {
             var properties = GetProperties(type).Except(GetLabelProperties(type)).ToArray();
-
             var notFound = SetProperties(context, elements, target, properties);
-
             if (notFound.Any())
                 throw new OclException($"The propert{(notFound.Count > 1 ? "ies" : "y")} '{string.Join("', '", notFound.Select(a => a.Name))}' {(notFound.Count > 1 ? "were" : "was")} not found on '{type.Name}'");
         }
