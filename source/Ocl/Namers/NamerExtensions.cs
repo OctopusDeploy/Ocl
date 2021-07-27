@@ -3,9 +3,9 @@ using Octopus.Ocl.Converters;
 
 namespace Octopus.Ocl.Namers
 {
-    static class NamerExtensions
+    public static class NamerExtensions
     {
-        internal static string GetOclNameForProperty(this IOclNamer namer, PropertyInfo propertyInfo)
+        public static string GetOclNameForProperty(this IOclNamer namer, PropertyInfo propertyInfo)
         {
             // The OclAttribute attribute can be applied to properties to control the OCL attribute name
             return propertyInfo.GetCustomAttribute(typeof(OclNameAttribute)) is OclNameAttribute oclAttribute && !string.IsNullOrEmpty(oclAttribute.Name)
