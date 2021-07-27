@@ -14,6 +14,11 @@ namespace Octopus.Ocl.Namers
         string FormatName(string name);
 
         /// <summary>
+        /// Gets the OCL name for the given property 
+        /// </summary>
+        string GetName(PropertyInfo propertyInfo);
+
+        /// <summary>
         /// Get the corresponding property for the given name
         /// </summary>
         /// <param name="name">The OCL representation of the name</param>

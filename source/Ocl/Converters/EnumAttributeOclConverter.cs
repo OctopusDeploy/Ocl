@@ -36,7 +36,7 @@ namespace Octopus.Ocl.Converters
         {
             var isDefault = Activator.CreateInstance(obj.GetType()).Equals(obj);
             if (!isDefault)
-                yield return new OclAttribute(context.Namer.GetOclNameForProperty(propertyInfo!), obj.ToString());
+                yield return new OclAttribute(context.Namer.GetName(propertyInfo!), obj.ToString());
         }
     }
 }

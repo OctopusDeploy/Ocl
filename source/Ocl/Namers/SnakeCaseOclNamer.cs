@@ -6,14 +6,14 @@ using System.Text.RegularExpressions;
 
 namespace Octopus.Ocl.Namers
 {
-    public class SnakeCaseOclNamer : IOclNamer
+    public class SnakeCaseOclNamer : BaseNamer 
     {
-        public string FormatName(string name)
+        public override string FormatName(string name)
             => Regex.Replace(name, "([a-z])([A-Z])", "$1_$2")
                 .Replace(" ", "_")
                 .ToLower();
 
-        public PropertyInfo? GetProperty(string name, IReadOnlyCollection<PropertyInfo> properties)
+        protected override PropertyInfo? GetPropertyInternal(string name, IReadOnlyCollection<PropertyInfo> properties)
         {
             var nameWithoutUnderscores = name.Replace("_", "");
             var matches = properties.Where(p => p.Name.Equals(nameWithoutUnderscores, StringComparison.OrdinalIgnoreCase)).ToArray();

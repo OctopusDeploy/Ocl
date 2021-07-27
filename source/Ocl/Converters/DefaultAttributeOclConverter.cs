@@ -37,7 +37,7 @@ namespace Octopus.Ocl.Converters
                 if (!enumerable.GetEnumerator().MoveNext())
                     yield break;
 
-            yield return new OclAttribute(context.Namer.GetOclNameForProperty(propertyInfo!), obj);
+            yield return new OclAttribute(context.Namer.GetName(propertyInfo!), obj);
         }
     }
 }
