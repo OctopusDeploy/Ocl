@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Octopus.Ocl;
 using Octopus.TinyTypes;
 
@@ -10,10 +11,10 @@ namespace Tests.RealLifeScenario.Implementation
         public bool CanConvert(Type type)
             => type.IsTinyType();
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
             => new[]
             {
-                new OclAttribute(context.Namer.FormatName(name), value.ToString())
+                new OclAttribute(context.Namer.FormatName(propertyInfo!.Name), value.ToString())
             };
 
         public OclDocument ToDocument(OclConversionContext context, object obj)

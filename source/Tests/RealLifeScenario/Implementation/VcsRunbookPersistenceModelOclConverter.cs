@@ -23,7 +23,7 @@ namespace Tests.RealLifeScenario.Implementation
         public bool CanConvert(Type type)
             => type == typeof(VcsRunbookPersistenceModel);
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
             => throw new NotSupportedException();
 
         public OclDocument ToDocument(OclConversionContext context, object obj)

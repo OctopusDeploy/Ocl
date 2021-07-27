@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl.Converters
 {
@@ -9,23 +10,23 @@ namespace Octopus.Ocl.Converters
     {
         public abstract bool CanConvert(Type type);
 
-        public virtual IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
-            => new[] { ConvertInternal(context, name, obj) };
+        public virtual IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
+            => new[] { ConvertInternal(context, propertyInfo, obj) };
 
         public virtual OclDocument ToDocument(OclConversionContext context, object obj)
             => throw new NotSupportedException("This type does not support conversion to the OCL root document");
 
         public abstract object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue);
 
-        protected abstract IOclElement ConvertInternal(OclConversionContext context, string name, object obj);
+        protected abstract IOclElement ConvertInternal(OclConversionContext context, PropertyInfo? propertyInfo, object obj);
 
-        protected virtual string GetName(OclConversionContext context, string name, object obj)
-            => context.Namer.FormatName(name);
+        protected virtual string GetName(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
+            => propertyInfo != null ? context.Namer.GetOclNameForProperty(propertyInfo) : "";
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {
             var elements = from p in properties
-                from element in context.ToElements(p.Name, p.GetValue(obj))
+                from element in context.ToElements(p, p.GetValue(obj))
                 orderby
                     element is OclBlock,
                     element.Name

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 using Octopus.Ocl;
 using Octopus.Ocl.Converters;
@@ -55,7 +56,7 @@ namespace Tests.ToOclDoc
             public override bool CanConvert(Type type)
                 => type == typeof(SampleWithANameProperty);
 
-            protected override string GetName(OclConversionContext context, string name, object obj)
+            protected override string GetName(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
                 => context.Namer.FormatName(((dynamic)obj).Name);
 
             protected override IEnumerable<IOclElement> GetElements(object obj, OclConversionContext context)

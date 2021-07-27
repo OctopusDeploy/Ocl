@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl.Converters
 {
@@ -20,7 +22,7 @@ namespace Octopus.Ocl.Converters
             throw new OclException("Can only convert attribute elements");
         }
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object obj)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
         {
             var type = obj.GetType();
 
@@ -35,7 +37,7 @@ namespace Octopus.Ocl.Converters
                 if (!enumerable.GetEnumerator().MoveNext())
                     yield break;
 
-            yield return new OclAttribute(context.Namer.FormatName(name), obj);
+            yield return new OclAttribute(context.Namer.GetOclNameForProperty(propertyInfo!), obj);
         }
     }
 }

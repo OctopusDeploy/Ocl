@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Octopus.Data.Model;
 using Octopus.Ocl;
 
@@ -11,7 +12,7 @@ namespace Tests.RealLifeScenario.Implementation
         public bool CanConvert(Type type)
             => type == typeof(ReferenceCollection);
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
         {
             var collection = (ReferenceCollection)value;
 
@@ -20,7 +21,7 @@ namespace Tests.RealLifeScenario.Implementation
 
             return new[]
             {
-                new OclAttribute(context.Namer.FormatName(name), collection.ToArray())
+                new OclAttribute(context.Namer.FormatName(propertyInfo!.Name), collection.ToArray())
             };
         }
 

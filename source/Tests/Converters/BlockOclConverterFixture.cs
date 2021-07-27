@@ -14,8 +14,8 @@ namespace Tests.Converters
         {
             var context = new OclConversionContext(new OclSerializerOptions());
             var data = new object();
-            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
-            result.Name.Should().Be("test");
+            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, typeof(WithIndexer).GetProperty(nameof(WithIndexer.MyProp))!, data).Single();
+            result.Name.Should().Be("my_prop");
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Tests.Converters
                 MyBlock = new { BlockProp = "OtherValue" },
                 MyProp = "MyValue"
             };
-            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
+            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, typeof(WithIndexer).GetProperty(nameof(WithIndexer.MyProp)), data).Single();
             result.First()
                 .Should()
                 .BeEquivalentTo(new OclAttribute("my_prop", "MyValue"));
@@ -37,11 +37,15 @@ namespace Tests.Converters
         public void IndexersAreIgnored()
         {
             var context = new OclConversionContext(new OclSerializerOptions());
-            var data = new WithIndexer();
-            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, "Test", data).Single();
+            var data =
+                new Dummy
+                {
+                    Foo = new WithIndexer()
+                };
+            var result = (OclBlock)new DefaultBlockOclConverter().ToElements(context, typeof(Dummy).GetProperty(nameof(Dummy.Foo)), data.Foo).Single();
             result.Should()
                 .Be(
-                    new OclBlock("Test")
+                    new OclBlock("foo")
                     {
                         new OclAttribute("my_prop", "MyValue")
                     }
@@ -52,6 +56,11 @@ namespace Tests.Converters
         {
             public string MyProp => "MyValue";
             public string this[int index] => throw new NotImplementedException();
+        }
+
+        class Dummy
+        {
+            public object? Foo { get; set; }
         }
     }
 }

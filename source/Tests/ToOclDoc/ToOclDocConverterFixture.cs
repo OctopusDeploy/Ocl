@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 using Octopus.Ocl;
 
@@ -28,7 +29,7 @@ namespace Tests.ToOclDoc
             public bool CanConvert(Type type)
                 => type == typeof(FakeType);
 
-            public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+            public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
                 => throw new NotImplementedException();
 
             public OclDocument ToDocument(OclConversionContext context, object obj)

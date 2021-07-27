@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Octopus.Ocl.Converters
 {
@@ -10,17 +11,17 @@ namespace Octopus.Ocl.Converters
         public bool CanConvert(Type type)
             => typeof(IEnumerable).IsAssignableFrom(type);
 
-        public IEnumerable<IOclElement> ToElements(OclConversionContext context, string name, object value)
+        public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
         {
             var items = (IEnumerable)value;
             foreach (var item in items)
                 if (item != null)
-                    foreach (var element in context.ToElements(name, item))
+                    foreach (var element in context.ToElements(propertyInfo, item))
                         yield return element;
         }
 
         public OclDocument ToDocument(OclConversionContext context, object obj)
-            => new OclDocument(ToElements(context, "", obj));
+            => new OclDocument(ToElements(context, null, obj));
 
         public object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
         {

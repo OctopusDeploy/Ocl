@@ -10,13 +10,13 @@ namespace Tests.RealLifeScenario.Implementation
 {
     public class DeploymentStepOclConverter : DefaultBlockOclConverter
     {
-        protected override IOclElement ConvertInternal(OclConversionContext context, string name, object obj)
+        protected override IOclElement ConvertInternal(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
         {
             var step = (DeploymentStep)obj;
             if (string.IsNullOrWhiteSpace(step.Name))
                 throw new Exception("The name of the action must be set");
 
-            return base.ConvertInternal(context, name, obj);
+            return base.ConvertInternal(context, propertyInfo, obj);
         }
 
         public override bool CanConvert(Type type)
