@@ -29,19 +29,24 @@ namespace Octopus.Ocl.Converters
 
             var collection = currentValue ?? CreateNewCollection(type, collectionType);
 
-            var item = context.FromElement(collectionType, element, null);
+            var elements = element is OclDocument root
+                ? root.ToArray()
+                : new[] { element };
 
-            if (collection is IList list)
+            foreach (var item in elements.Select(e => context.FromElement(collectionType, e, null)))
             {
-                list.Add(item);
-                return list;
+                if (collection is IList list)
+                {
+                    list.Add(item);
+                    return list;
+                }
+
+                var addMethod = collection.GetType().GetMethod("Add", new[] { collectionType });
+                if (addMethod == null)
+                    throw new Exception("Only collections that implement an Add method are supported");
+
+                addMethod.Invoke(collection, new[] { item });
             }
-
-            var addMethod = collection.GetType().GetMethod("Add", new[] { collectionType });
-            if (addMethod == null)
-                throw new Exception("Only collections that implement an Add method are supported");
-
-            addMethod.Invoke(collection, new[] { item });
 
             return collection;
         }

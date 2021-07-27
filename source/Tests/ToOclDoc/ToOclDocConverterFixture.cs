@@ -36,6 +36,18 @@ namespace Tests.ToOclDoc
                 );
         }
 
+        [Test]
+        public void DeserializingCollectionOfObjectsWithClassNamesAsBlockNames()
+        {
+            var result = new OclSerializer().Deserialize<IEnumerable<FakeType>>(
+                new OclDocument(
+                    new[]
+                    {
+                        new OclBlock("fake_type", Array.Empty<string>(), new[] { new OclAttribute("foo", 1) }),
+                        new OclBlock("fake_type", Array.Empty<string>(), new[] { new OclAttribute("foo", 2) })
+                    }));
+        }
+
         class FakeType
         {
             public int Foo { get; set; } = 1;
