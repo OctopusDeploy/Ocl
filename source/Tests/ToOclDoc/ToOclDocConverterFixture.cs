@@ -19,6 +19,23 @@ namespace Tests.ToOclDoc
                 .HaveChildrenExactly(new OclAttribute("Fake", null));
         }
 
+        [Test]
+        public void SerializingCollectionOfObjectsUsesClassNameAsBlockName()
+        {
+            var subject = new FakeType[]
+            {
+                new FakeType(),
+                new FakeType { Foo = 2 }
+            };
+
+            new OclSerializer().ToOclDocument(subject)
+                .Should()
+                .HaveChildrenExactly(
+                    new OclBlock("fake_type", Array.Empty<string>(), new[] { new OclAttribute("foo", 1) }),
+                    new OclBlock("fake_type", Array.Empty<string>(), new[] { new OclAttribute("foo", 2) })
+                );
+        }
+
         class FakeType
         {
             public int Foo { get; set; } = 1;

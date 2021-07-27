@@ -11,7 +11,12 @@ namespace Octopus.Ocl.Converters
         public abstract bool CanConvert(Type type);
 
         public virtual IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
-            => new[] { ConvertInternal(context, propertyInfo, obj) };
+        {
+            var element = ConvertInternal(context, propertyInfo, obj);
+            return element != null
+                ? new[] { element }
+                : Array.Empty<IOclElement>();
+        }
 
         public virtual OclDocument ToDocument(OclConversionContext context, object obj)
             => throw new NotSupportedException("This type does not support conversion to the OCL root document");
@@ -21,7 +26,9 @@ namespace Octopus.Ocl.Converters
         protected abstract IOclElement ConvertInternal(OclConversionContext context, PropertyInfo? propertyInfo, object obj);
 
         protected virtual string GetName(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
-            => propertyInfo != null ? context.Namer.GetOclNameForProperty(propertyInfo) : "";
+            => propertyInfo != null // If the object is the value of a property, then base the name on the property name 
+                ? context.Namer.GetOclNameForProperty(propertyInfo) 
+                : context.Namer.FormatName(obj.GetType().Name); // Otherwise base it on the type name
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {
