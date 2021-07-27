@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
 
@@ -46,6 +48,8 @@ namespace Tests.ToOclDoc
                         new OclBlock("fake_type", Array.Empty<string>(), new[] { new OclAttribute("foo", 1) }),
                         new OclBlock("fake_type", Array.Empty<string>(), new[] { new OclAttribute("foo", 2) })
                     }));
+
+            result.Count().Should().Be(2);
         }
 
         class FakeType

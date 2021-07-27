@@ -38,14 +38,15 @@ namespace Octopus.Ocl.Converters
                 if (collection is IList list)
                 {
                     list.Add(item);
-                    return list;
                 }
+                else
+                {
+                    var addMethod = collection.GetType().GetMethod("Add", new[] { collectionType });
+                    if (addMethod == null)
+                        throw new Exception("Only collections that implement an Add method are supported");
 
-                var addMethod = collection.GetType().GetMethod("Add", new[] { collectionType });
-                if (addMethod == null)
-                    throw new Exception("Only collections that implement an Add method are supported");
-
-                addMethod.Invoke(collection, new[] { item });
+                    addMethod.Invoke(collection, new[] { item });
+                }
             }
 
             return collection;
