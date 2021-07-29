@@ -26,6 +26,15 @@ namespace Octopus.Ocl
                 .ToArray();
             Namer = options.Namer;
         }
+        
+        public IOclConverter GetConverterFor(Type type)
+        {
+            foreach (var converter in converters)
+                if (converter.CanConvert(type))
+                    return converter;
+
+            throw new Exception("Could not find a converter for " + type.FullName);
+        }
 
         internal IOclNamer Namer { get; }
 
@@ -41,14 +50,5 @@ namespace Octopus.Ocl
         internal object? FromElement(Type type, IOclElement element, object? getCurrentValue)
             => GetConverterFor(type)
                 .FromElement(this, type, element, getCurrentValue);
-
-        internal IOclConverter GetConverterFor(Type type)
-        {
-            foreach (var converter in converters)
-                if (converter.CanConvert(type))
-                    return converter;
-
-            throw new Exception("Could not find a converter for " + type.FullName);
-        }
     }
 }
