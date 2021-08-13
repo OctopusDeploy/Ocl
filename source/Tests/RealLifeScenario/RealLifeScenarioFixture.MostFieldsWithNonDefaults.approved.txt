@@ -25,7 +25,6 @@ steps "Script Step" {
         Octopus.Action.TargetRoles = "Portal"
         StepProperty = "Value1"
     }
-
     start_trigger = "StartWithPrevious"
 
     actions "Script Step" {
@@ -39,7 +38,6 @@ steps "Script Step" {
         properties = {
             Action.Prop = "The Value"
         }
-
         tenant_tags = ["David/Who"]
         worker_pool_id_or_name = "My Worker Pool"
         worker_pool_variable = "WorkerPoolVar"

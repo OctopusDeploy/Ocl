@@ -50,6 +50,5 @@ steps "Backup the Database" {
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-
     }
 }
