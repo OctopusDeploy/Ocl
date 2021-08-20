@@ -1,0 +1,25 @@
+channel "Default" {
+    is_default = true
+    lifecycle_id = "Components Internal only"
+
+    rules {
+        tag = "^$"
+        version_range = ""
+
+        deployment_action_packages "Push" "Octopus.Ocl" {
+        }
+    }
+}
+
+channel "Pre-release" {
+    description = "Pre-releases should only ever go to our internal nuget feed"
+    lifecycle_id = "Components Internal only"
+
+    rules {
+        tag = ".+"
+        version_range = ""
+
+        deployment_action_packages "Push" "Octopus.Ocl" {
+        }
+    }
+}

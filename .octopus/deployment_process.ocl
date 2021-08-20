@@ -1,0 +1,43 @@
+step "Push" {
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "true"
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                # Build the path to nuget.exe
+                $nugetPackagePath = $OctopusParameters["Octopus.Action.Package[NuGet.CommandLine].ExtractedPath"]
+                $nugetExe = Join-Path -Path $nugetPackagePath -ChildPath "Tools\nuget.exe"
+                
+                # nuget push
+                . $nugetExe push "$($OctopusParameters["Octopus.Action.Package[Octopus.Ocl].PackageFileName"])" -source $FeedUrl -apikey $FeedApiKey
+                
+            EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+
+        worker_pool = "Hosted Windows 2019"
+
+        packages "NuGet.CommandLine" {
+            acquisition_location = "Server"
+            feed = "NuGet"
+            package_id = "NuGet.CommandLine"
+            properties = {
+                Extract = "True"
+            }
+
+        }
+
+        packages "Octopus.Ocl" {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "Octopus.Ocl"
+            properties = {
+                Extract = "False"
+                SelectionMode = "immediate"
+            }
+
+        }
+    }
+}
