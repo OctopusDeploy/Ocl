@@ -292,6 +292,66 @@ ZZZ
                 .Be(expected.ToUnixLineEndings());
         }
 
+        [Test]
+        public void CollectionAttributeFollowedByEndOfBlock()
+        {
+
+            var block = new OclBlock("OuterBlock")
+            {
+                new OclBlock("InnerBlock")
+                {
+                    new OclAttribute("MapAttribute",
+                        new Dictionary<string, object>
+                            { { "alpha", 1 }, {"bravo", 2} })
+                }
+            };
+            
+            const string expected = @"OuterBlock {
+
+    InnerBlock {
+        MapAttribute = {
+            alpha = 1
+            bravo = 2
+        }
+    }
+}";
+            
+            Execute(w => w.Write(block))
+                .Should()
+                .Be(expected.ToUnixLineEndings());
+        }
+        
+        [Test]
+        public void CollectionAttributeFollowedByAttribute()
+        {
+
+            var block = new OclBlock("OuterBlock")
+            {
+                new OclBlock("InnerBlock")
+                {
+                    new OclAttribute("MapAttribute",
+                        new Dictionary<string, object>
+                            { { "alpha", 1 }, {"bravo", 2} }),
+                    new OclAttribute("StringAttribute", "Value")
+                }
+            };
+            
+            const string expected = @"OuterBlock {
+
+    InnerBlock {
+        MapAttribute = {
+            alpha = 1
+            bravo = 2
+        }
+        StringAttribute = ""Value""
+    }
+}";
+            
+            Execute(w => w.Write(block))
+                .Should()
+                .Be(expected.ToUnixLineEndings());
+        }
+
         string Execute(Action<OclWriter> when, OclSerializerOptions? options = null)
         {
             var sb = new StringBuilder();

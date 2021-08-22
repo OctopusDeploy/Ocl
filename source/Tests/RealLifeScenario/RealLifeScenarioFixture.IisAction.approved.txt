@@ -33,6 +33,5 @@ steps "Deploy Website" {
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "appsettings.json"
             Octopus.Action.Package.PackageId = "OctoFX.Web"
         }
-
     }
 }

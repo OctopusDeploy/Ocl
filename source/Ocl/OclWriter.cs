@@ -273,7 +273,7 @@ namespace Octopus.Ocl
             }
 
             WriteIndent();
-            writer.WriteLine("}");
+            writer.Write("}");
         }
 
         void WriteSingleLineStringLiteral(string s)
