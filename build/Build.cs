@@ -1,3 +1,4 @@
+// ReSharper disable RedundantUsingDirective
 using System;
 using Nuke.Common;
 using Nuke.Common.Execution;

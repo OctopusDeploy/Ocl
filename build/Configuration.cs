@@ -1,3 +1,4 @@
+// ReSharper disable RedundantUsingDirective
 using System;
 using System.ComponentModel;
 using System.Linq;
