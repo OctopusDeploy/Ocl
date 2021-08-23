@@ -5,6 +5,6 @@ connectivity_policy {
 
 versioning_strategy {
 
-    donor_package "f63f42e6-b1f8-4bab-9a87-1762c9c6bf9f" "a0af560f-9b46-41b8-98d6-297ffcc15016" {
+    donor_package "Push" "Octopus.Ocl" {
     }
 }
