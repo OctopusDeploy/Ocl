@@ -5,6 +5,8 @@ connectivity_policy {
 
 versioning_strategy {
 
-    donor_package "Push" "Octopus.Ocl" {
+    donor_package {
+        step = "Push" 
+        package = "Octopus.Ocl"
     }
 }
