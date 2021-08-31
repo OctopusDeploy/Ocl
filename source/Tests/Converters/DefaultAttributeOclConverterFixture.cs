@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
 using Octopus.Ocl;
@@ -17,7 +16,7 @@ namespace Tests.Converters
             var result = (OclAttribute)new DefaultAttributeOclConverter().ToElements(context, typeof(Dummy).GetProperty(nameof(Dummy.Test))!, "Value").Single();
             result.Name.Should().Be("test");
         }
-        
+
         class Dummy
         {
             public string Test { get; } = "Value";

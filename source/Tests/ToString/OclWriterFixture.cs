@@ -295,17 +295,16 @@ ZZZ
         [Test]
         public void CollectionAttributeFollowedByEndOfBlock()
         {
-
             var block = new OclBlock("OuterBlock")
             {
                 new OclBlock("InnerBlock")
                 {
                     new OclAttribute("MapAttribute",
                         new Dictionary<string, object>
-                            { { "alpha", 1 }, {"bravo", 2} })
+                            { { "alpha", 1 }, { "bravo", 2 } })
                 }
             };
-            
+
             const string expected = @"OuterBlock {
 
     InnerBlock {
@@ -315,27 +314,26 @@ ZZZ
         }
     }
 }";
-            
+
             Execute(w => w.Write(block))
                 .Should()
                 .Be(expected.ToUnixLineEndings());
         }
-        
+
         [Test]
         public void CollectionAttributeFollowedByAttribute()
         {
-
             var block = new OclBlock("OuterBlock")
             {
                 new OclBlock("InnerBlock")
                 {
                     new OclAttribute("MapAttribute",
                         new Dictionary<string, object>
-                            { { "alpha", 1 }, {"bravo", 2} }),
+                            { { "alpha", 1 }, { "bravo", 2 } }),
                     new OclAttribute("StringAttribute", "Value")
                 }
             };
-            
+
             const string expected = @"OuterBlock {
 
     InnerBlock {
@@ -346,7 +344,7 @@ ZZZ
         StringAttribute = ""Value""
     }
 }";
-            
+
             Execute(w => w.Write(block))
                 .Should()
                 .Be(expected.ToUnixLineEndings());

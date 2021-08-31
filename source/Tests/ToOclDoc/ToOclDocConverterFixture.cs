@@ -24,7 +24,7 @@ namespace Tests.ToOclDoc
         [Test]
         public void SerializingCollectionOfObjectsUsesClassNameAsBlockName()
         {
-            var subject = new FakeType[]
+            var subject = new[]
             {
                 new FakeType(),
                 new FakeType { Foo = 2 }

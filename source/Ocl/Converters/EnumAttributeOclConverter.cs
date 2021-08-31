@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl.Converters
 {

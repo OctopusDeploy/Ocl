@@ -34,7 +34,6 @@ namespace Octopus.Ocl.Converters
                 : new[] { element };
 
             foreach (var item in elements.Select(e => context.FromElement(collectionType, e, null)))
-            {
                 if (collection is IList list)
                 {
                     list.Add(item);
@@ -47,7 +46,6 @@ namespace Octopus.Ocl.Converters
 
                     addMethod.Invoke(collection, new[] { item });
                 }
-            }
 
             return collection;
         }

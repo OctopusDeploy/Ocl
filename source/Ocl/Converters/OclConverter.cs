@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Octopus.Ocl.Namers;
 
 namespace Octopus.Ocl.Converters
 {
@@ -27,7 +26,7 @@ namespace Octopus.Ocl.Converters
 
         protected virtual string GetName(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
             => propertyInfo != null // If the object is the value of a property, then base the name on the property name 
-                ? context.Namer.GetName(propertyInfo) 
+                ? context.Namer.GetName(propertyInfo)
                 : context.Namer.FormatName(obj.GetType().Name); // Otherwise base it on the type name
 
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)

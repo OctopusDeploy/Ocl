@@ -25,7 +25,7 @@ namespace Octopus.Ocl.Namers
 
             if (matches.Length == 1)
                 return matches[0];
-            
+
             if (matches.Length > 1)
                 throw new OclException($"Multiple properties match the name '{name}': {string.Join(", ", matches.Select(m => m.Name))}");
 
