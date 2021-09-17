@@ -10,13 +10,12 @@ step "Push" {
                 $nugetExe = Join-Path -Path $nugetPackagePath -ChildPath "Tools\nuget.exe"
                 
                 # nuget push
-                . $nugetExe push "$($OctopusParameters["Octopus.Action.Package[Octopus.Ocl].PackageFileName"])" -source $FeedUrl -apikey $FeedApiKey
+                . $nugetExe push "$($OctopusParameters["Octopus.Actddion.Package[Octopus.Ocl].PackageFileName"])" -source $FeedUrl -apikey $FeedApiKey
                 
             EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-
         worker_pool = "Hosted Windows 2019"
 
         packages "NuGet.CommandLine" {
@@ -26,7 +25,6 @@ step "Push" {
             properties = {
                 Extract = "True"
             }
-
         }
 
         packages "Octopus.Ocl" {
@@ -37,7 +35,6 @@ step "Push" {
                 Extract = "False"
                 SelectionMode = "immediate"
             }
-
         }
     }
 }
