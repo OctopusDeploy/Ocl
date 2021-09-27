@@ -6,7 +6,7 @@ step "Push" {
             Octopus.Action.RunOnServer = "true"
             Octopus.Action.Script.ScriptBody = <<-EOT
                 # Build the path to nuget.exe
-                $nugetPackagePath = $OctopusParameters["Octopus.Acction.Package[NuGet.CommandLine].ExtractedPath"]
+                $nugetPackagePath = $OctopusParameters["Octopus.Action.Package[NuGet.CommandLine].ExtractedPath"]
                 $nugetExe = Join-Path -Path $nugetPackagePath -ChildPath "Tools\nuget.exe"
                 
                 # nuget push
