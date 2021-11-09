@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Octopus.Ocl
 {
@@ -53,5 +56,14 @@ namespace Octopus.Ocl
         /// Block labels can either be quoted literal strings or naked identifiers.
         /// </remarks>
         public List<string> Labels { get; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            using var tw = new StringWriter(sb, CultureInfo.InvariantCulture);
+            using var writer = new OclWriter(tw);
+            writer.Write(this);
+            return sb.ToString();
+        }
     }
 }

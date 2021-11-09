@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Text;
 
 namespace Octopus.Ocl
 {
@@ -73,5 +76,15 @@ namespace Octopus.Ocl
         internal static bool IsSupportedValueCollectionType(Type type)
             => type.IsArray && type.GetArrayRank() == 1 && IsSupportedValueType(type.GetElementType()!) ||
                 typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType && type.GenericTypeArguments.Length == 1 && IsSupportedValueType(type.GenericTypeArguments[0]);
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            using var tw = new StringWriter(sb, CultureInfo.InvariantCulture);
+            using var writer = new OclWriter(tw);
+            writer.Write(this);
+            return sb.ToString();
+        }
     }
+    
 }
