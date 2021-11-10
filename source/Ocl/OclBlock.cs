@@ -56,7 +56,7 @@ namespace Octopus.Ocl
         /// Block labels can either be quoted literal strings or naked identifiers.
         /// </remarks>
         public List<string> Labels { get; }
-        
+
         public override string ToString()
         {
             var sb = new StringBuilder();
