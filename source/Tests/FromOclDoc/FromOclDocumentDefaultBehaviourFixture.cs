@@ -11,7 +11,7 @@ namespace Tests.FromOclDoc
         [Test]
         public void Empty()
         {
-            OclDocument document = new OclDocument();
+            var document = new OclDocument();
             var context = new OclConversionContext(new OclSerializerOptions());
             var result = context.FromElement(typeof(Car), document, null);
             if (result == null)
@@ -263,7 +263,7 @@ namespace Tests.FromOclDoc
                 var result = context.FromElement(typeof(Car), document, null);
                 if (result == null)
                     throw new OclException("Document conversion resulted in null, which is not valid");
-                Car temp = (Car)result;
+                var temp = (Car)result;
             };
             action.Should()
                 .Throw<OclException>()
@@ -284,7 +284,7 @@ namespace Tests.FromOclDoc
                 var result = context.FromElement(typeof(Car), document, null);
                 if (result == null)
                     throw new OclException("Document conversion resulted in null, which is not valid");
-                Car temp = (Car)result;
+                var temp = (Car)result;
             };
             action.Should()
                 .Throw<OclException>()
