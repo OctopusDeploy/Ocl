@@ -62,9 +62,7 @@ namespace Octopus.Ocl
         }
 
         public T Deserialize<T>(string ocl) where T : notnull
-        {
-            return (T)Deserialize(ocl, typeof(T));
-        }
+            => (T)Deserialize(ocl, typeof(T));
 
         public object Deserialize(string ocl, Type type)
         {
@@ -75,10 +73,8 @@ namespace Octopus.Ocl
         }
 
         public T Deserialize<T>(OclDocument document) where T : notnull
-        {
-            return (T)Deserialize(document, typeof(T));
-        }
-        
+            => (T)Deserialize(document, typeof(T));
+
         public object Deserialize(OclDocument document, Type type)
         {
             var context = new OclConversionContext(options);
