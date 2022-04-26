@@ -11,7 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Ocl\Ocl.csproj" />
 
-    <PackageReference Include="Octopus.Data" Version="5.3.0" />
     <PackageReference Include="Octopus.Server.Extensibility" Version="14.0.4" />
     <PackageReference Include="Assent" Version="1.7.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
