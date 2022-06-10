@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Tests</AssemblyName>
     <RootNamespace>Tests</RootNamespace>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
