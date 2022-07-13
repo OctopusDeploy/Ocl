@@ -1,9 +1,9 @@
-step "Push" {
+step "push" {
+    name = "Push"
 
     action {
         action_type = "Octopus.Script"
         properties = {
-            Octopus.Action.RunOnServer = "true"
             Octopus.Action.Script.ScriptBody = <<-EOT
                 # Build the path to nuget.exe
                 $nugetPackagePath = $OctopusParameters["Octopus.Action.Package[NuGet.CommandLine].ExtractedPath"]
@@ -16,11 +16,11 @@ step "Push" {
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-        worker_pool = "Hosted Windows 2019"
+        worker_pool = "hosted-windows-2019"
 
         packages "NuGet.CommandLine" {
             acquisition_location = "Server"
-            feed = "NuGet"
+            feed = "nuget"
             package_id = "NuGet.CommandLine"
             properties = {
                 Extract = "True"
@@ -29,7 +29,7 @@ step "Push" {
 
         packages "Octopus.Ocl" {
             acquisition_location = "Server"
-            feed = "Octopus Server (built-in)"
+            feed = "octopus-server-built-in"
             package_id = "Octopus.Ocl"
             properties = {
                 Extract = "False"
