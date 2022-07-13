@@ -6,7 +6,7 @@ connectivity_policy {
 versioning_strategy {
 
     donor_package {
-        step = "Push" 
-        package = "Octopus.Ocl"
+        package = "nugetpush-source-package"
+        step = "nuget-push"
     }
 }
