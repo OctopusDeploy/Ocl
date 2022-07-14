@@ -1,18 +1,13 @@
-// ReSharper disable RedundantUsingDirective
-
-using System;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.OctoVersion;
 using Nuke.Common.Utilities.Collections;
-using Nuke.OctoVersion;
-using OctoVersion.Core;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 class Build : NukeBuild
 {
@@ -20,7 +15,16 @@ class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
 
-    [NukeOctoVersion] readonly OctoVersionInfo OctoVersionInfo;
+    [Parameter("Branch name for OctoVersion to use to calculate the version number. Can be set via the environment variable OCTOVERSION_CurrentBranch.",
+      Name = "OCTOVERSION_CurrentBranch")]
+     readonly string BranchName;
+
+     [Parameter("Whether to auto-detect the branch name - this is okay for a local build, but should not be used under CI.")]
+     readonly bool AutoDetectBranch = IsLocalBuild;
+
+     [OctoVersion(UpdateBuildNumber = true, BranchParameter = nameof(BranchName),
+         AutoDetectBranchParameter = nameof(AutoDetectBranch), Framework = "net6.0")]
+     readonly OctoVersionInfo OctoVersionInfo;
 
     AbsolutePath SourceDirectory => RootDirectory / "source";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
@@ -53,8 +57,8 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            Logger.Info("Building Octopus.Ocl v{0}", OctoVersionInfo.NuGetVersion);
-            Logger.Info("Informational Version {0}", OctoVersionInfo.InformationalVersion);
+            Serilog.Log.Information("Building Octopus.Ocl v{0}", OctoVersionInfo.NuGetVersion);
+            Serilog.Log.Information("Informational Version {0}", OctoVersionInfo.InformationalVersion);
 
             DotNetBuild(_ => _
                 .SetProjectFile(Solution)
