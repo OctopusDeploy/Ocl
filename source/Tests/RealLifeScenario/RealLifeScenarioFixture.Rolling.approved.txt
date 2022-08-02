@@ -8,7 +8,6 @@ connectivity_policy {
 project_id = "Projects-1"
 
 steps "My Rolling Step" {
-
     actions "First" {
         action_type = "Octopus.Script"
     }

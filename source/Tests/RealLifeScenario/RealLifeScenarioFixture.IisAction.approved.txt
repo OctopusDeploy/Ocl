@@ -8,7 +8,6 @@ connectivity_policy {
 project_id = "Projects-1"
 
 steps "Deploy Website" {
-
     actions "Deploy Website" {
         action_type = "Octopus.IIS"
         properties = {

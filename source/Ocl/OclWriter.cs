@@ -15,6 +15,7 @@ namespace Octopus.Ocl
         readonly TextWriter writer;
         int currentIndent;
         bool isFirstLine = true;
+        bool isFirstChildInBlock;
         bool lastWrittenWasBlock;
 
         public OclWriter(StringBuilder sb, OclSerializerOptions? options = null)
@@ -60,7 +61,7 @@ namespace Octopus.Ocl
 
         public void Write(OclBlock block)
         {
-            if (!isFirstLine && !lastWrittenWasBlock)
+            if (!isFirstLine && !lastWrittenWasBlock && !isFirstChildInBlock)
                 writer.WriteLine();
             WriteNextLine();
             WriteIndent();
@@ -74,14 +75,23 @@ namespace Octopus.Ocl
 
             writer.Write(" {");
 
-            currentIndent++;
-            foreach (var child in block)
-                Write(child);
-            currentIndent--;
+            if (block.Any())
+            {
+                currentIndent++;
+                isFirstChildInBlock = true;
 
-            writer.WriteLine();
+                foreach (var child in block)
+                {
+                    Write(child);
+                    isFirstChildInBlock = false;
+                }
 
-            WriteIndent();
+                currentIndent--;
+
+                writer.WriteLine();
+                WriteIndent();
+            }
+
             writer.Write("}");
 
             lastWrittenWasBlock = true;
