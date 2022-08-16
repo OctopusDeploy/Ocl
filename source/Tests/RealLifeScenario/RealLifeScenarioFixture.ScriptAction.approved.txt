@@ -8,7 +8,6 @@ connectivity_policy {
 project_id = "Projects-1"
 
 steps "Backup the Database" {
-
     actions "Backup the Database" {
         action_type = "Octopus.Script"
         properties = {

@@ -156,13 +156,13 @@ ZZZ
         public void WriteBlockEmpty()
             => Execute(w => w.Write(new OclBlock("MyBlock")))
                 .Should()
-                .Be("MyBlock {\n}");
+                .Be("MyBlock {}");
 
         [Test]
         public void WriteBlockSpecialCharactersInName()
             => Execute(w => w.Write(new OclBlock("My0%&2_'\"-Block")))
                 .Should()
-                .Be("My0__2___-Block {\n}");
+                .Be("My0__2___-Block {}");
 
         [Test]
         public void WriteBlockSingleLabel()
@@ -172,7 +172,7 @@ ZZZ
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be("MyBlock \"MyLabel\" {\n}");
+                .Be("MyBlock \"MyLabel\" {}");
         }
 
         [Test]
@@ -185,7 +185,7 @@ ZZZ
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be("MyBlock \"MyLabel\" \"OtherLabel\" \"LastLabel\" {\n}");
+                .Be("MyBlock \"MyLabel\" \"OtherLabel\" \"LastLabel\" {}");
         }
 
         [Test]
@@ -196,7 +196,7 @@ ZZZ
 
             Execute(w => w.Write(block))
                 .Should()
-                .Be("MyBlock \"My\\\"Label\" {\n}");
+                .Be("MyBlock \"My\\\"Label\" {}");
         }
 
         [Test]
@@ -208,9 +208,7 @@ ZZZ
             };
 
             var expected = @"MyBlock {
-
-    Child {
-    }
+    Child {}
 }";
 
             Execute(w => w.Write(block))
@@ -281,8 +279,7 @@ ZZZ
         ThirdChild = 3
     }
 
-    Fourth {
-    }
+    Fourth {}
 
     Last = 9
 }";
@@ -306,7 +303,6 @@ ZZZ
             };
 
             const string expected = @"OuterBlock {
-
     InnerBlock {
         MapAttribute = {
             alpha = 1
@@ -335,7 +331,6 @@ ZZZ
             };
 
             const string expected = @"OuterBlock {
-
     InnerBlock {
         MapAttribute = {
             alpha = 1
