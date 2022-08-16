@@ -2,3 +2,11 @@ release_notes_template = "#{OctopusReleaseNotesTemplate}"
 
 connectivity_policy {
 }
+
+versioning_strategy {
+
+    donor_package {
+        package = "d03ff38a-cadf-4288-bbfd-8704688c11ad"
+        step = "nuget-push"
+    }
+}
