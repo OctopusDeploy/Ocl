@@ -1,5 +1,4 @@
 variable "FeedApiKey" {
-
     value "#{InternalFeedApiKey}" {
         environment = ["components-internal"]
     }
@@ -11,7 +10,6 @@ variable "FeedApiKey" {
 }
 
 variable "FeedUrl" {
-
     value "#{InternalFeedUrl}" {
         environment = ["components-internal"]
     }

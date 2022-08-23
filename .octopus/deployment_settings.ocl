@@ -1,12 +1,10 @@
 release_notes_template = "#{OctopusReleaseNotesTemplate}"
 
-connectivity_policy {
-}
+connectivity_policy {}
 
 versioning_strategy {
-
     donor_package {
-        package = "nugetpush-source-package"
-        step = "nuget-push"
+        package = "NuGetPush.Source.Package"
+        step = "NuGet Push"
     }
 }
