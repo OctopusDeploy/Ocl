@@ -13,8 +13,7 @@ namespace Tests.ToString
     {
         static IEnumerable<TestCaseData> WriteAttributeDataSource()
         {
-            TestCaseData CreateCase(string name, object? value, string expected)
-                => new TestCaseData(value, expected) { TestName = "WriteAttribute value: " + name };
+            TestCaseData CreateCase(string name, object? value, string expected) => new(value, expected) { TestName = "WriteAttribute value: " + name };
 
             yield return CreateCase("null", null, "null");
             yield return CreateCase("bool", false, "false");

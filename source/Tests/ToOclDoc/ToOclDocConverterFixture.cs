@@ -65,8 +65,7 @@ namespace Tests.ToOclDoc
             public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object value)
                 => throw new NotImplementedException();
 
-            public OclDocument ToDocument(OclConversionContext context, object obj)
-                => new OclDocument(new[] { new OclAttribute("Fake", null) });
+            public OclDocument ToDocument(OclConversionContext context, object obj) => new(new[] { new OclAttribute("Fake", null) });
 
             public object? FromElement(OclConversionContext context, Type type, IOclElement element, object? currentValue)
                 => throw new NotImplementedException();

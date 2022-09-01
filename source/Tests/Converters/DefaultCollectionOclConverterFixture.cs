@@ -11,7 +11,7 @@ namespace Tests.Converters
     {
         const string Value = "Daffy";
 
-        readonly OclConversionContext context = new OclConversionContext(new OclSerializerOptions());
+        readonly OclConversionContext context = new(new OclSerializerOptions());
 
         [Test]
         public void FromElement_IEnumerableTargetWithCurrentAsNullReturnsAList()

@@ -16,14 +16,14 @@ namespace Tests.RealLifeScenario.Entities
 
         public TenantedDeploymentMode MultiTenancyMode { get; set; }
 
-        public ProjectConnectivityPolicy ConnectivityPolicy { get; set; } = new ProjectConnectivityPolicy
+        public ProjectConnectivityPolicy ConnectivityPolicy { get; set; } = new()
         {
             AllowDeploymentsToNoTargets = true
         };
 
         public RunbookEnvironmentScope EnvironmentScope { get; set; }
 
-        public ReferenceCollection Environments { get; } = new ReferenceCollection();
+        public ReferenceCollection Environments { get; } = new();
 
         public GuidedFailureMode DefaultGuidedFailureMode { get; set; }
     }
