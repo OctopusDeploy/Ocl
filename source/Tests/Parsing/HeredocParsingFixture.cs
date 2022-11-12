@@ -36,15 +36,15 @@ namespace Tests.Parsing
                 .Should()
                 .BeFalse();
 
-        [TestCase("ZZZ\n")]
-        [TestCase("ZZZ")]
-        [TestCase("\t\tZZZ\t\t\n")]
-        [TestCase("ZZZ\nFoo\n")]
-        public void End(string input)
+        [TestCase("ZZZ", "ZZZ", Reason = "Exact Match")]
+        [TestCase("ZZZ\n", "ZZZ", Reason = "Trailing line breaks removed")]
+        [TestCase("\t\tZZZ\t\t\n", "\t\tZZZ", Reason = "Leading whitespace returned for indent count")]
+        [TestCase("ZZZ\nFoo\n", "ZZZ", Reason = "Proceeding nodes ignored")]
+        public void End(string input, string expected)
             => HeredocParser.End("ZZZ")
                 .Parse(input)
                 .Should()
-                .Be("ZZZ");
+                .Be(expected);
 
         [TestCase("ZZZ A\n")]
         [TestCase("A ZZZ\n")]
@@ -71,12 +71,12 @@ namespace Tests.Parsing
                     )
                 );
 
-        [TestCase("<<-ZZZ\nZZZ", "", Description = "IndentedHeredoc - Empty")]
-        [TestCase("<<-ZZZ\n \n \nZZZ", "\n", Description = "IndentedHeredoc - Whitespace")]
-        [TestCase("<<-ZZZ\n  A\n  B\nZZZ", "A\nB", Description = "IndentedHeredoc - NoExtraIndent")]
-        [TestCase("<<-ZZZ\n  A\n    B\n  ZZZ", "A\n  B", Description = "IndentedHeredoc - ExtraIndent")]
-        [TestCase("<<-ZZZ\n  A ZZZ\n   ZZZ B\nZZZ", "A ZZZ\n ZZZ B", Description = "IndentedHeredoc - End Marker In Text")]
-        [TestCase("<<-ZZZ\n  A\n    B\nZZZ", "A\n  B", Description = "IndentedHeredoc - End marker does not affect indent")]
+        [TestCase("<<-ZZZ\nZZZ", "", Reason = "IndentedHeredoc - Empty")]
+        [TestCase("<<-ZZZ\n \n \nZZZ", " \n ", Reason = "IndentedHeredoc - Whitespace Preserved")]
+        [TestCase("<<-ZZZ\n \n \n ZZZ", "\n", Reason = "IndentedHeredoc - Whitespace Removed")]
+        [TestCase("<<-ZZZ\n  A\n   B\n  ZZZ", "A\n B", Reason = "IndentedHeredoc - Offset By End Indent")]
+        [TestCase("<<-ZZZ\n  A ZZZ\nZZZ B\nZZZ", "  A ZZZ\nZZZ B", Reason = "IndentedHeredoc - End Marker In Text")]
+        [TestCase("<<-ZZZ\n  A\nB\n     ZZZ", "  A\nB", Reason = "IndentedHeredoc - Min Across All Lines")]
         public void IndentedHeredoc(string input, string expected)
             => OclParser.Execute("Foo = " + input.ToUnixLineEndings())
                 .Should()
@@ -124,7 +124,7 @@ namespace Tests.Parsing
         [TestCase("    A", "B")]
         public void UnindentNoChange(params string[] input)
         {
-            var result = HeredocParser.Unindent(input, OclStringLiteralFormat.IndentedHeredoc);
+            var result = HeredocParser.Unindent(input, "", OclStringLiteralFormat.IndentedHeredoc);
             result.Should().BeEquivalentTo(input);
         }
 
@@ -141,7 +141,7 @@ namespace Tests.Parsing
         public void UnindentBy4Chars(params string[] input)
         {
             var expected = input.Select(i => i.Length < 4 ? "" : i.Substring(4));
-            var result = HeredocParser.Unindent(input, OclStringLiteralFormat.IndentedHeredoc);
+            var result = HeredocParser.Unindent(input, "", OclStringLiteralFormat.IndentedHeredoc);
             result.Should().BeEquivalentTo(expected);
         }
     }

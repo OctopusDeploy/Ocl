@@ -4,7 +4,9 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
+using Octopus.Data.Model;
 using Octopus.Ocl;
+using Tests.RealLifeScenario.Implementation;
 
 namespace Tests.ToString
 {
@@ -113,6 +115,7 @@ ZZZ
                 .Be(expected.ToUnixLineEndings());
         }
 
+        
         [Test]
         public void HeredocIndented()
         {
@@ -126,9 +129,9 @@ ZZZ
     MyAttr = <<-EOT
              a
                 b
-        EOT
+            EOT
 }";
-
+            
             Execute(w => w.Write(block))
                 .Should()
                 .Be(expected.ToUnixLineEndings());
@@ -145,11 +148,34 @@ ZZZ
             var expected = @"MyAttr = <<-YYY
         a
         b
-    YYY";
+        YYY";
 
             Execute(w => w.Write(new OclAttribute("MyAttr", "a\nb")), options)
                 .Should()
                 .Be(expected.ToUnixLineEndings());
+        }
+        
+        [Test]
+        [TestCase(@"blah = <<-EOT
+        	Hello
+        	World
+        EOT")]
+        public void MultilineStringsSupportHeredocLineFormat(string expectedRaw)
+        {
+            var options = new OclSerializerOptions();
+
+            var originalFoo = new Foo() { Blah = "\tHello\r\n\tWorld" };
+            var serializer = new OclSerializer(options);
+            var raw = serializer.Serialize(originalFoo);
+            var deserializedFoo = serializer.Deserialize<Foo>(expectedRaw);
+            
+            raw.Should().Be(expectedRaw);
+            deserializedFoo.Blah.Should().Be(originalFoo.Blah);
+        }
+        
+        public class Foo
+        {
+            public string? Blah { get; set; }
         }
 
         [Test]

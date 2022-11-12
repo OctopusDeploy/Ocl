@@ -252,7 +252,7 @@ namespace Octopus.Ocl
             writer.WriteLine();
 
             if (isIndented)
-                WriteIndent(1);
+                WriteIndent(2);
             writer.Write(literal.HeredocTag);
         }
 
