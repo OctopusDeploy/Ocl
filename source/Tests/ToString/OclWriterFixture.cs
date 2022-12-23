@@ -173,6 +173,36 @@ ZZZ
             deserializedFoo.Blah.Should().Be(originalFoo.Blah);
         }
         
+        
+             
+        [Test]
+        [TestCase(@"blah = <<-EOT
+        	Hello
+        	World
+        EOT")]
+        public void MultilineStringsSupportHeredocLineFormat1(string expectedRaw)
+        {
+            var options = new OclSerializerOptions();
+            var serializer = new OclSerializer(options);
+            
+            
+            var dualIndent = new Foo() { Blah = "\tHello\r\n\tWorld" };
+            var dualIndentRaw = serializer.Serialize(dualIndent);
+            
+            var singleIndent = new Foo() { Blah = "Hello\r\n\tWorld" };
+            var singleIndentRaw = serializer.Serialize(singleIndent);
+
+            singleIndentRaw = @"blah = <<-EOT
+        	Hello
+        	World
+    EOT";
+            
+            var singleIndentDeserialized = serializer.Deserialize<Foo>(singleIndentRaw);
+            var dualIndentDeserialized = serializer.Deserialize<Foo>(dualIndentRaw);
+
+        }
+        
+        
         public class Foo
         {
             public string? Blah { get; set; }
