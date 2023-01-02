@@ -47,7 +47,7 @@ namespace Octopus.Ocl
             set
             {
                 if (value != null && !IsSupportedValueType(value.GetType()))
-                    throw new OclException($"The type {value.GetType().FullName} is not a support value type OCL attribute value");
+                    throw new OclException($"The type {value.GetType().FullName} is not a supported value type OCL attribute value");
                 this.value = value;
             }
         }
@@ -64,9 +64,13 @@ namespace Octopus.Ocl
                 IsObjectDictionary(type) ||
                 IsStringDictionary(type) ||
                 IsNullableSupportedValueType() ||
-                IsSupportedValueCollectionType(type);
+                IsSupportedValueCollectionType(type) ||
+                IsFunctionCall(type);
         }
 
+        internal static bool IsFunctionCall(Type type)
+            => typeof(OclFunctionCall).IsAssignableFrom(type);
+        
         internal static bool IsObjectDictionary(Type type)
             => typeof(IEnumerable<KeyValuePair<string, object?>>).IsAssignableFrom(type);
 

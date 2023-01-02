@@ -203,24 +203,42 @@ namespace Octopus.Ocl
                 return;
             }
 
+            if(OclAttribute.IsFunctionCall(valueType))
+            {
+                WriteValue((OclFunctionCall)value);
+                return;
+            }
+
             if (OclAttribute.IsSupportedValueCollectionType(valueType))
             {
-                var enumerable = (IEnumerable)value;
                 writer.Write('[');
-                var isFirst = true;
-                foreach (var item in enumerable)
-                {
-                    if (!isFirst)
-                        writer.Write(", ");
-                    isFirst = false;
-                    WriteValue(item);
-                }
-
+                Write((IEnumerable)value);
                 writer.Write(']');
                 return;
             }
 
             throw new InvalidOperationException($"The type {value.GetType().FullName} is not a valid attribute value and can not be serialized");
+        }
+
+        void Write(IEnumerable enumerable)
+        {
+            
+            var isFirst = true;
+            foreach (var item in enumerable)
+            {
+                if (!isFirst)
+                    writer.Write(", ");
+                isFirst = false;
+                WriteValue(item);
+            }
+        }
+
+        void WriteValue(OclFunctionCall functionCall)
+        {
+            writer.Write(functionCall.Name);
+            writer.Write("(");
+            Write((IEnumerable)functionCall.Arguments);
+            writer.Write(")");
         }
 
         void WriteValue(OclStringLiteral literal)
