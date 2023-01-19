@@ -154,9 +154,21 @@ ZZZ
         }
         
         [Test]
-        [TestCase("Hello\r\nWorld", "blah = <<-EOT\r\n        Hello\r\n        World\r\n        EOT",  Description = "No Indentation")]
-        [TestCase("\tHello\r\n\tWorld", "blah = <<-EOT\r\n        \tHello\r\n        \tWorld\r\n        EOT",  Description = "Double Indent Preserved")]
-        [TestCase("Hello\r\n\t\tWorld", "blah = <<-EOT\r\n        Hello\r\n        \t\tWorld\r\n        EOT",  Description = "Single Property Indented")]
+        [TestCase(@"Hello
+World", @"blah = <<-EOT
+        Hello
+        World
+        EOT",  Description = "No Indentation")]
+        [TestCase(@"    Hello
+    World", @"blah = <<-EOT
+            Hello
+            World
+        EOT",  Description = "Double Indent Preserved")]
+        [TestCase(@"Hello
+        World", @"blah = <<-EOT
+        Hello
+                World
+        EOT",  Description = "Single Property Indented")]
         public void MultilineStringsSupportHeredocLineFormat(string propertyText, string expectedOcl)
         {
             var serializer = new OclSerializer(new OclSerializerOptions());
