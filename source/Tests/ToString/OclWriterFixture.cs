@@ -4,9 +4,7 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
-using Octopus.Data.Model;
 using Octopus.Ocl;
-using Tests.RealLifeScenario.Implementation;
 
 namespace Tests.ToString
 {
@@ -156,54 +154,21 @@ ZZZ
         }
         
         [Test]
-        [TestCase(@"blah = <<-EOT
-        	Hello
-        	World
-        EOT")]
-        public void MultilineStringsSupportHeredocLineFormat(string expectedRaw)
+        [TestCase("Hello\r\nWorld", "blah = <<-EOT\r\n        Hello\r\n        World\r\n        EOT",  Description = "No Indentation")]
+        [TestCase("\tHello\r\n\tWorld", "blah = <<-EOT\r\n        \tHello\r\n        \tWorld\r\n        EOT",  Description = "Double Indent Preserved")]
+        [TestCase("Hello\r\n\t\tWorld", "blah = <<-EOT\r\n        Hello\r\n        \t\tWorld\r\n        EOT",  Description = "Single Property Indented")]
+        public void MultilineStringsSupportHeredocLineFormat(string propertyText, string expectedOcl)
         {
-            var options = new OclSerializerOptions();
+            var serializer = new OclSerializer(new OclSerializerOptions());
 
-            var originalFoo = new Foo() { Blah = "\tHello\r\n\tWorld" };
-            var serializer = new OclSerializer(options);
-            var raw = serializer.Serialize(originalFoo);
-            var deserializedFoo = serializer.Deserialize<Foo>(expectedRaw);
+            var serializedOcl = serializer.Serialize(new Foo() { Blah = propertyText });
+            serializedOcl.Should().Be(expectedOcl);
             
-            raw.Should().Be(expectedRaw);
-            deserializedFoo.Blah.Should().Be(originalFoo.Blah);
+            var deserializedFoo = serializer.Deserialize<Foo>(expectedOcl);
+            deserializedFoo.Blah.Should().Be(propertyText);
         }
         
-        
-             
-        [Test]
-        [TestCase(@"blah = <<-EOT
-        	Hello
-        	World
-        EOT")]
-        public void MultilineStringsSupportHeredocLineFormat1(string expectedRaw)
-        {
-            var options = new OclSerializerOptions();
-            var serializer = new OclSerializer(options);
-            
-            
-            var dualIndent = new Foo() { Blah = "\tHello\r\n\tWorld" };
-            var dualIndentRaw = serializer.Serialize(dualIndent);
-            
-            var singleIndent = new Foo() { Blah = "Hello\r\n\tWorld" };
-            var singleIndentRaw = serializer.Serialize(singleIndent);
-
-            singleIndentRaw = @"blah = <<-EOT
-        	Hello
-        	World
-    EOT";
-            
-            var singleIndentDeserialized = serializer.Deserialize<Foo>(singleIndentRaw);
-            var dualIndentDeserialized = serializer.Deserialize<Foo>(dualIndentRaw);
-
-        }
-        
-        
-        public class Foo
+        class Foo
         {
             public string? Blah { get; set; }
         }

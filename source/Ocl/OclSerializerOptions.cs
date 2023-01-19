@@ -9,7 +9,13 @@ namespace Octopus.Ocl
     /// </summary>
     public class OclSerializerOptions
     {
-        public char IndentChar { get; set; } = ' ';
+        /// <summary>
+        /// What character is used when indenting the OCL text.
+        /// This is not settable as it is
+        /// currently not used in some places in the static Parser 
+        /// </summary>
+        public char IndentChar { get; internal set; } = ' ';
+
         public int IndentDepth { get; set; } = 4;
         public string DefaultHeredocTag { get; set; } = "EOT";
         public List<IOclConverter> Converters { get; set; } = new List<IOclConverter>();
