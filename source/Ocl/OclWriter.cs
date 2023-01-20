@@ -232,7 +232,8 @@ namespace Octopus.Ocl
             }
 
             var isIndented = literal.Format == OclStringLiteralFormat.IndentedHeredoc;
-
+            var indentSize = 2;
+            
             writer.Write("<<");
             if (isIndented)
                 writer.Write("-");
@@ -245,14 +246,15 @@ namespace Octopus.Ocl
                     writer.Write('\n');
 
                 if (isIndented)
-                    WriteIndent(2);
+                    WriteIndent(indentSize);
                 writer.Write(lines[x]);
             }
-
             writer.WriteLine();
 
+            // Ident the ending tag by the same amount as the text value above.
+            // This ensures that when being read back out the parsed text line indentation can be made relative to this ending tag.
             if (isIndented)
-                WriteIndent(2);
+                WriteIndent(indentSize);
             writer.Write(literal.HeredocTag);
         }
 
