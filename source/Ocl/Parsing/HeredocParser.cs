@@ -54,7 +54,7 @@ namespace Octopus.Ocl.Parsing
             from lines in Line.Except(endParser).Many()
             from end in endParser
             let trimmed = TrimCarriageReturn(lines)
-            let unindented = Unindent(trimmed.lines, start.format)
+            let unindented = Unindent(trimmed.lines, end, start.format)
             let joined = string.Join(trimmed.lineSeparator, unindented)
             select new OclStringLiteral(joined, start.format)
             {
@@ -63,11 +63,11 @@ namespace Octopus.Ocl.Parsing
 
         internal static Parser<string> End(string tag)
         {
-            var endLine = from leadingWhitespace in ParserCommon.WhitespaceExceptNewline.Many()
+            var endLine = from leadingWhitespace in ParserCommon.WhitespaceExceptNewline.Many().Text()
                 from endtag in Parse.String(tag).Text()
-                from trailingWhitespace in ParserCommon.WhitespaceExceptNewline.Many()
-                select endtag;
-
+                from trailingWhitespace in ParserCommon.WhitespaceExceptNewline.Many().Optional()
+                select leadingWhitespace + endtag;
+            
             var terminateWithNewline = from endtag in endLine
                 from newline in ParserCommon.NewLine
                 select endtag;
@@ -86,7 +86,7 @@ namespace Octopus.Ocl.Parsing
             return (lineSeparator, trimmed);
         }
 
-        public static IEnumerable<string> Unindent(IReadOnlyList<string> lines, OclStringLiteralFormat format)
+        public static IEnumerable<string> Unindent(IReadOnlyList<string> lines, string endLine, OclStringLiteralFormat format)
         {
             if (format != OclStringLiteralFormat.IndentedHeredoc)
                 return lines;
@@ -102,8 +102,8 @@ namespace Octopus.Ocl.Parsing
                 return int.MaxValue;
             }
 
-            var unindentBy = lines
-                .Min(CountLeadingWhitespace);
+            var endTagLeadingWhitespace = CountLeadingWhitespace(endLine);
+            var unindentBy = Math.Min(endTagLeadingWhitespace, lines.Min(CountLeadingWhitespace));
 
             return lines.Select(l => l.Length <= unindentBy ? "" : l.Substring(unindentBy));
         }

@@ -113,6 +113,7 @@ ZZZ
                 .Be(expected.ToUnixLineEndings());
         }
 
+        
         [Test]
         public void HeredocIndented()
         {
@@ -126,9 +127,9 @@ ZZZ
     MyAttr = <<-EOT
              a
                 b
-        EOT
+            EOT
 }";
-
+            
             Execute(w => w.Write(block))
                 .Should()
                 .Be(expected.ToUnixLineEndings());
@@ -145,11 +146,43 @@ ZZZ
             var expected = @"MyAttr = <<-YYY
         a
         b
-    YYY";
+        YYY";
 
             Execute(w => w.Write(new OclAttribute("MyAttr", "a\nb")), options)
                 .Should()
                 .Be(expected.ToUnixLineEndings());
+        }
+        
+        [Test]
+        [TestCase(@"Hello
+World", @"blah = <<-EOT
+        Hello
+        World
+        EOT",  Description = "No Indentation")]
+        [TestCase(@"    Hello
+    World", @"blah = <<-EOT
+            Hello
+            World
+        EOT",  Description = "Double Indent Preserved")]
+        [TestCase(@"Hello
+        World", @"blah = <<-EOT
+        Hello
+                World
+        EOT",  Description = "Single Property Indented")]
+        public void MultilineStringsSupportHeredocLineFormat(string propertyText, string expectedOcl)
+        {
+            var serializer = new OclSerializer(new OclSerializerOptions());
+
+            var serializedOcl = serializer.Serialize(new Foo() { Blah = propertyText });
+            serializedOcl.Should().Be(expectedOcl);
+            
+            var deserializedFoo = serializer.Deserialize<Foo>(expectedOcl);
+            deserializedFoo.Blah.Should().Be(propertyText);
+        }
+        
+        class Foo
+        {
+            public string? Blah { get; set; }
         }
 
         [Test]
