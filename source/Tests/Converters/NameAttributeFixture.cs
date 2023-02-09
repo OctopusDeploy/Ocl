@@ -48,7 +48,7 @@ namespace Tests.Converters
         class DummyWithBlock
         {
             [OclName("AnotherName")]
-            public DummyWithAttribute BlockProperty { get; set; } = new DummyWithAttribute();
+            public DummyWithAttribute BlockProperty { get; set; } = new();
         }
     }
 }

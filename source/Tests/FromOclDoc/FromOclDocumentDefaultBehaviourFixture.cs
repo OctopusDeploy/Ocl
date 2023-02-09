@@ -210,7 +210,7 @@ namespace Tests.FromOclDoc
                 {
                     Passengers = new List<Person>
                     {
-                        new Person
+                        new()
                             { Name = "Bob" }
                     }
                 });
@@ -241,9 +241,9 @@ namespace Tests.FromOclDoc
                 {
                     Passengers = new List<Person>
                     {
-                        new Person
+                        new()
                             { Name = "Bob" },
-                        new Person
+                        new()
                             { Name = "George" }
                     }
                 });
@@ -257,7 +257,7 @@ namespace Tests.FromOclDoc
                 new OclAttribute("Wings", 1)
             };
 
-            Action action = () =>
+            var action = () =>
             {
                 var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
                 var result = context.FromElement(typeof(Car), document, null);
@@ -278,7 +278,7 @@ namespace Tests.FromOclDoc
                 new OclAttribute("ReadOnly", 1)
             };
 
-            Action action = () =>
+            var action = () =>
             {
                 var context = new OclConversionContext(new OclSerializerOptions() ?? new OclSerializerOptions());
                 var result = context.FromElement(typeof(Car), document, null);
@@ -322,7 +322,7 @@ namespace Tests.FromOclDoc
             public int ReadOnly { get; } = 1;
             public Person? Driver { get; set; }
             public List<Person>? Passengers { get; set; }
-            public List<Person> ReadOnlyPassengers { get; } = new List<Person>();
+            public List<Person> ReadOnlyPassengers { get; } = new();
             public CarType Type { get; set; }
             public Dictionary<string, string>? StringDictionary { get; set; }
             public Dictionary<string, object?>? ObjectDictionary { get; set; }

@@ -40,23 +40,23 @@ namespace Tests.RealLifeScenario.Entities
         public bool CanBeUsedForProjectVersioning => true;
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public ReferenceCollection<DeploymentEnvironmentIdOrName> Environments { get; } = new ReferenceCollection<DeploymentEnvironmentIdOrName>();
+        public ReferenceCollection<DeploymentEnvironmentIdOrName> Environments { get; } = new();
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public ReferenceCollection<DeploymentEnvironmentIdOrName> ExcludedEnvironments { get; } = new ReferenceCollection<DeploymentEnvironmentIdOrName>();
+        public ReferenceCollection<DeploymentEnvironmentIdOrName> ExcludedEnvironments { get; } = new();
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public ReferenceCollection<ChannelIdOrName> Channels { get; } = new ReferenceCollection<ChannelIdOrName>();
+        public ReferenceCollection<ChannelIdOrName> Channels { get; } = new();
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public ReferenceCollection<TagCanonicalIdOrName> TenantTags { get; } = new ReferenceCollection<TagCanonicalIdOrName>();
+        public ReferenceCollection<TagCanonicalIdOrName> TenantTags { get; } = new();
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public PackageReferenceCollection Packages { get; } = new PackageReferenceCollection();
+        public PackageReferenceCollection Packages { get; } = new();
 
         public DeploymentActionCondition Condition { get; set; }
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public PropertiesDictionary Properties { get; } = new PropertiesDictionary();
+        public PropertiesDictionary Properties { get; } = new();
     }
 }

@@ -20,7 +20,7 @@ namespace Tests.RealLifeScenario.Entities
         public DeploymentStepPackageRequirement PackageRequirement { get; set; }
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public List<DeploymentAction> Actions { get; } = new List<DeploymentAction>();
+        public List<DeploymentAction> Actions { get; } = new();
 
         [JsonIgnore]
         public IEnumerable<PropertiesDictionary> InheritedPropertiesForActions
@@ -29,6 +29,6 @@ namespace Tests.RealLifeScenario.Entities
         }
 
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public PropertiesDictionary Properties { get; } = new PropertiesDictionary();
+        public PropertiesDictionary Properties { get; } = new();
     }
 }
