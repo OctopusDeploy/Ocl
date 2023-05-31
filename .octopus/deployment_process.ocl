@@ -3,7 +3,10 @@ step "nuget-push" {
 
     action {
         properties = {
-            NuGetPush.ApiKey = "#{FeedApiKey}"
+            NuGetPush.ApiKey = <<-EOT
+                #{FeedApiKey}
+                
+                EOT
             NuGetPush.Source.Package = "{\"PackageId\":\"Octopus.Ocl\",\"FeedId\":\"octopus-server-built-in\"}"
             NuGetPush.Target.Url = "#{FeedUrl}"
             Octopus.Action.Template.Id = "ActionTemplates-1241"
