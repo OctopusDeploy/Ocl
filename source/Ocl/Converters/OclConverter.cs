@@ -100,12 +100,18 @@ namespace Octopus.Ocl.Converters
             
             if (sourceValue is OclFunctionCall functionCall)
             {
-                var result = context.GetFunctionCallFor(functionCall.Name).ToValue(functionCall);
+                var result = context.GetFunctionCallFor(functionCall.Name).ToValue(functionCall.Arguments);
                 return CoerceValue(context, result, targetType);
             }
 
             if (sourceValue == null)
                 return null;
+            
+            if (sourceValue is int[] array)
+            {
+                if (typeof(IEnumerable<byte>).IsAssignableFrom(targetType))
+                    sourceValue = array.Select(i => (byte)i).ToArray();
+            }
 
             if (targetType.IsInstanceOfType(sourceValue))
                 return sourceValue;
@@ -126,7 +132,13 @@ namespace Octopus.Ocl.Converters
                 if (sourceValue is byte[] bytes)
                     return Encoding.UTF8.GetString(bytes);
             }
-            
+
+            if (targetType == typeof(int))
+            {
+                if (sourceValue is decimal sd && sd == Decimal.Truncate(sd))
+                    return (int)sd;
+            }
+
             object? FromArray<T>()
             {
                 if (sourceValue is T[] array)
@@ -140,7 +152,7 @@ namespace Octopus.Ocl.Converters
                 return null;
             }
 
-            return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? throw new Exception($"Could not coerce value of type {sourceValue.GetType().Name} to {targetType.Name}");
+            return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? FromArray<byte>() ?? throw new Exception($"Could not coerce value of type {sourceValue.GetType().Name} to {targetType.Name}");
         }
 
         /// <summary>

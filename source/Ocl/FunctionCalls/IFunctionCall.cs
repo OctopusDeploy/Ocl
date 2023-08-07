@@ -1,14 +1,12 @@
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 
 namespace Octopus.Ocl.FunctionCalls
 {
     public interface IFunctionCall
     {
         string Name {get;}
-        object? ToValue(OclFunctionCall functionCall);
-        OclFunctionCall? ToOclFunctionCall(object obj, PropertyInfo propertyInfo);
-
-        OclFunctionCall? ToOclFunctionCall(object[] arguments);
+        object? ToValue(IEnumerable<object?> arguments);
+        IEnumerable<object?> ToOclFunctionCall(object propertyValue);
     }
 }
