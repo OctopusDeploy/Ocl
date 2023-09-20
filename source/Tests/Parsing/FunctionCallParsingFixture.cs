@@ -45,5 +45,16 @@ namespace Tests.Parsing
                     new OclAttribute("Child",
                         new OclFunctionCall("dateCalc", new object?[] { }))
                 });
+                
+                
+            [Test]
+            public void WithSurroundingQuotes()
+            {
+                OclParser.Execute("Child = \"dateCalc()\"").Should()
+                    .HaveChildrenExactly(
+                        new OclAttribute("Child","dateCalc()")
+                    );
+            }
+                
     }
 }
