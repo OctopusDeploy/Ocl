@@ -25,7 +25,7 @@ namespace Tests.RealLifeScenario.Implementation
 
             var stringDict = dict.ToDictionary(
                 kvp => kvp.Key,
-                kvp => kvp.Value.Value
+                kvp => (object)kvp.Value.Value
             );
 
             yield return new OclAttribute("properties", stringDict);
