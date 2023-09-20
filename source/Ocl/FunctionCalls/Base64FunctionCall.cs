@@ -18,7 +18,7 @@ namespace Octopus.Ocl.FunctionCalls
 
             if (val is not string valString)
             {
-                throw new OclException("f2c function expecting a single double argument. Unable to parse value");
+                throw new OclException($"The {Name} OCL function expects a single double argument. Unable to parse value");
             }
             return Convert.FromBase64String(valString);
         }
