@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nuke.Common" Version="6.3.0" />
-    <PackageDownload Include="OctoVersion.Tool" Version="[0.3.49]" />
+    <PackageDownload Include="Octopus.OctoVersion.Tool" Version="[0.3.293]" />
   </ItemGroup>
 
   <ItemGroup>
