@@ -33,7 +33,22 @@ namespace Octopus.Ocl.Converters
 
         public IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
         {
-            var isDefault = Activator.CreateInstance(obj.GetType()).Equals(obj);
+            var isDefault = false;
+            var defaultValueAttributeType = typeof(OclDefaultEnumValueAttribute);
+            var defaultValueAttribute = propertyInfo?.GetCustomAttribute(defaultValueAttributeType);
+
+            if (defaultValueAttribute != null)
+            {
+                var defaultValueProperty = defaultValueAttributeType.GetProperty("DefaultValue");
+                var defaultValue = defaultValueProperty?.GetValue(defaultValueAttribute);
+
+                isDefault = Equals(obj, defaultValue);
+            }
+            else
+            {
+                isDefault = Activator.CreateInstance(obj.GetType()).Equals(obj);
+            }
+
             if (!isDefault)
                 yield return new OclAttribute(context.Namer.GetName(propertyInfo!), obj.ToString());
         }
