@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="6.1.2" />
-    <PackageDownload Include="OctoVersion.Tool" Version="[0.3.49]" />
+    <PackageReference Include="Nuke.Common" Version="8.1.0" />
+    <PackageReference Include="Octopus.OctoVersion.Tool" Version="0.3.403" />
   </ItemGroup>
 
   <ItemGroup>
