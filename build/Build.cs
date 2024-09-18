@@ -23,7 +23,7 @@ class Build : NukeBuild
      readonly bool AutoDetectBranch = IsLocalBuild;
 
      [OctoVersion(UpdateBuildNumber = true, BranchParameter = nameof(BranchName),
-         AutoDetectBranchParameter = nameof(AutoDetectBranch), Framework = "net6.0")]
+         AutoDetectBranchParameter = nameof(AutoDetectBranch), Framework = "net8.0")]
      readonly OctoVersionInfo OctoVersionInfo;
 
     AbsolutePath SourceDirectory => RootDirectory / "source";
