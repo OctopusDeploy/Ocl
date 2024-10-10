@@ -14,7 +14,7 @@ namespace Octopus.Ocl.Parsing
         static readonly Parser<char> BlockOpen = Parse.Char('{');
         static readonly Parser<char> BlockClose = Parse.Char('}');
 
-        static readonly Parser<string> Name =
+        static readonly Parser<string> Identifier =
             from name in Parse.Char(c => c == '_' || char.IsLetterOrDigit(c), "letter, digit, _")
                 .AtLeastOnce()
                 .Text()
@@ -69,7 +69,7 @@ namespace Octopus.Ocl.Parsing
             from close in ArrayClose.Token()
             select values.ToArray();
 
-        static readonly Parser<object> ArrayLiteral =
+        static readonly Parser<object> Tuple =
             EmptyArrayLiteral
                 .Or(QuotedStringArrayLiteral)
                 .Or<object>(DecimalArrayLiteral)
@@ -79,6 +79,13 @@ namespace Octopus.Ocl.Parsing
             DecimalLiteral.Select(d => (object)d)
                 .Or(IntegerLiteral.Select(d => (object)d));
 
+        static readonly Parser<object> FunctionCall =
+            from identifier in Identifier.Token()
+            from funcOpen in Parse.Char('(')
+            from values in Literal.DelimitedBy(Comma.Token()).Optional()
+            from funcClose in Parse.Char(')')
+            select new OclFunctionCall(identifier.ToString(), values.GetOrDefault() ?? Array.Empty<object?>());
+        
         static readonly Parser<object?> Literal =
             NullLiteral
                 .XOr(TrueLiteral.Select(d => (object)d))
@@ -86,30 +93,44 @@ namespace Octopus.Ocl.Parsing
                 .XOr(QuotedStringParser.QuotedStringLiteral)
                 .XOr(HeredocParser.Literal)
                 .XOr(NumberLiteral)
-                .XOr(ArrayLiteral);
+                .XOr(Tuple);
 
         static readonly Parser<string> UnquotedDictionaryKey =
             Parse.CharExcept(c => char.IsWhiteSpace(c) || c == '"', "Not whitespace or quotes")
                 .Many()
                 .Text();
 
-        static readonly Parser<KeyValuePair<string, object?>> DictionaryEntry =
+        static readonly Parser<KeyValuePair<string, object?>> ObjectElem =
             from key in UnquotedDictionaryKey.Or(QuotedStringParser.QuotedStringLiteral).SameLineToken()
             from _ in Parse.Char('=')
-            from value in Literal.SameLineToken()
+            from value in ExprTerm
             select new KeyValuePair<string, object?>(key, value);
 
-        static readonly Parser<Dictionary<string, object?>> Dictionary =
+        /// <summary>
+        /// See https://github.com/hashicorp/hcl/blob/main/hclsyntax/spec.md#collection-values
+        /// </summary>
+        static readonly Parser<Dictionary<string, object?>> @Object =
             from open in BlockOpen.Token()
-            from entries in DictionaryEntry.Token().Many()
+            from entries in ObjectElem.Token().Many()
             from close in BlockClose.Token()
             select new Dictionary<string, object?>(entries);
 
+
+        /// <summary>
+        /// See https://github.com/hashicorp/hcl/blob/hcl2/hclsyntax/spec.md#attribute-definitions
+        /// Currently only support <see cref="ExprTerm"/> values
+        /// </summary>
         static readonly Parser<OclAttribute> Attribute =
-            from name in Name.SameLineToken()
+            from name in Identifier.SameLineToken()
             from _ in Parse.Char('=')
-            from value in Dictionary.XOr(Literal).SameLineToken()
+            from value in ExprTerm
             select new OclAttribute(name, value);
+        
+        /// <summary>
+        /// See https://github.com/hashicorp/hcl/blob/main/hclsyntax/spec.md#expression-terms
+        /// </summary>
+        static readonly Parser<object?> ExprTerm =
+            Object.Or(FunctionCall).Or(Literal).SameLineToken();
 
         static readonly Parser<IOclElement[]> EmptyBlockBody =
             from open in BlockOpen.SameLineToken()
@@ -124,7 +145,7 @@ namespace Octopus.Ocl.Parsing
             select children.ToArray();
 
         static readonly Parser<OclBlock> Block =
-            from name in Name.SameLineToken()
+            from name in Identifier.SameLineToken()
             from labels in QuotedStringParser.QuotedStringLiteral.SameLineToken().Many()
             from children in EmptyBlockBody.Or(BlockBody).Token().Once()
             select new OclBlock(name, labels.ToArray(), children.Single());

@@ -2,11 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Octopus.Ocl.Converters
 {
     public abstract class OclConverter : IOclConverter
     {
+        /// <summary>
+        /// Returns true if the converter can be used for the provided type
+        /// </summary>
+        /// <param name="type">The model type being converted</param>
         public abstract bool CanConvert(Type type);
 
         public virtual IEnumerable<IOclElement> ToElements(OclConversionContext context, PropertyInfo? propertyInfo, object obj)
@@ -17,6 +22,13 @@ namespace Octopus.Ocl.Converters
                 : Array.Empty<IOclElement>();
         }
 
+        /// <summary>
+        /// Converts the provided object to an OCL root document.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public virtual OclDocument ToDocument(OclConversionContext context, object obj)
             => throw new NotSupportedException("This type does not support conversion to the OCL root document");
 
@@ -32,7 +44,7 @@ namespace Octopus.Ocl.Converters
         protected virtual IEnumerable<IOclElement> GetElements(object obj, IEnumerable<PropertyInfo> properties, OclConversionContext context)
         {
             var elements = from p in properties
-                from element in context.ToElements(p, p.GetValue(obj))
+                from element in PropertyToElements(obj, context, p)
                 orderby
                     element is OclBlock,
                     element.Name
@@ -40,12 +52,17 @@ namespace Octopus.Ocl.Converters
             return elements;
         }
 
+        protected virtual IEnumerable<IOclElement> PropertyToElements(object obj, OclConversionContext context, PropertyInfo p)
+            => context.ToElements(p, p.GetValue(obj));
+
+
         protected virtual IReadOnlyList<IOclElement> SetProperties(
             OclConversionContext context,
             IEnumerable<IOclElement> elements,
             object target,
             IReadOnlyList<PropertyInfo> properties)
         {
+            
             var notFound = new List<IOclElement>();
             foreach (var element in elements)
             {
@@ -68,7 +85,7 @@ namespace Octopus.Ocl.Converters
                         if (!propertyToSet.CanWrite)
                             throw new OclException($"The property '{propertyToSet.Name}' on '{target.GetType().Name}' does not have a setter");
 
-                        propertyToSet.SetValue(target, CoerceValue(valueToSet, propertyToSet.PropertyType));
+                        propertyToSet.SetValue(target, CoerceValue(context, valueToSet, propertyToSet.PropertyType));
                     }
                 }
             }
@@ -76,44 +93,74 @@ namespace Octopus.Ocl.Converters
             return notFound;
         }
 
-        object? CoerceValue(object? valueToSet, Type type)
+        object? CoerceValue(OclConversionContext context, object? sourceValue, Type targetType)
         {
-            if (valueToSet is OclStringLiteral literal)
-                valueToSet = literal.Value;
-
-            if (valueToSet == null)
-                return null;
-
-            if (type.IsInstanceOfType(valueToSet))
-                return valueToSet;
-
-            if (valueToSet is Dictionary<string, object?> dict)
+            if (sourceValue is OclStringLiteral literal)
+                sourceValue = literal.Value;
+            
+            if (sourceValue is OclFunctionCall functionCall)
             {
-                if (type.IsAssignableFrom(typeof(Dictionary<string, string>)))
-                    return dict.ToDictionary(kvp => kvp.Key, kvp => (string?)CoerceValue(kvp.Value, typeof(string)));
-
-                throw new OclException($"Could not coerce dictionary to {type.Name}. Only Dictionary<string, string> and Dictionary<string, object?> are supported.");
+                var result = context.GetFunctionCallFor(functionCall.Name).ToValue(functionCall.Arguments);
+                return CoerceValue(context, result, targetType);
             }
 
-            if (type == typeof(string) && valueToSet.GetType().IsPrimitive)
-                return valueToSet.ToString();
+            if (sourceValue == null)
+                return null;
+            
+            if (sourceValue is int[] array)
+            {
+                if (typeof(IEnumerable<byte>).IsAssignableFrom(targetType))
+                    sourceValue = array.Select(i => (byte)i).ToArray();
+            }
+
+            if (targetType.IsInstanceOfType(sourceValue))
+                return sourceValue;
+
+            if (sourceValue is Dictionary<string, object?> dict)
+            {
+                if (targetType.IsAssignableFrom(typeof(Dictionary<string, string>)))
+                    return dict.ToDictionary(kvp => kvp.Key, kvp => (string?)CoerceValue(context, kvp.Value, typeof(string)));
+
+                throw new OclException($"Could not coerce dictionary to {targetType.Name}. Only Dictionary<string, string> and Dictionary<string, object?> are supported.");
+            }
+
+            if (targetType == typeof(string))
+            {
+                if (sourceValue.GetType().IsPrimitive)
+                    return sourceValue.ToString();
+
+                if (sourceValue is byte[] bytes)
+                    return Encoding.UTF8.GetString(bytes);
+            }
+
+            if (targetType == typeof(int))
+            {
+                if (sourceValue is decimal sd && sd == Decimal.Truncate(sd))
+                    return (int)sd;
+            }
 
             object? FromArray<T>()
             {
-                if (valueToSet is T[] array)
+                if (sourceValue is T[] array)
                 {
-                    if (type == typeof(List<T>))
+                    if (targetType == typeof(List<T>))
                         return array.ToList();
-                    if (type == typeof(HashSet<T>))
+                    if (targetType == typeof(HashSet<T>))
                         return array.ToHashSet();
                 }
 
                 return null;
             }
 
-            return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? throw new Exception($"Could not coerce value of type {valueToSet.GetType().Name} to {type.Name}");
+            return FromArray<string>() ?? FromArray<decimal>() ?? FromArray<int>() ?? FromArray<byte>() ?? throw new Exception($"Could not coerce value of type {sourceValue.GetType().Name} to {targetType.Name}");
         }
 
+        /// <summary>
+        /// Get the properties for the given type.
+        /// TODO: The virtual accessor can probably be removed and replaced with a ShouldSerialize method that seems to be used.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         protected virtual IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             var defaultProperties = type.GetDefaultMembers().OfType<PropertyInfo>();
