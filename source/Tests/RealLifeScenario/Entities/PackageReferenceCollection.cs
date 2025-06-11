@@ -7,7 +7,7 @@ namespace Tests.RealLifeScenario.Entities
     /// <summary>
     /// This is a copy from Octopus.Server.MessageContracts.PackageReferenceCollectionResource, with a subset of properties.
     /// </summary>
-     public class PackageReferenceCollection : ICollection<PackageReference>
+    public class PackageReferenceCollection : ICollection<PackageReference>
     {
         readonly Dictionary<string, PackageReference> idMap = new(StringComparer.OrdinalIgnoreCase);
 
