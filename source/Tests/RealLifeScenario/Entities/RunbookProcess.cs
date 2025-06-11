@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Channels;
 using Newtonsoft.Json;
-using Octopus.Server.Extensibility.HostServices.Model.Environments;
-using Octopus.Server.Extensibility.HostServices.Model.TagSets;
+using Octopus.Server.MessageContracts.Features.DeploymentEnvironments;
+using Octopus.Server.MessageContracts.Features.TagSets;
 
 namespace Tests.RealLifeScenario.Entities
 {

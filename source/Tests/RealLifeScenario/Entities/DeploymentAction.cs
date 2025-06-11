@@ -1,7 +1,6 @@
 using System;
 using Newtonsoft.Json;
-using Octopus.Data.Model;
-using Octopus.Server.Extensibility.HostServices.Model;
+using Octopus.Server.MessageContracts;
 
 namespace Tests.RealLifeScenario.Entities
 {

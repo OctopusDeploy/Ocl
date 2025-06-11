@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Octopus.Data.Model;
 using Octopus.Ocl;
+using Octopus.Server.MessageContracts;
 using Octopus.TinyTypes;
 
 namespace Tests.RealLifeScenario.Implementation

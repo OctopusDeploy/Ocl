@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Octopus.Ocl;
 using Octopus.Ocl.Converters;
-using Octopus.Server.Extensibility.HostServices.Model;
+using Tests.RealLifeScenario.Entities;
 
 namespace Tests.RealLifeScenario.Implementation
 {

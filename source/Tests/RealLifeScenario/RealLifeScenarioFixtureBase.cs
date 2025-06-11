@@ -4,14 +4,17 @@ using System.Runtime.CompilerServices;
 using Assent;
 using FluentAssertions;
 using NUnit.Framework;
-using Octopus.Data.Model;
-using Octopus.Server.Extensibility.HostServices.Model;
-using Octopus.Server.Extensibility.HostServices.Model.Feeds;
-using Octopus.Server.Extensibility.HostServices.Model.Projects;
-using Octopus.Server.Extensibility.HostServices.Model.Tenants;
-using Octopus.Server.Extensibility.Resources;
+using Octopus.Server.MessageContracts;
+using Octopus.Server.MessageContracts.Features.Feeds;
 using Tests.RealLifeScenario.Entities;
 using Tests.RealLifeScenario.Implementation;
+using DeploymentActionCondition = Tests.RealLifeScenario.Entities.DeploymentActionCondition;
+using DeploymentStepCondition = Tests.RealLifeScenario.Entities.DeploymentStepCondition;
+using DeploymentStepPackageRequirement = Tests.RealLifeScenario.Entities.DeploymentStepPackageRequirement;
+using DeploymentStepStartTrigger = Tests.RealLifeScenario.Entities.DeploymentStepStartTrigger;
+using GuidedFailureMode = Octopus.Server.MessageContracts.Features.Projects.GuidedFailureMode;
+using SkipMachineBehavior = Octopus.Server.MessageContracts.Features.Projects.SkipMachineBehavior;
+using TenantedDeploymentMode = Octopus.Server.MessageContracts.Features.Tenants.TenantedDeploymentMode;
 
 namespace Tests.RealLifeScenario
 {
@@ -86,8 +89,8 @@ namespace Tests.RealLifeScenario
                                     IsRequired = true,
                                     Packages =
                                     {
-                                        new PackageReference("", "OctoFx.Web", new FeedIdOrName("External Feed"), PackageAcquisitionLocation.ExecutionTarget),
-                                        new PackageReference("Helper Package", "OctoFx.Helper", new FeedIdOrName("External Feed"), PackageAcquisitionLocation.Server)
+                                        new PackageReference("", "OctoFx.Web", "External Feed".ToFeedIdOrName(), "ExecutionTarget"),
+                                        new PackageReference("Helper Package", "OctoFx.Helper", "External Feed".ToFeedIdOrName(), "Server")
                                     },
                                     Properties =
                                     {

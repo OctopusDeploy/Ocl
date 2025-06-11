@@ -1,7 +1,7 @@
 using System;
-using Octopus.Data.Model;
-using Octopus.Server.Extensibility.HostServices.Model.Projects;
-using Octopus.Server.Extensibility.HostServices.Model.Tenants;
+using Octopus.Server.MessageContracts;
+using Octopus.Server.MessageContracts.Features.Projects;
+using Octopus.Server.MessageContracts.Features.Tenants;
 
 namespace Tests.RealLifeScenario.Entities
 {
