@@ -16,10 +16,13 @@
     <PackageReference Include="FluentAssertions.Extensions" Version="1.0.18" />
     <PackageReference Include="nunit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
-    <PackageReference Include="Octopus.Server.MessageContracts" Version="3.1.744" />
     <PackageReference Include="Octopus.TinyTypes" Version="3.0.2" />
     <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.30" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="RealLifeScenario\Entities\IIdOrNameTinyType.cs" />
   </ItemGroup>
 
 </Project>

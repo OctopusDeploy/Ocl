@@ -1,7 +1,4 @@
 using System;
-using Octopus.Server.MessageContracts;
-using Octopus.Server.MessageContracts.Features.Projects;
-using Octopus.Server.MessageContracts.Features.Tenants;
 
 namespace Tests.RealLifeScenario.Entities
 {

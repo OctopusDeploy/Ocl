@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Octopus.Ocl;
-using Octopus.Server.MessageContracts;
 using Octopus.TinyTypes;
+using Tests.RealLifeScenario.Entities;
 
 namespace Tests.RealLifeScenario.Implementation
 {

@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Octopus.Ocl.Converters;
-using Octopus.Server.MessageContracts;
-using Octopus.Server.MessageContracts.Features.Feeds;
 
 namespace Tests.RealLifeScenario.Entities
 {
+    /// <summary>
+    ///     Copied a subset from server, but it still has Id for serialization purposes, even if it doesn't have the IId interface.
+    ///     Excluded convenience methods.
+    /// </summary>
     /// <summary>
     ///     Represents a reference from a deployment-process (specifically an action or action-template) to a package.
     ///     May be named or un-named.
@@ -19,7 +21,7 @@ namespace Tests.RealLifeScenario.Entities
     ///     their own class
     ///     and collection on the deployment actions.
     /// </history>
-    public class PackageReference : IId
+    public class PackageReference
     {
         /// <summary>
         ///     Constructs a named package-reference.
@@ -163,38 +165,5 @@ namespace Tests.RealLifeScenario.Entities
 
         [JsonIgnore]
         public bool IsPrimaryPackage => Name == "";
-
-        /// <summary>
-        /// Convenience helper for setting a property using a fluent-builder style interface
-        /// </summary>
-        public PackageReference WithProperty(string propertyKey, string propertyValue)
-        {
-            Properties ??= new Dictionary<string, string>();
-
-            Properties[propertyKey] = propertyValue;
-            return this;
-        }
-
-        public PackageReference DeepClone() =>
-            new(
-                Id,
-                Name,
-                PackageId,
-                FeedIdOrName,
-                AcquisitionLocation)
-            {
-                Properties = Properties is null ? null : new Dictionary<string, string>(Properties),
-                StepPackageInputsReferenceId = StepPackageInputsReferenceId,
-                Version = Version
-            };
-
-        /// <summary>
-        ///     Performs a case-insensitive comparison between the name of this package-reference and the
-        ///     supplied name.  Nulls and empty strings are considered equal.
-        /// </summary>
-        public bool NameMatches(string name) =>
-            Name == ""
-                ? string.IsNullOrEmpty(name)
-                : Name.Equals(name, StringComparison.OrdinalIgnoreCase);
     }
 }

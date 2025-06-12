@@ -73,13 +73,5 @@ namespace Tests.RealLifeScenario.Entities
         public IEnumerator<PackageReference> GetEnumerator() => nameMap.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public PackageReference GetById(string id) => idMap[id];
-
-        public PackageReference GetByName(string name)
-        {
-            var key = name ?? "";
-            return nameMap[key];
-        }
     }
 }

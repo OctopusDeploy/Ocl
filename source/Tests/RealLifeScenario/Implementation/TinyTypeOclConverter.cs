@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Octopus.Ocl;
 using Octopus.TinyTypes;
-using Octopus.Server.MessageContracts.Features.Feeds;
+using Tests.RealLifeScenario.Entities;
 
 namespace Tests.RealLifeScenario.Implementation
 {
