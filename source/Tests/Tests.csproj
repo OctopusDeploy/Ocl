@@ -21,8 +21,4 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="RealLifeScenario\Entities\IIdOrNameTinyType.cs" />
-  </ItemGroup>
-
 </Project>
