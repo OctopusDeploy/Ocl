@@ -65,10 +65,33 @@ namespace Octopus.Ocl.Converters
 
                     if (currentValue != valueToSet)
                     {
-                        if (!propertyToSet.CanWrite)
+                        // Try to get the setter (this will return the setter if private/protected setters are available)
+                        var setMethod = propertyToSet.GetSetMethod(nonPublic: true);
+                    
+                        // If setter not found it could be because:
+                        // 1. The property is read-only (no setter)
+                        // 2. The property is defined on a base class (e.g. abstract class) and the setter is private/protected
+                        if (setMethod == null)
+                        {
+                            // If the property is defined on a base class, we need to find the setter in the base class
+                            var declaringType = propertyToSet.DeclaringType;
+                            if (declaringType != null && declaringType != target.GetType())
+                            {
+                                // Get the property from the declaring type with all binding flags
+                                var baseProperty = declaringType.GetProperty(
+                                    propertyToSet.Name, 
+                                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                                setMethod = baseProperty?.GetSetMethod(nonPublic: true);
+                            }
+                        }
+                    
+                        // If its still null, it definetly does not have a setter.
+                        if (setMethod == null)
                             throw new OclException($"The property '{propertyToSet.Name}' on '{target.GetType().Name}' does not have a setter");
-
-                        propertyToSet.SetValue(target, CoerceValue(valueToSet, propertyToSet.PropertyType));
+                    
+                        // Instead of propertyToSet.SetValue(target, CoerceValue(valueToSet, propertyToSet.PropertyType));
+                        // We use direct method invocation, because it allows us to handle private/protected setters on base classes
+                        setMethod.Invoke(target, new[] { CoerceValue(valueToSet, propertyToSet.PropertyType) });
                     }
                 }
             }
