@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Octopus.Data.Model;
 using Octopus.Ocl;
+using Tests.RealLifeScenario.Entities;
 
 namespace Tests.RealLifeScenario.Implementation
 {

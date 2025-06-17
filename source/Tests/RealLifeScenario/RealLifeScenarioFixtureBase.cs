@@ -4,12 +4,6 @@ using System.Runtime.CompilerServices;
 using Assent;
 using FluentAssertions;
 using NUnit.Framework;
-using Octopus.Data.Model;
-using Octopus.Server.Extensibility.HostServices.Model;
-using Octopus.Server.Extensibility.HostServices.Model.Feeds;
-using Octopus.Server.Extensibility.HostServices.Model.Projects;
-using Octopus.Server.Extensibility.HostServices.Model.Tenants;
-using Octopus.Server.Extensibility.Resources;
 using Tests.RealLifeScenario.Entities;
 using Tests.RealLifeScenario.Implementation;
 
@@ -86,8 +80,8 @@ namespace Tests.RealLifeScenario
                                     IsRequired = true,
                                     Packages =
                                     {
-                                        new PackageReference("", "OctoFx.Web", new FeedIdOrName("External Feed"), PackageAcquisitionLocation.ExecutionTarget),
-                                        new PackageReference("Helper Package", "OctoFx.Helper", new FeedIdOrName("External Feed"), PackageAcquisitionLocation.Server)
+                                        new PackageReference("", "OctoFx.Web", "External Feed".ToFeedIdOrName(), PackageAcquisitionLocation.ExecutionTarget),
+                                        new PackageReference("Helper Package", "OctoFx.Helper", "External Feed".ToFeedIdOrName(), PackageAcquisitionLocation.Server)
                                     },
                                     Properties =
                                     {

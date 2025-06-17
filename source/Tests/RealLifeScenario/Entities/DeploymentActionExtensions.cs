@@ -1,5 +1,4 @@
 using System;
-using Octopus.Server.Extensibility.HostServices.Model;
 
 namespace Tests.RealLifeScenario.Entities
 {
