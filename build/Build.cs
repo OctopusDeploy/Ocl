@@ -5,7 +5,6 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.OctoVersion;
 using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 [UnsetVisualStudioEnvironmentVariables]
@@ -23,7 +22,7 @@ class Build : NukeBuild
      readonly bool AutoDetectBranch = IsLocalBuild;
 
      [OctoVersion(UpdateBuildNumber = true, BranchMember = nameof(BranchName),
-         AutoDetectBranchMember = nameof(AutoDetectBranch), Framework = "net8.0")]
+         AutoDetectBranchMember = nameof(AutoDetectBranch), Framework = "net10.0")]
      readonly OctoVersionInfo OctoVersionInfo;
 
     AbsolutePath SourceDirectory => RootDirectory / "source";
@@ -34,8 +33,8 @@ class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            EnsureCleanDirectory(ArtifactsDirectory);
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(d => d.DeleteDirectory());
+            ArtifactsDirectory.CreateOrCleanDirectory();
         });
 
     Target Restore => _ => _
@@ -99,8 +98,8 @@ class Build : NukeBuild
         .TriggeredBy(Pack)
         .Executes(() =>
         {
-            EnsureExistingDirectory(LocalPackagesDirectory);
-            CopyFileToDirectory(ArtifactsDirectory / $"Octopus.Ocl.{OctoVersionInfo.NuGetVersion}.nupkg", LocalPackagesDirectory, FileExistsPolicy.Overwrite);
+            LocalPackagesDirectory.CreateDirectory();
+            (ArtifactsDirectory / $"Octopus.Ocl.{OctoVersionInfo.NuGetVersion}.nupkg").CopyToDirectory(LocalPackagesDirectory, ExistsPolicy.FileOverwrite);
         });
 
     /// Support plugins are available for:
