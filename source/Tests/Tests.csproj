@@ -11,14 +11,14 @@
   <ItemGroup>
     <ProjectReference Include="..\Ocl\Ocl.csproj" />
 
-    <PackageReference Include="Assent" Version="1.7.0" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Assent" Version="3.0.1" />
+    <PackageReference Include="FluentAssertions" Version="8.11.0" />
     <PackageReference Include="FluentAssertions.Extensions" Version="1.0.18" />
-    <PackageReference Include="nunit" Version="3.14.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageReference Include="Octopus.TinyTypes" Version="3.0.2" />
-    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.30" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+    <PackageReference Include="nunit" Version="4.6.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.0" />
+    <PackageReference Include="Octopus.TinyTypes" Version="3.1.0" />
+    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.41" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
